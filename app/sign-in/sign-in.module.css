@@ -1,0 +1,116 @@
+.page {
+  min-height: 100svh;
+  background: #f0e8dc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+.card {
+  background: #faf6f0;
+  border: 1px solid #e0d0c0;
+  border-radius: 6px;
+  padding: 2.5rem 2rem;
+  width: 100%;
+  max-width: 380px;
+  text-align: center;
+}
+
+.monogram {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.82rem;
+  font-style: italic;
+  letter-spacing: 0.28em;
+  color: #9a8070;
+  margin-bottom: 0.75rem;
+}
+
+.heading {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2rem;
+  font-weight: 400;
+  font-style: italic;
+  color: #2c2218;
+  margin-bottom: 0.4rem;
+  line-height: 1.15;
+}
+
+.sub {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.9rem;
+  color: #7a6a5a;
+  margin-bottom: 2rem;
+}
+
+/* ── Form ── */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  text-align: left;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.label {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #7a6a5a;
+}
+
+.input {
+  background: #fff;
+  border: 1px solid #d4c4b4;
+  border-radius: 4px;
+  padding: 0.6rem 0.75rem;
+  font-family: inherit;
+  font-size: 0.9rem;
+  color: #2c2218;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.input::placeholder {
+  color: #bfb0a0;
+}
+
+.input:focus {
+  border-color: #9a8070;
+}
+
+.error {
+  font-size: 0.82rem;
+  color: #b04040;
+  text-align: center;
+}
+
+.btn {
+  margin-top: 0.4rem;
+  background: #2c2218;
+  color: #f0e8dc;
+  border: none;
+  border-radius: 4px;
+  padding: 0.7rem 1.5rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.88rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn:hover:not(:disabled) {
+  background: #3d3028;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

@@ -1,0 +1,626 @@
+.page {
+  min-height: 100svh;
+  background: #f0e8dc;
+  color: #2c2218;
+}
+
+/* ── Top bar ── */
+.topBar {
+  padding: 1.1rem 1.5rem;
+  border-bottom: 1px solid #e0d0c0;
+}
+
+.backLink {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.82rem;
+  letter-spacing: 0.1em;
+  color: #7a6a5a;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.backLink:hover {
+  color: #2c2218;
+}
+
+/* ── Hero ── */
+.hero {
+  text-align: center;
+  padding: 3rem 1.5rem 2.5rem;
+  border-bottom: 1px solid #d4c4b4;
+}
+
+.monogram {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.85rem;
+  font-style: italic;
+  letter-spacing: 0.25em;
+  color: #9a8070;
+  margin-bottom: 0.5rem;
+}
+
+.heading {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.2rem, 7vw, 3.8rem);
+  font-weight: 400;
+  font-style: italic;
+  color: #2c2218;
+  margin-bottom: 1rem;
+  line-height: 1.1;
+}
+
+.sub {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(0.88rem, 2vw, 1rem);
+  color: #5a4a3a;
+  line-height: 1.8;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/* ── Check my reservation bar ── */
+.checkBar {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+  border-bottom: 1px solid #e0d0c0;
+}
+
+.checkCta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.1rem 0;
+  gap: 1rem;
+}
+
+.checkCtaText {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.95rem;
+  font-style: italic;
+  color: #7a6a5a;
+  margin: 0;
+}
+
+.checkCtaBtn {
+  background: transparent;
+  color: #2c2218;
+  border: 1px solid #b5a090;
+  border-radius: 50px;
+  padding: 0.38rem 1.2rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.88rem;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.checkCtaBtn:hover {
+  background: #2c2218;
+  color: #f0e8dc;
+}
+
+.checkPanel {
+  padding: 0.5rem 0 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.checkPanelLabel {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.82rem;
+  color: #7a6a5a;
+  font-style: italic;
+}
+
+.checkRow {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.checkInput {
+  border: none;
+  border-bottom: 1px solid #b5a090;
+  background: transparent;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem;
+  color: #2c2218;
+  padding: 0.3rem 0.2rem;
+  outline: none;
+  flex: 1;
+  max-width: 220px;
+}
+
+.checkBtn {
+  background: transparent;
+  color: #2c2218;
+  border: 1px solid #b5a090;
+  border-radius: 50px;
+  padding: 0.3rem 1rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.checkBtn:hover {
+  background: #2c2218;
+  color: #f0e8dc;
+}
+
+.checkEmpty {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.82rem;
+  color: #9a8070;
+  font-style: italic;
+}
+
+.checkList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.checkListItem {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.88rem;
+  color: #2c2218;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.checkTick {
+  color: #5a7a4a;
+  font-size: 0.75rem;
+}
+
+.checkAmt {
+  margin-left: auto;
+  color: #7a6a5a;
+  font-size: 0.78rem;
+}
+
+/* ── Items grid ── */
+.gridWrap {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 1rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+/* ── Pagination ── */
+.pageNav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  padding: 1.5rem 0 2rem;
+}
+
+.pageArrow {
+  background: none;
+  border: 1px solid #b5a090;
+  border-radius: 50%;
+  width: 2.1rem;
+  height: 2.1rem;
+  font-size: 0.95rem;
+  color: #7a6a5a;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+  line-height: 1;
+}
+
+.pageArrow:hover:not(:disabled) {
+  background: #2c2218;
+  color: #f0e8dc;
+  border-color: #2c2218;
+}
+
+.pageArrow:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.pageDots {
+  display: flex;
+  gap: 0.55rem;
+  align-items: center;
+}
+
+.pageDot {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: #c8b8a8;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.pageDotActive {
+  background: #2c2218;
+  transform: scale(1.4);
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.45);
+  border: 1px solid #ddd0c0;
+  border-radius: 12px;
+  padding: 1.4rem 1.2rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.3rem;
+  transition: box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.card:hover {
+  border-color: #b5a090;
+  box-shadow: 0 4px 20px rgba(44, 34, 24, 0.08);
+}
+
+.cardIcon {
+  margin-bottom: 0.5rem;
+  opacity: 0.75;
+}
+
+.cardCategory {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #9a8070;
+}
+
+.cardTitle {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1rem, 3vw, 1.2rem);
+  font-weight: 500;
+  color: #2c2218;
+  margin: 0;
+  line-height: 1.25;
+}
+
+.cardDesc {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.8rem;
+  color: #5a4a3a;
+  line-height: 1.65;
+  flex: 1;
+  margin-top: 0.15rem;
+}
+
+.cardAmount {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #2c2218;
+  letter-spacing: 0.03em;
+  margin-top: 0.25rem;
+}
+
+.cardActions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 0.6rem;
+}
+
+.viewItemLink {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.9rem;
+  letter-spacing: 0.06em;
+  color: #7a6a5a;
+  text-decoration: none;
+  border-bottom: 1px solid #b5a090;
+  padding-bottom: 0.05rem;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.viewItemLink:hover {
+  color: #2c2218;
+  border-color: #2c2218;
+}
+
+.cardBtn {
+  margin-top: 0;
+  background: #2c2218;
+  color: #f0e8dc;
+  border: none;
+  border-radius: 50px;
+  padding: 0.42rem 1.2rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.cardBtn:hover {
+  background: #3d3028;
+}
+
+.cardReserved {
+  border-color: #a8c490;
+  background: rgba(168, 196, 144, 0.12);
+}
+
+.reservedBtn {
+  margin-top: 0.6rem;
+  background: transparent;
+  color: #9a8070;
+  border: 1px solid #c8b8a8;
+  border-radius: 50px;
+  padding: 0.42rem 1.2rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.interestCount {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  color: #9a8070;
+  text-transform: uppercase;
+  margin-top: 0.15rem;
+}
+
+.reservedBadge {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.82rem;
+  color: #5a7a4a;
+  font-style: italic;
+  margin-top: 0.5rem;
+}
+
+.reserveForm {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.reserveInput {
+  border: none;
+  border-bottom: 1px solid #b5a090;
+  background: transparent;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem;
+  color: #2c2218;
+  padding: 0.3rem 0.1rem;
+  outline: none;
+  width: 100%;
+}
+
+.reserveError {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.75rem;
+  color: #9a5a4a;
+  font-style: italic;
+}
+
+.reserveActions {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  margin-top: 0.25rem;
+}
+
+.cancelBtn {
+  background: none;
+  border: none;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.8rem;
+  color: #9a8070;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+  transition: color 0.2s;
+}
+
+.cancelBtn:hover {
+  color: #5a4a3a;
+}
+
+/* ── Payment section ── */
+.payment {
+  background: rgba(255, 255, 255, 0.28);
+  border-top: 1px solid #d4c4b4;
+  border-bottom: 1px solid #d4c4b4;
+  padding: 3rem 1.5rem;
+  text-align: center;
+}
+
+.paymentTitle {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.6rem, 5vw, 2.4rem);
+  font-style: italic;
+  font-weight: 400;
+  color: #2c2218;
+  margin-bottom: 0.5rem;
+}
+
+.paymentSub {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.88rem;
+  color: #5a4a3a;
+  margin-bottom: 2.25rem;
+}
+
+.paymentGrid {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 1.75rem;
+}
+
+.paymentCard {
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid #d4c4b4;
+  border-radius: 14px;
+  padding: 1.5rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 220px;
+}
+
+.paymentCardLabel {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #7a6a5a;
+}
+
+.qrFrame {
+  background: #fff;
+  border-radius: 8px;
+  padding: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.paymentName {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.78rem;
+  color: #3d3028;
+  text-align: center;
+}
+
+/* Bank details table */
+.bankDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+  text-align: left;
+}
+
+.bankRow {
+  display: flex;
+  gap: 0.75rem;
+  align-items: baseline;
+}
+
+.bankRowLabel {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #9a8070;
+  min-width: 56px;
+  flex-shrink: 0;
+}
+
+.bankRowValue {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.9rem;
+  color: #2c2218;
+  font-weight: 500;
+}
+
+.paymentNote {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.82rem;
+  color: #7a6a5a;
+  font-style: italic;
+  max-width: 420px;
+  margin: 0 auto;
+  line-height: 1.8;
+}
+
+/* ── Footer ── */
+.footer {
+  text-align: center;
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  align-items: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.9rem;
+  font-style: italic;
+  color: #5a4a3a;
+}
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
+  }
+
+  .paymentGrid {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .paymentCard {
+    width: 100%;
+    max-width: 320px;
+  }
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+
+  .hero {
+    padding: 4rem 2rem 3rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .grid {
+    gap: 1.5rem;
+  }
+
+  .cardTitle {
+    font-size: 1.35rem;
+  }
+
+  .cardDesc {
+    font-size: 0.9rem;
+  }
+
+  .cardAmount {
+    font-size: 1rem;
+  }
+
+  .paymentTitle {
+    font-size: 2.6rem;
+  }
+
+  .qrFrame svg {
+    width: 180px;
+    height: 180px;
+  }
+}

@@ -1,0 +1,881 @@
+/* ── Fade-in container ── */
+.invitationSection {
+  background: #f0e8dc;
+  width: 100%;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  /* Hidden by default */
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.9s ease, transform 0.9s ease;
+  pointer-events: none;
+}
+
+.invitationSection.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* ── Full-screen section wrapper ── */
+.screenSection {
+  min-height: 100svh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 1.5rem;
+}
+
+/* ── Divider ── */
+.divider {
+  width: 60px;
+  height: 1px;
+  background: #b5a090;
+  margin: 2rem 0;
+}
+
+/* ── Monogram ── */
+.monoHeader {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.walimatul {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  color: #3d3028;
+  margin-bottom: 0.4rem;
+}
+
+.monogram {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(4rem, 15vw, 7rem);
+  font-weight: 700;
+  color: #2c2218;
+  line-height: 0.85;
+  display: flex;
+  justify-content: center;
+  font-style: italic;
+  gap: 0.05em;
+  margin: 0.2rem 0;
+}
+
+.monoA {
+  transform: rotate(-6deg);
+  display: inline-block;
+}
+
+.monoZ {
+  transform: rotate(6deg);
+  display: inline-block;
+  margin-left: -0.1em;
+}
+
+.detailLine {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  color: #3d3028;
+  margin: 0.18rem 0;
+}
+
+/* ── Bismillah ── */
+.bismillah {
+  font-family: 'Amiri', serif;
+  font-size: clamp(2rem, 1.1rem, 3.2rem);
+  color: #2c2218;
+  text-align: center;
+  margin: 0.5rem 0 2.5rem;
+  line-height: 1.5;
+}
+
+/* ── Names ── */
+.namesBlock {
+  text-align: center;
+  margin-bottom: 2rem;
+  max-width: 400px;
+}
+
+.parentName {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem;
+  letter-spacing: 0.12em;
+  color: #3d3028;
+  margin: 0.2rem 0;
+  font-weight: 800;
+}
+
+.andConnector {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.9rem;
+  color: #5a4a3a;
+  font-style: italic;
+  margin: 0.4rem 0;
+}
+
+.inviteText {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.9rem;
+  color: #3d3028;
+  margin: 1rem 0 0.5rem;
+  font-style: italic;
+}
+
+.scriptName {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.4rem, 5vw, 1.85rem);
+  font-style: italic;
+  color: #2c2218;
+  margin: 0.3rem 0;
+  font-weight: 500;
+}
+
+.eventDate {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.95rem;
+  color: #3d3028;
+  margin: 1rem 0 0.15rem;
+}
+
+.eventTime {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.9rem;
+  color: #3d3028;
+}
+
+/* ── CTA row ── */
+.ctaRow {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 2.5rem;
+}
+
+.btnDark {
+  background: #2c2218;
+  color: #f0e8dc;
+  border: none;
+  border-radius: 50px;
+  padding: 0.6rem 1.4rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.85rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.3s ease;
+}
+
+.btnDark:hover {
+  background: #3d3028;
+}
+
+.btnLocation {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #fff;
+  color: #2c2218;
+  border: 1px solid #d4c4b4;
+  border-radius: 50px;
+  padding: 0.6rem 1.4rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.85rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btnLocation:hover {
+  border-color: #b5a090;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* ── Itinerary ── */
+.itineraryWrap {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+  max-width: 680px;
+  width: 100%;
+}
+
+.itineraryLeft {
+  flex: 0 0 auto;
+}
+
+.itineraryTitle {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(3rem, 6vw, 3rem);
+  font-style: italic;
+  color: #2c2218;
+  margin: 0 0 1.5rem;
+  line-height: 1.15;
+  font-weight: 500;
+}
+
+.illustration {
+  opacity: 1;
+  width: clamp(14rem, 40%, 22rem);
+}
+
+.illustrationRsvp {
+  opacity: 0.65;
+  margin-bottom: 1.5rem;
+}
+
+.illustrationGift {
+  opacity: 0.65;
+  margin-bottom: 1rem;
+}
+
+.itineraryRight {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding-top: 0.3rem;
+  justify-content: center;
+}
+
+.itinRow {
+  display: flex;
+  align-items: baseline;
+  gap: 1.5rem;
+}
+
+.itinTime {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.3rem, 2vw, 1rem);
+  font-weight: 700;
+  color: #2c2218;
+  min-width: 72px;
+  letter-spacing: 0.04em;
+}
+
+.itinEvent {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.3rem, 3vw, 1.3rem);
+  font-style: italic;
+  color: #3d3028;
+}
+
+/* ── RSVP ── */
+.rsvpSection {
+  width: 100%;
+  max-width: 440px;
+  text-align: center;
+}
+
+.rsvpTitle {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.8rem, 6vw, 2.5rem);
+  font-style: italic;
+  color: #2c2218;
+  margin-bottom: 1rem;
+  font-weight: 400;
+}
+
+.rsvpForm {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.formRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.formRowTop {
+  align-items: flex-start;
+}
+
+.formRow label {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.9rem;
+  color: #3d3028;
+  min-width: 130px;
+  text-align: right;
+  line-height: 1.4;
+}
+
+.labelNote {
+  font-size: 0.72rem;
+  font-style: italic;
+  color: #7a6a5a;
+}
+
+.formRow input,
+.formRow select,
+.formRow textarea {
+  flex: 1;
+  border: none;
+  border-bottom: 1px solid #b5a090;
+  background: transparent;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem;
+  color: #2c2218;
+  padding: 0.3rem 0.2rem;
+  outline: none;
+}
+
+.formRow textarea {
+  border: 1px solid #b5a090;
+  padding: 0.5rem;
+  resize: vertical;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.submitBtn {
+  align-self: center;
+  background: #2c2218;
+  color: #f0e8dc;
+  border: none;
+  border-radius: 50px;
+  padding: 0.65rem 2.2rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.95rem;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  transition: background 0.3s;
+}
+
+.submitBtn:hover {
+  background: #3d3028;
+}
+
+.rsvpSuccess {
+  background: rgba(255, 255, 255, 0.35);
+  border-radius: 12px;
+  padding: 1.5rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem;
+  color: #2c2218;
+  font-style: italic;
+}
+
+/* ── Check RSVP ── */
+.checkRsvp {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #d4c4b4;
+  text-align: center;
+  width: 100%;
+}
+
+.checkTitle {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem;
+  color: #7a6a5a;
+  font-style: italic;
+  margin-bottom: 0.9rem;
+  letter-spacing: 0.03em;
+}
+
+.checkRow {
+  display: flex;
+  gap: 0.6rem;
+  justify-content: center;
+}
+
+.checkInput {
+  border: none;
+  border-bottom: 1px solid #b5a090;
+  background: transparent;
+  font-family: 'Cormorant Garamond', serif;
+  text-align: center;
+  font-size: 1.2rem;
+  color: #2c2218;
+  padding: 0.3rem 0.2rem;
+  outline: none;
+  width: 180px;
+}
+
+.checkBtn {
+  background: transparent;
+  color: #2c2218;
+  border: 1px solid #b5a090;
+  border-radius: 50px;
+  padding: 0.3rem 1.1rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.checkBtn:hover {
+  background: #2c2218;
+  color: #f0e8dc;
+}
+
+.checkSuccess {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem;
+  color: #5a7a4a;
+  font-style: italic;
+  margin-top: 0.75rem;
+}
+
+.checkNotFound {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.88rem;
+  color: #9a5a4a;
+  font-style: italic;
+  margin-top: 0.75rem;
+}
+
+/* ── Gift ── */
+.giftSection {
+  text-align: center;
+  max-width: 360px;
+  width: 100%;
+}
+
+.giftEyebrow {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #7a6a5a;
+  margin-bottom: 0.6rem;
+}
+
+.giftTitle {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.4rem, 5vw, 1.9rem);
+  font-style: italic;
+  color: #2c2218;
+  margin-bottom: 0.75rem;
+  font-weight: 400;
+  line-height: 1.3;
+}
+
+.giftDesc {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.88rem;
+  color: #5a4a3a;
+  line-height: 1.75;
+  margin-bottom: 1.75rem;
+}
+
+/* QR card */
+.qrCard {
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid #d4c4b4;
+  border-radius: 14px;
+  padding: 1.4rem 1.6rem 1.1rem;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1.25rem;
+}
+
+.qrCardLabel {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #7a6a5a;
+}
+
+.qrFrame {
+  background: #fff;
+  border-radius: 8px;
+  padding: 0.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qrName {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.78rem;
+  color: #3d3028;
+  letter-spacing: 0.04em;
+}
+
+/* Bank transfer */
+.bankWrap {
+  margin-bottom: 1.75rem;
+}
+
+.bankOr {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #b5a090;
+  margin-bottom: 0.5rem;
+}
+
+.bankName {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem;
+  color: #2c2218;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.2rem;
+}
+
+.bankHolder {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.78rem;
+  color: #5a4a3a;
+}
+
+.btnRegistry {
+  background: transparent;
+  color: #2c2218;
+  border: 1px solid #b5a090;
+  border-radius: 50px;
+  padding: 0.6rem 1.8rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  letter-spacing: 0.03em;
+  transition: background 0.25s, color 0.25s, border-color 0.25s;
+}
+
+.btnRegistry:hover {
+  background: #2c2218;
+  color: #f0e8dc;
+  border-color: #2c2218;
+}
+
+/* ── Warm wishes ── */
+.wishesSection {
+  width: 100%;
+  max-width: 440px;
+  text-align: center;
+}
+
+.wishesTitle {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.4rem, 5vw, 2rem);
+  font-style: italic;
+  color: #2c2218;
+  margin-bottom: 1.5rem;
+  font-weight: 400;
+}
+
+.wishesSubtitle {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.82rem;
+  letter-spacing: 0.15em;
+  color: #7a6a5a;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+}
+
+.wishesContainer {
+  position: relative;
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
+.wishesFadeTop,
+.wishesFadeBottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.wishesFadeTop {
+  top: 0;
+  height: 3.5rem;
+  background: linear-gradient(to bottom, #f0e8dc, transparent);
+}
+
+.wishesFadeBottom {
+  bottom: 0;
+  height: 5rem;
+  background: linear-gradient(to top, #f0e8dc, transparent);
+}
+
+.wishesScroller {
+  max-height: 55svh;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.wishesScroller::-webkit-scrollbar {
+  display: none;
+}
+
+.wishesTrack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.wishCard {
+  background: rgba(255, 255, 255, 0.45);
+  border-radius: 8px;
+  padding: 0.9rem 1.1rem;
+  text-align: left;
+}
+
+.wishCardName {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #2c2218;
+  margin-bottom: 0.35rem;
+}
+
+.wishCardText {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem;
+  color: #3d3028;
+  font-style: italic;
+  line-height: 1.6;
+}
+
+.footerText {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem;
+  color: #7a6a5a;
+  font-style: italic;
+  line-height: 1.7;
+  padding: 2 ;
+}
+
+/* ── Large screens (1280px+): scale everything up ×1.2 ── */
+@media (min-width: 1280px) {
+  .screenSection {
+    padding: 3.6rem 1rem;
+  }
+
+  .divider {
+    width: 72px;
+    margin: 2.4rem 0;
+  }
+
+  .monoHeader {
+    margin-bottom: 2.4rem;
+  }
+
+  .walimatul {
+    font-size: 1.2rem;
+    letter-spacing: 0.12em;
+  }
+
+  .monogram {
+    font-size: clamp(4.8rem, 18vw, 8.4rem);
+  }
+
+  .detailLine {
+    font-size: 0.86rem;
+    letter-spacing: 0.26em;
+  }
+
+  .bismillah {
+    font-size: 2.4rem;
+    margin: 0.6rem 0 3rem;
+  }
+
+  .namesBlock {
+    max-width: 480px;
+  }
+
+  .parentName {
+    font-size: 1.2rem;
+  }
+
+  .andConnector,
+  .inviteText,
+  .eventTime {
+    font-size: 1.08rem;
+  }
+
+  .scriptName {
+    font-size: clamp(1.68rem, 6vw, 2.22rem);
+  }
+
+  .eventDate {
+    font-size: 1.14rem;
+  }
+
+  .ctaRow {
+    gap: 0.9rem;
+  }
+
+  .btnDark,
+  .btnLocation {
+    padding: 0.72rem 1.68rem;
+    font-size: 1.02rem;
+  }
+
+  .itineraryWrap {
+    gap: 2.4rem;
+    max-width: 816px;
+  }
+
+  .itineraryTitle {
+    font-size: 3.6rem;
+  }
+
+  .illustration {
+    width: clamp(16.8rem, 40%, 26.4rem);
+  }
+
+  .itineraryRight {
+    gap: 2.4rem;
+  }
+
+  .itinRow {
+    gap: 1.8rem;
+  }
+
+  .itinTime {
+    font-size: 1.2rem;
+    min-width: 86px;
+  }
+
+  .itinEvent {
+    font-size: 1.56rem;
+  }
+
+  .rsvpSection {
+    max-width: 528px;
+    max-height: 95vh
+  }
+
+  .rsvpTitle {
+    font-size: clamp(2.16rem, 7.2vw, 3rem);
+  }
+
+  .rsvpForm {
+    gap: 1.08rem;
+  }
+
+  .formRow {
+    gap: 0.9rem;
+  }
+
+  .formRow label {
+    font-size: 1.02rem;
+    min-width: 156px;
+  }
+
+  .labelNote {
+    font-size: 0.86rem;
+  }
+
+  .submitBtn {
+    padding: 0.78rem 2.64rem;
+    font-size: 1.14rem;
+  }
+
+  .rsvpSuccess {
+    font-size: 1.32rem;
+  }
+
+  .giftSection {
+    max-width: 456px;
+  }
+
+  /* gift */
+  .giftSection {
+    max-width: 420px;
+  }
+
+  .giftTitle {
+    font-size: 2.2rem;
+  }
+
+  .giftDesc {
+    font-size: 1rem;
+  }
+
+  .qrFrame svg {
+    width: 180px;
+    height: 180px;
+  }
+
+  .bankName {
+    font-size: 1.15rem;
+  }
+
+  .btnRegistry {
+    padding: 0.7rem 2.1rem;
+    font-size: 1.05rem;
+  }
+
+  .wishesSection {
+    max-width: 528px;
+  }
+
+  .wishesScroller {
+    max-height: 52svh;
+  }
+
+  .wishesTrack {
+    gap: 1rem;
+  }
+
+  .wishCardName {
+    font-size: 0.94rem;
+  }
+
+  .wishCardText {
+    font-size: 1.2rem;
+  }
+
+  .formRow input,
+  .formRow select,
+  .formRow textarea {
+    font-size: 1.08rem;
+  }
+
+  .footerText {
+    font-size: 0.98rem;
+  }
+}
+
+/* ── Mobile: itinerary stacks vertically ── */
+@media (max-width: 640px) {
+  .itineraryWrap {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .itineraryLeft {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .illustration {
+    width: min(18rem, 85vw);
+  }
+}
+
+/* ── Honeypot (keep bots away) ── */
+.honeypot {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}

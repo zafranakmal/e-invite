@@ -113,6 +113,9 @@ export default function DashboardPage() {
   const [form, setForm] = useState(BLANK_FORM);
   const [formErr, setFormErr] = useState('');
   const [formBusy, setFormBusy] = useState(false);
+  const [imageMode, setImageMode] = useState<'url' | 'upload'>('url');
+  const [uploadBusy, setUploadBusy] = useState(false);
+  const [uploadError, setUploadError] = useState('');
 
   // Reservation assignment
   const [assigningItemId, setAssigningItemId] = useState<string | null>(null);
@@ -170,6 +173,8 @@ export default function DashboardPage() {
     setEditId(null);
     setForm(BLANK_FORM);
     setFormErr('');
+    setImageMode('url');
+    setUploadError('');
     setShowForm(true);
   };
 
@@ -183,6 +188,8 @@ export default function DashboardPage() {
       imageUrl: item.imageUrl,
     });
     setFormErr('');
+    setImageMode('url');
+    setUploadError('');
     setShowForm(true);
   };
 
@@ -191,6 +198,25 @@ export default function DashboardPage() {
     setEditId(null);
     setForm(BLANK_FORM);
     setFormErr('');
+    setImageMode('url');
+    setUploadError('');
+  };
+
+  const handleUpload = async (file: File) => {
+    setUploadBusy(true);
+    setUploadError('');
+    try {
+      const body = new FormData();
+      body.append('file', file);
+      const res = await fetch('/api/upload', { method: 'POST', body });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? 'Upload failed.');
+      setForm((f) => ({ ...f, imageUrl: data.url }));
+    } catch (e) {
+      setUploadError((e as Error).message);
+    } finally {
+      setUploadBusy(false);
+    }
   };
 
   const submitForm = async (e: React.FormEvent) => {
@@ -663,13 +689,48 @@ export default function DashboardPage() {
                     />
                   </div>
                   <div className={styles.formField}>
-                    <label className={styles.formLabel}>Image URL *</label>
-                    <input
-                      value={form.imageUrl}
-                      onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
-                      className={styles.formInput}
-                      placeholder="https://example.com/image.jpg"
-                    />
+                    <label className={styles.formLabel}>Image *</label>
+                    <div className={styles.imageModeToggle}>
+                      <button
+                        type="button"
+                        className={`${styles.modeBtn} ${imageMode === 'url' ? styles.modeBtnActive : ''}`}
+                        onClick={() => { setImageMode('url'); setUploadError(''); }}
+                      >
+                        URL
+                      </button>
+                      <button
+                        type="button"
+                        className={`${styles.modeBtn} ${imageMode === 'upload' ? styles.modeBtnActive : ''}`}
+                        onClick={() => { setImageMode('upload'); setUploadError(''); }}
+                      >
+                        Upload
+                      </button>
+                    </div>
+                    {imageMode === 'url' ? (
+                      <input
+                        value={form.imageUrl}
+                        onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
+                        className={styles.formInput}
+                        placeholder="https://example.com/image.jpg"
+                      />
+                    ) : (
+                      <div className={styles.uploadArea}>
+                        <input
+                          type="file"
+                          accept="image/jpeg,image/png,image/webp,image/gif"
+                          onChange={(e) => { const f = e.target.files?.[0]; if (f) handleUpload(f); }}
+                          className={styles.fileInput}
+                          disabled={uploadBusy}
+                        />
+                        {uploadBusy && <p className={styles.uploadStatus}>Uploading…</p>}
+                        {uploadError && <p className={styles.formErr}>{uploadError}</p>}
+                        {form.imageUrl && !uploadBusy && <p className={styles.uploadStatus}>✓ Uploaded</p>}
+                      </div>
+                    )}
+                    {form.imageUrl && (
+                      /* eslint-disable-next-line @next/next/no-img-element */
+                      <img src={form.imageUrl} alt="preview" className={styles.imagePreview} />
+                    )}
                   </div>
                   <div className={styles.formField}>
                     <label className={styles.formLabel}>Product URL (optional)</label>

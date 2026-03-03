@@ -858,6 +858,61 @@
   border: 1px solid #c8a8e0;
 }
 
+/* ── Image mode toggle + upload ────────────────────────────── */
+.imageModeToggle {
+  display: flex;
+  border: 1px solid #d4c4b4;
+  border-radius: 4px;
+  overflow: hidden;
+  width: fit-content;
+  margin-bottom: 0.4rem;
+}
+
+.modeBtn {
+  background: #fff;
+  border: none;
+  padding: 0.3rem 0.8rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  color: #7a6a5a;
+  transition: background 0.15s, color 0.15s;
+}
+
+.modeBtn + .modeBtn {
+  border-left: 1px solid #d4c4b4;
+}
+
+.modeBtnActive {
+  background: #2c2218;
+  color: #f0e8dc;
+}
+
+.uploadArea {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.fileInput {
+  font-size: 0.82rem;
+  color: #2c2218;
+}
+
+.uploadStatus {
+  font-size: 0.78rem;
+  color: #5a7a4a;
+}
+
+.imagePreview {
+  margin-top: 0.5rem;
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid #e0d8d0;
+}
+
 /* ── Inline reservation assign form ───────────────────────── */
 .assignForm {
   display: flex;

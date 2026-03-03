@@ -1,8 +1,5 @@
 'use client';
 
-// zafranakmal7@gmail.com
-// A&ZForever311026$#
-
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { authClient } from '@/lib/auth-client';

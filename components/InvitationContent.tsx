@@ -23,6 +23,27 @@ export default function InvitationContent({ revealed }: InvitationContentProps) 
   const ref = searchParams.get('ref') ?? '';
 
   const [wishes, setWishes] = useState<Wish[]>([]);
+  const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+
+  useEffect(() => {
+    const WEDDING = new Date('2026-10-31T00:00:00');
+    const tick = () => {
+      const diff = WEDDING.getTime() - Date.now();
+      if (diff <= 0) {
+        setCountdown({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+        return;
+      }
+      setCountdown({
+        days: Math.floor(diff / 86_400_000),
+        hours: Math.floor((diff % 86_400_000) / 3_600_000),
+        minutes: Math.floor((diff % 3_600_000) / 60_000),
+        seconds: Math.floor((diff % 60_000) / 1_000),
+      });
+    };
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, []);
 
   useEffect(() => {
     fetch('/api/wishes')
@@ -305,6 +326,22 @@ export default function InvitationContent({ revealed }: InvitationContentProps) 
       {/* ── Screen 3: RSVP ── */}
       <div id="rsvp" className={styles.screenSection}>
         <div className={styles.rsvpSection}>
+          <div className={styles.countdown}>
+            {[
+              { value: countdown.days,    label: 'Days' },
+              { value: countdown.hours,   label: 'Hours' },
+              { value: countdown.minutes, label: 'Mins' },
+              { value: countdown.seconds, label: 'Secs' },
+            ].map(({ value, label }, i, arr) => (
+              <div key={label} className={styles.countdownUnitWrap}>
+                <div className={styles.countdownUnit}>
+                  <span className={styles.countdownNum}>{String(value).padStart(2, '0')}</span>
+                  <span className={styles.countdownLabel}>{label}</span>
+                </div>
+                {i < arr.length - 1 && <span className={styles.countdownSep}>:</span>}
+              </div>
+            ))}
+          </div>
           <h2 className={styles.rsvpTitle}>Save your seat!</h2>
           <div className={styles.illustrationRsvp}>
             <svg viewBox="0 0 90 90" fill="none" width="75">

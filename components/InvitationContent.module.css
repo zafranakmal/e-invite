@@ -265,6 +265,53 @@
   color: #3d3028;
 }
 
+/* ── Countdown ── */
+.countdown {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin-bottom: 1.75rem;
+}
+
+.countdownUnitWrap {
+  display: flex;
+  align-items: center;
+}
+
+.countdownUnit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 56px;
+}
+
+.countdownNum {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2rem, 6vw, 2.6rem);
+  font-weight: 400;
+  line-height: 1;
+  color: #2c2218;
+  letter-spacing: 0.04em;
+}
+
+.countdownLabel {
+  font-size: 0.58rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #9a8070;
+  margin-top: 0.25rem;
+}
+
+.countdownSep {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.6rem;
+  color: #b5a090;
+  padding: 0 0.1rem;
+  margin-bottom: 1rem;
+  user-select: none;
+}
+
 /* ── RSVP ── */
 .rsvpSection {
   width: 100%;

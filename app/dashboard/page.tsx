@@ -446,16 +446,16 @@ export default function DashboardPage() {
               <div className={styles.statCard}>
                 <p className={styles.statLabel}>RSVPs received</p>
                 <p className={styles.statValue}>
-                  {rsvps.length}
+                  {totalGuests}
                   <span className={styles.statCap}> / {TOTAL_CAPACITY}</span>
                 </p>
                 <div className={styles.progressTrack}>
                   <div
                     className={styles.progressFill}
-                    style={{ width: `${Math.min((rsvps.length / TOTAL_CAPACITY) * 100, 100)}%` }}
+                    style={{ width: `${Math.min((totalGuests / TOTAL_CAPACITY) * 100, 100)}%` }}
                   />
                 </div>
-                <p className={styles.statSub}>{TOTAL_CAPACITY - rsvps.length} spots remaining</p>
+                <p className={styles.statSub}>{TOTAL_CAPACITY - totalGuests} spots remaining</p>
               </div>
 
               <div className={styles.statCard}>
@@ -830,9 +830,11 @@ export default function DashboardPage() {
                         </button>
                       )}
                     </td>
-                    <td className={styles.rowActions}>
-                      <button onClick={() => startEdit(item)} className={styles.editBtn}>Edit</button>
-                      <button onClick={() => deleteItem(item.id)} className={styles.deleteBtn}>Delete</button>
+                    <td>
+                      <div className={styles.rowActions}>
+                        <button onClick={() => startEdit(item)} className={styles.editBtn}>Edit</button>
+                        <button onClick={() => deleteItem(item.id)} className={styles.deleteBtn}>Delete</button>
+                      </div>
                     </td>
                   </tr>
                 ))}

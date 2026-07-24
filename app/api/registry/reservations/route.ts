@@ -99,9 +99,15 @@ export async function GET(req: NextRequest) {
     const itemId = searchParams.get('itemId');
 
     if (mobile) {
+      const { ok } = rateLimit(`reservations-lookup:${getClientIp(req)}`, { limit: 5, windowMs: 60_000 });
+      if (!ok) {
+        return NextResponse.json({ error: 'Too many requests. Please try again shortly.' }, { status: 429 });
+      }
+
       const reservations = await prisma.reservation.findMany({
         where: { mobile: mobile.trim() },
         orderBy: { createdAt: 'desc' },
+        select: { itemId: true },
       });
       return NextResponse.json(reservations);
     }

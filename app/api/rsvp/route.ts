@@ -55,7 +55,15 @@ export async function GET(req: NextRequest) {
     const mobile = new URL(req.url).searchParams.get('mobile');
 
     if (mobile) {
-      const rsvp = await prisma.rsvp.findUnique({ where: { mobile: mobile.trim() } });
+      const { ok } = rateLimit(`rsvp-lookup:${getClientIp(req)}`, { limit: 5, windowMs: 60_000 });
+      if (!ok) {
+        return NextResponse.json({ error: 'Too many requests. Please try again shortly.' }, { status: 429 });
+      }
+
+      const rsvp = await prisma.rsvp.findUnique({
+        where: { mobile: mobile.trim() },
+        select: { id: true, name: true, attending: true, guests: true },
+      });
       return NextResponse.json(rsvp ?? null);
     }
 

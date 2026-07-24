@@ -245,12 +245,15 @@ export default function DashboardPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
       });
-      if (!res.ok) throw new Error();
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        throw new Error(data?.error || 'Something went wrong. Please try again.');
+      }
       cancelForm();
       const r = await fetch('/api/registry');
       setRegistry(await r.json());
-    } catch {
-      setFormErr('Something went wrong. Please try again.');
+    } catch (err) {
+      setFormErr(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
     } finally {
       setFormBusy(false);
     }

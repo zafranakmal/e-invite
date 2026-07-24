@@ -21,16 +21,16 @@ export async function POST(req: NextRequest) {
 
     const { name, description, url, imageUrl, price } = await req.json();
 
-    if (!name?.trim() || !description?.trim() || !url?.trim() || !imageUrl?.trim() || !price) {
+    if (!name?.trim() || !description?.trim() || !imageUrl?.trim() || !price) {
       return NextResponse.json({ error: 'Missing fields.' }, { status: 400 });
     }
 
-    if (!isSafeHttpUrl(url.trim()) || !isSafeHttpUrl(imageUrl.trim())) {
+    if ((url?.trim() && !isSafeHttpUrl(url.trim())) || !isSafeHttpUrl(imageUrl.trim())) {
       return NextResponse.json({ error: 'url and imageUrl must be http(s) links.' }, { status: 400 });
     }
 
     const reservation = await prisma.registryItem.create({
-      data: {name: name.trim(), description: description.trim(), url: url.trim(), imageUrl: imageUrl.trim(), price: price},
+      data: {name: name.trim(), description: description.trim(), url: url?.trim() || '', imageUrl: imageUrl.trim(), price: price},
     });
 
     return NextResponse.json(reservation, { status: 201 });
@@ -89,17 +89,17 @@ export async function PUT(req: NextRequest) {
 
     const { id, name, description, url, imageUrl, price } = await req.json();
 
-    if (!id || !name?.trim() || !description?.trim() || !url?.trim() || !imageUrl?.trim() || !price) {
+    if (!id || !name?.trim() || !description?.trim() || !imageUrl?.trim() || !price) {
       return NextResponse.json({ error: 'Missing fields.' }, { status: 400 });
     }
 
-    if (!isSafeHttpUrl(url.trim()) || !isSafeHttpUrl(imageUrl.trim())) {
+    if ((url?.trim() && !isSafeHttpUrl(url.trim())) || !isSafeHttpUrl(imageUrl.trim())) {
       return NextResponse.json({ error: 'url and imageUrl must be http(s) links.' }, { status: 400 });
     }
 
     const updatedItem = await prisma.registryItem.update({
       where: { id },
-      data: { name: name.trim(), description: description.trim(), url: url.trim(), imageUrl: imageUrl.trim(), price: price },
+      data: { name: name.trim(), description: description.trim(), url: url?.trim() || '', imageUrl: imageUrl.trim(), price: price },
     });
 
     return NextResponse.json(updatedItem);

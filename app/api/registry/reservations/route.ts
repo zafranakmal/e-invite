@@ -1,9 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/lib/auth';
+import { rateLimit, getClientIp } from '@/lib/rate-limit';
 
 // POST /api/registry/reservations — create a reservation
 export async function POST(req: NextRequest) {
+  const { ok } = rateLimit(`reservations:${getClientIp(req)}`, { limit: 5, windowMs: 60_000 });
+  if (!ok) {
+    return NextResponse.json({ error: 'Too many requests. Please try again shortly.' }, { status: 429 });
+  }
+
   try {
     const { itemId, name, mobile } = await req.json()
 
@@ -20,16 +26,12 @@ export async function POST(req: NextRequest) {
       include: { reservation: true }
     })
 
-    console.log('Checking item:', itemId, 'Found:', !!item) // Debug log
-
     if (!item) {
       return NextResponse.json(
         { error: 'Item not found.' },
         { status: 404 }
       )
     }
-
-    console.log('Item found:', item)
 
     // 2️⃣ Check if already reserved
     if (item.reservation || item.reserved) {
@@ -56,9 +58,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(reservation, { status: 201 })
 
   } catch (error) {
-    console.error(error)
+    console.error('Reservation POST error:', error)
     return NextResponse.json(
-      { error: 'Server error.', details: error },
+      { error: 'Server error.' },
       { status: 500 }
     )
   }
@@ -83,7 +85,8 @@ export async function DELETE(req: NextRequest) {
 
     return NextResponse.json({ ok: true });
   } catch (error) {
-    return NextResponse.json({ error: 'Server error.', details: (error as Error).message }, { status: 500 });
+    console.error('Reservation DELETE error:', error);
+    return NextResponse.json({ error: 'Server error.' }, { status: 500 });
   }
 }
 

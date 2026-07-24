@@ -2,6 +2,15 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/lib/auth';
 
+function isSafeHttpUrl(value: string): boolean {
+  try {
+    const parsed = new URL(value);
+    return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+  } catch {
+    return false;
+  }
+}
+
 // POST /api/registry/ — create a registry item (admin only)
 export async function POST(req: NextRequest) {
   try {
@@ -12,9 +21,12 @@ export async function POST(req: NextRequest) {
 
     const { name, description, url, imageUrl, price } = await req.json();
 
-    if (!name?.trim() || !description?.trim() || !imageUrl?.trim() || !price) {
-      console.log('Validation failed:', { name, description, url, imageUrl, price });
+    if (!name?.trim() || !description?.trim() || !url?.trim() || !imageUrl?.trim() || !price) {
       return NextResponse.json({ error: 'Missing fields.' }, { status: 400 });
+    }
+
+    if (!isSafeHttpUrl(url.trim()) || !isSafeHttpUrl(imageUrl.trim())) {
+      return NextResponse.json({ error: 'url and imageUrl must be http(s) links.' }, { status: 400 });
     }
 
     const reservation = await prisma.registryItem.create({
@@ -23,7 +35,8 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(reservation, { status: 201 });
   } catch (error) {
-    return NextResponse.json({ error: 'Server error.', details: error }, { status: 500 });
+    console.error('Registry POST error:', error);
+    return NextResponse.json({ error: 'Server error.' }, { status: 500 });
   }
 }
 
@@ -62,7 +75,8 @@ export async function DELETE(req: NextRequest) {
 
     return NextResponse.json({ message: 'Item deleted successfully.' });
   } catch (error) {
-    return NextResponse.json({ error: 'Server error.', details: error }, { status: 500 });
+    console.error('Registry DELETE error:', error);
+    return NextResponse.json({ error: 'Server error.' }, { status: 500 });
   }
 }
 
@@ -79,6 +93,10 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ error: 'Missing fields.' }, { status: 400 });
     }
 
+    if (!isSafeHttpUrl(url.trim()) || !isSafeHttpUrl(imageUrl.trim())) {
+      return NextResponse.json({ error: 'url and imageUrl must be http(s) links.' }, { status: 400 });
+    }
+
     const updatedItem = await prisma.registryItem.update({
       where: { id },
       data: { name: name.trim(), description: description.trim(), url: url.trim(), imageUrl: imageUrl.trim(), price: price },
@@ -86,6 +104,7 @@ export async function PUT(req: NextRequest) {
 
     return NextResponse.json(updatedItem);
   } catch (error) {
-    return NextResponse.json({ error: 'Server error.', details: error }, { status: 500 });
+    console.error('Registry PUT error:', error);
+    return NextResponse.json({ error: 'Server error.' }, { status: 500 });
   }
 }

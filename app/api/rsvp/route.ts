@@ -1,9 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/lib/auth';
+import { rateLimit, getClientIp } from '@/lib/rate-limit';
 
 // POST /api/rsvp — create or update an RSVP (public)
 export async function POST(req: NextRequest) {
+  const { ok } = rateLimit(`rsvp:${getClientIp(req)}`, { limit: 5, windowMs: 60_000 });
+  if (!ok) {
+    return NextResponse.json({ error: 'Too many requests. Please try again shortly.' }, { status: 429 });
+  }
+
   try {
     const { name, mobile, attending, guests, ref, relation, _hp } = await req.json();
 
@@ -37,7 +43,8 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(rsvp, { status: 201 });
   } catch (error) {
-    return NextResponse.json({ error: 'Server error.', details: (error as Error).message }, { status: 500 });
+    console.error('RSVP POST error:', error);
+    return NextResponse.json({ error: 'Server error.' }, { status: 500 });
   }
 }
 
@@ -85,6 +92,7 @@ export async function PATCH(req: NextRequest) {
 
     return NextResponse.json(updated);
   } catch (error) {
-    return NextResponse.json({ error: 'Server error.', details: (error as Error).message }, { status: 500 });
+    console.error('RSVP PATCH error:', error);
+    return NextResponse.json({ error: 'Server error.' }, { status: 500 });
   }
 }

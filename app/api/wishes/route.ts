@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/lib/auth';
+import { rateLimit, getClientIp } from '@/lib/rate-limit';
 
 // GET /api/wishes — fetch all wishes (newest first)
 export async function GET() {
@@ -8,7 +9,6 @@ export async function GET() {
     const wishes = await prisma.wish.findMany({
       orderBy: { createdAt: 'desc' },
     });
-    console.log('Fetched wishes:', wishes);
     return NextResponse.json(wishes);
   } catch {
     return NextResponse.json({ error: 'Server error.' }, { status: 500 });
@@ -34,6 +34,11 @@ export async function DELETE(req: NextRequest) {
 
 // POST /api/wishes — create a wish
 export async function POST(req: NextRequest) {
+  const { ok } = rateLimit(`wishes:${getClientIp(req)}`, { limit: 5, windowMs: 60_000 });
+  if (!ok) {
+    return NextResponse.json({ error: 'Too many requests. Please try again shortly.' }, { status: 429 });
+  }
+
   try {
     const { name, message } = await req.json();
 

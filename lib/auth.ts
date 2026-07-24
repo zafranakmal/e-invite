@@ -1,14 +1,16 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-// If your Prisma file is located elsewhere, you can change the path
-import { PrismaClient } from '../app/generated/prisma/client'
+import { prisma } from "@/lib/prisma";
 
-const prisma = new PrismaClient();
 export const auth = betterAuth({
     database: prismaAdapter(prisma, {
         provider: "postgresql",
     }),
-    emailAndPassword: { 
-        enabled: true, 
+    emailAndPassword: {
+        enabled: true,
+        // Public registration is intentionally disabled — this is a 2-admin site.
+        // To add another admin later: temporarily set this to false, redeploy,
+        // sign up via POST /api/auth/sign-up/email, then set back to true and redeploy.
+        disableSignUp: true,
     },
 });

@@ -2,9 +2,14 @@
 const nextConfig = {
   poweredByHeader: false,
   async headers() {
+    // 'unsafe-inline' on script-src is required because most pages here are
+    // statically prerendered at build time, which is incompatible with
+    // per-request CSP nonces (Next.js's hydration scripts need one or the
+    // other). There's no script-injection vector in this app to exploit it
+    // (no dangerouslySetInnerHTML, all user content rendered as escaped JSX).
     const csp = [
       "default-src 'self'",
-      "script-src 'self'",
+      "script-src 'self' 'unsafe-inline'",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "img-src 'self' https: data:",
       "font-src 'self' https://fonts.gstatic.com",

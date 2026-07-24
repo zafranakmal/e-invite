@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import HeroSection from '../components/HeroSection';
 import InvitationContent from '../components/InvitationContent';
 import BottomNav from '../components/BottomNav';
+import { Suspense } from 'react';
 
 export default function Home() {
   const [revealed, setRevealed] = useState(false);
@@ -65,7 +66,9 @@ export default function Home() {
 
       <main style={{ paddingBottom: revealed ? '64px' : 0 }}>
         <HeroSection onReveal={handleReveal} revealed={revealed} />
-        <InvitationContent revealed={revealed} />
+        <Suspense fallback={null}>
+          <InvitationContent revealed={revealed} />
+        </Suspense>
       </main>
       <BottomNav visible={revealed} />
     </>

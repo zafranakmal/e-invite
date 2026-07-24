@@ -1,5 +1,7 @@
 'use client';
 
+import Image from 'next/image';
+
 interface HeroSectionProps {
   onReveal: () => void;
   revealed: boolean;
@@ -8,112 +10,79 @@ interface HeroSectionProps {
 export default function HeroSection({ onReveal, revealed }: HeroSectionProps) {
   return (
     <section className="hero-section">
-      {/* Arched text */}
-      <div className="arch-container">
-        <svg viewBox="0 0 500 200" className="arch-svg">
-          <defs>
-            <path id="archPath" d="M 30,180 A 220,220 0 0,1 470,180" />
-          </defs>
-          <text className="arch-text" letterSpacing="8">
-            <textPath href="#archPath" startOffset="50%" textAnchor="middle">
-              WELCOME TO OUR FOREVER CHAPTER
-            </textPath>
-          </text>
-        </svg>
+      {/* Background image */}
+      <div className="bg-wrap">
+        <Image
+          src="/bg.png"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          style={{ objectFit: 'cover', objectPosition: 'center' }}
+        />
       </div>
 
-      {/* Couple names */}
-      <div className="names-container">
-        <h1 className="couple-names">
-          <span className="name-left">Anis</span>
-          <span className="ampersand">&amp;</span>
-          <span className="name-right">Zafran</span>
-        </h1>
+      {/* Logo + button grouped so offset moves them together */}
+      <div className="content-group">
+        <div className="logo-wrap">
+          <Image
+            src="/logo-new.png"
+            alt="Welcome — Anis & Zafran"
+            width={860}
+            height={650}
+            priority
+            style={{ width: '100%', height: 'auto', display: 'block' }}
+          />
+        </div>
+
+        {/* CTA — fades out once clicked */}
+        <button
+          onClick={onReveal}
+          disabled={revealed}
+          className={`reveal-btn${revealed ? ' revealed' : ''}`}
+          aria-label="Reveal invitation"
+        >
+          <em>Join us in our celebration of love!</em>
+        </button>
       </div>
-
-      {/* Date */}
-      <p className="wedding-date">31 OCTOBER 2026</p>
-
-      {/* CTA — fades out once clicked */}
-      <button
-        onClick={onReveal}
-        disabled={revealed}
-        className={`reveal-btn${revealed ? ' revealed' : ''}`}
-        aria-label="Reveal invitation"
-      >
-        <em>Join us in our celebration of love!</em>
-      </button>
 
       <style jsx>{`
         .hero-section {
-          min-height: 100svh;
+          position: relative;
+          height: 100vh;
+          height: 100svh;
           width: 100%;
-          background: #e1d3c6ff;
           display: flex;
           flex-direction: column;
           align-items: center;
           justify-content: center;
           padding: 2rem;
+          overflow: hidden;
+          box-sizing: border-box;
         }
 
-        .arch-container {
-          width: min(700px, 90vw);
-          margin-bottom: -8rem;
+        .bg-wrap {
+          position: absolute;
+          inset: 0;
+          z-index: 0;
         }
 
-        .arch-svg {
-          width: 100%;
-          overflow: visible;
-        }
-
-        .arch-text {
-          font-family: 'Cormorant Garamond', serif;
-          font-size: 14px;
-          fill: #2c2c2c;
-          font-weight: 400;
-        }
-
-        .names-container {
-          text-align: center;
-          margin: 0.5rem 0;
-        }
-
-        .couple-names {
-          font-family: 'Cormorant Garamond', serif;
-          font-size: clamp(2.8rem, 10vw, 9rem);
-          font-weight: 400;
-          color: #1a1a1a;
+        .content-group {
+          position: relative;
+          z-index: 1;
           display: flex;
+          flex-direction: column;
           align-items: center;
-          gap: 0.25em;
-          line-height: 1;
-          margin: 0;
+          gap: 1.5rem;
         }
 
-        .name-left,
-        .name-right {
-          font-style: italic;
-        }
-
-        .ampersand {
-          font-style: normal;
-          font-size: 1.2em;
-          font-weight: 300;
-          color: #2c2c2c;
-        }
-
-        .wedding-date {
-          font-family: 'Cormorant Garamond', serif;
-          font-size: clamp(0.75rem, 1.4vw, 1.1rem);
-          letter-spacing: 0.35em;
-          color: #2c2c2c;
-          margin: 1.5rem 0 2.5rem;
-          font-weight: 500;
+        .logo-wrap {
+          width: min(400px, 80vw);
         }
 
         /* Base button */
         .reveal-btn {
-          background: #8faa6e;
+          background: #745a44;
           color: #ffffff;
           border: none;
           border-radius: 50px;
@@ -130,7 +99,7 @@ export default function HeroSection({ onReveal, revealed }: HeroSectionProps) {
         }
 
         .reveal-btn:hover:not(:disabled) {
-          background: #7a9660;
+          background: #997d51;
           transform: scale(1.03);
         }
 
@@ -139,6 +108,29 @@ export default function HeroSection({ onReveal, revealed }: HeroSectionProps) {
           opacity: 0;
           pointer-events: none;
           cursor: default;
+        }
+
+        /* PC / large screens */
+        @media (min-width: 1024px) {
+          .logo-wrap {
+            width: min(700px, 55vw);
+          }
+
+          .reveal-btn {
+            padding: 0.9rem 2rem;
+            font-size: 1.1rem;
+          }
+        }
+
+        /* Short viewports — e.g. ThinkPad at 150% scaling (~720px CSS height) */
+        @media (max-height: 800px) {
+          .logo-wrap {
+            width: min(380px, 52vh);
+          }
+
+          .content-group {
+            gap: 1rem;
+          }
         }
       `}</style>
     </section>

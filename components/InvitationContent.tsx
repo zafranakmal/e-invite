@@ -196,7 +196,7 @@ export default function InvitationContent({ revealed }: InvitationContentProps) 
         </div>
 
         {/* ── Bismillah ── */}
-        <p className={styles.bismillah}>بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيم</p>
+        <img src="/bismillah.png" alt="Bismillahi Barakatillah" width="100%" height="auto" className={styles.bismillah} />
 
         {/* ── Parents & couple names ── */}
         <div className={styles.namesBlock}>
@@ -204,7 +204,7 @@ export default function InvitationContent({ revealed }: InvitationContentProps) 
           <p className={styles.parentName}>NOR RABA&apos;AH BINTI ZAKARIA</p>
           <p className={styles.andConnector}>and</p>
           <p className={styles.parentName}>ZAINOL HISHAM BIN OSMAN</p>
-          <p className={styles.parentName}>ZAHARIAH BINTI YEOP</p>
+          <p className={styles.parentName}>ZAHARIYAH BINTI YEOP</p>
           <p className={styles.inviteText}>joyfully invite you to the reception of our beloved children</p>
           <p className={styles.scriptName}>Anis Sufea binti Ismail</p>
           <p className={styles.andConnector}>and</p>
@@ -247,62 +247,7 @@ export default function InvitationContent({ revealed }: InvitationContentProps) 
               Reception<br />Itinerary
             </h2>
             <div className={styles.illustration}>
-              <svg viewBox="10 78 220 150" fill="none" width="100%">
-                {/* Tablecloth drape */}
-                <path d="M 25,145 Q 15,172 18,202 Q 120,220 222,202 Q 225,172 215,145" stroke="#3d3028" strokeWidth="1.3"/>
-                {/* Table ellipse */}
-                <ellipse cx="120" cy="135" rx="95" ry="42" stroke="#3d3028" strokeWidth="1.5"/>
-                {/* Tablecloth sides */}
-                <path d="M 25,135 L 18,202" stroke="#3d3028" strokeWidth="1.2"/>
-                <path d="M 215,135 L 222,202" stroke="#3d3028" strokeWidth="1.2"/>
-                {/* Left plate */}
-                <ellipse cx="70" cy="144" rx="24" ry="13" stroke="#3d3028" strokeWidth="1.1"/>
-                <ellipse cx="70" cy="144" rx="17" ry="9" stroke="#3d3028" strokeWidth="0.7"/>
-                {/* Left fork */}
-                <path d="M 41,137 L 38,153" stroke="#3d3028" strokeWidth="0.9"/>
-                <path d="M 45,136 L 42,152" stroke="#3d3028" strokeWidth="0.9"/>
-                {/* Left knife */}
-                <path d="M 97,137 L 100,153" stroke="#3d3028" strokeWidth="0.9"/>
-                {/* Right plate */}
-                <ellipse cx="170" cy="144" rx="24" ry="13" stroke="#3d3028" strokeWidth="1.1"/>
-                <ellipse cx="170" cy="144" rx="17" ry="9" stroke="#3d3028" strokeWidth="0.7"/>
-                {/* Right fork */}
-                <path d="M 141,137 L 138,153" stroke="#3d3028" strokeWidth="0.9"/>
-                <path d="M 145,136 L 142,152" stroke="#3d3028" strokeWidth="0.9"/>
-                {/* Right knife */}
-                <path d="M 197,137 L 200,153" stroke="#3d3028" strokeWidth="0.9"/>
-                <path d="M 201,136 L 204,152" stroke="#3d3028" strokeWidth="0.9"/>
-                {/* Wine glass */}
-                <path d="M 192,116 Q 196,127 192,131 L 194,140 M 189,140 L 197,140" stroke="#3d3028" strokeWidth="0.9"/>
-                {/* Small water glass left */}
-                <path d="M 50,121 L 47,133 Q 50,136 53,133 L 50,121" stroke="#3d3028" strokeWidth="0.8"/>
-                {/* Napkin on left plate */}
-                <rect x="62" y="139" width="10" height="7" rx="1" stroke="#3d3028" strokeWidth="0.7" transform="rotate(-8,67,142)"/>
-                {/* Vase */}
-                <path d="M 112,130 Q 108,136 109,142 L 131,142 Q 132,136 128,130 Z" stroke="#3d3028" strokeWidth="1.1"/>
-                {/* Stems */}
-                <line x1="120" y1="130" x2="120" y2="103" stroke="#3d3028" strokeWidth="0.9"/>
-                <line x1="120" y1="130" x2="107" y2="96" stroke="#3d3028" strokeWidth="0.9"/>
-                <line x1="120" y1="130" x2="133" y2="96" stroke="#3d3028" strokeWidth="0.9"/>
-                <line x1="120" y1="130" x2="103" y2="110" stroke="#3d3028" strokeWidth="0.9"/>
-                <line x1="120" y1="130" x2="137" y2="110" stroke="#3d3028" strokeWidth="0.9"/>
-                {/* Centre flower */}
-                <circle cx="120" cy="98" r="7" stroke="#3d3028" strokeWidth="1"/>
-                <circle cx="120" cy="98" r="3" stroke="#3d3028" strokeWidth="0.7" fill="#3d3028"/>
-                {/* Left flowers */}
-                <circle cx="106" cy="91" r="6" stroke="#3d3028" strokeWidth="1"/>
-                <circle cx="106" cy="91" r="2.5" fill="#3d3028"/>
-                <circle cx="101" cy="106" r="5" stroke="#3d3028" strokeWidth="0.9"/>
-                {/* Right flowers */}
-                <circle cx="134" cy="91" r="6" stroke="#3d3028" strokeWidth="1"/>
-                <circle cx="134" cy="91" r="2.5" fill="#3d3028"/>
-                <circle cx="139" cy="106" r="5" stroke="#3d3028" strokeWidth="0.9"/>
-                {/* Leaves */}
-                <path d="M 112,120 Q 103,115 104,123 Q 112,124 112,120" stroke="#3d3028" strokeWidth="0.8"/>
-                <path d="M 128,120 Q 137,115 136,123 Q 128,124 128,120" stroke="#3d3028" strokeWidth="0.8"/>
-                <path d="M 109,110 Q 100,106 101,113" stroke="#3d3028" strokeWidth="0.8"/>
-                <path d="M 131,110 Q 140,106 139,113" stroke="#3d3028" strokeWidth="0.8"/>
-              </svg>
+              <img src="/reception.png" alt="Reception Itinerary" width="280" height="280" />
             </div>
           </div>
           <div className={styles.itineraryRight}>

@@ -7,9 +7,12 @@ const nextConfig = {
     // per-request CSP nonces (Next.js's hydration scripts need one or the
     // other). There's no script-injection vector in this app to exploit it
     // (no dangerouslySetInnerHTML, all user content rendered as escaped JSX).
+    // 'unsafe-eval' is added in dev only — Next's Fast Refresh/HMR runtime
+    // uses eval() and doesn't exist in the production build.
+    const isDev = process.env.NODE_ENV !== 'production';
     const csp = [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline'",
+      `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ''}`,
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "img-src 'self' https: data:",
       "font-src 'self' https://fonts.gstatic.com",

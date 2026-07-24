@@ -1,5 +1,7 @@
 'use client';
 
+//added "use client" directive to ensure this component is rendered on the client side, as it uses hooks and browser APIs
+
 import { useState, useEffect } from 'react';
 import HeroSection from '../components/HeroSection';
 import InvitationContent from '../components/InvitationContent';

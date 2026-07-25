@@ -65,8 +65,9 @@ const NAV_ITEMS = [
 
 export default function BottomNav({ visible }: BottomNavProps) {
   const [activeId, setActiveId] = useState<string>('invitation');
+  const [scrollProgress, setScrollProgress] = useState(0);
 
-  // Highlight nav item based on scroll position
+  // Highlight nav item + track scroll progress
   useEffect(() => {
     if (!visible) return;
 
@@ -74,6 +75,10 @@ export default function BottomNav({ visible }: BottomNavProps) {
     const handleScroll = () => {
       cancelAnimationFrame(rafId);
       rafId = requestAnimationFrame(() => {
+        const doc = document.documentElement;
+        const max = doc.scrollHeight - doc.clientHeight;
+        setScrollProgress(max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0);
+
         const ids = NAV_ITEMS.map((item) => item.id);
         for (let i = ids.length - 1; i >= 0; i--) {
           const el = document.getElementById(ids[i]);
@@ -89,6 +94,7 @@ export default function BottomNav({ visible }: BottomNavProps) {
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
     return () => {
       window.removeEventListener('scroll', handleScroll);
       cancelAnimationFrame(rafId);
@@ -106,6 +112,7 @@ export default function BottomNav({ visible }: BottomNavProps) {
 
   return (
     <nav className={`bottom-nav${visible ? ' visible' : ''}`} role="navigation" aria-label="Page sections">
+      <div className="scroll-progress" style={{ width: `${scrollProgress * 100}%` }} />
       {NAV_ITEMS.map((item) => (
         <button
           key={item.id}
@@ -143,6 +150,15 @@ export default function BottomNav({ visible }: BottomNavProps) {
           opacity: 1;
           transform: translateY(0);
           pointer-events: auto;
+        }
+
+        .scroll-progress {
+          position: absolute;
+          top: 0;
+          left: 0;
+          height: 2px;
+          background: #8faa6e;
+          transition: width 0.1s linear;
         }
 
         .nav-item {

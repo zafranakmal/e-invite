@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
 
 interface HeroSectionProps {
   onReveal: () => void;
@@ -8,12 +9,27 @@ interface HeroSectionProps {
 }
 
 export default function HeroSection({ onReveal, revealed }: HeroSectionProps) {
+  const [scrollY, setScrollY] = useState(0);
+
+  useEffect(() => {
+    let rafId: number;
+    const onScroll = () => {
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => setScrollY(window.scrollY));
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      cancelAnimationFrame(rafId);
+    };
+  }, []);
+
   return (
     <section className="hero-section">
-      {/* Background image */}
-      <div className="bg-wrap">
+      {/* Background image with scroll parallax */}
+      <div className="bg-wrap" style={{ transform: `translateY(${scrollY * -0.25}px)` }}>
         <Image
-          src="/bg.png"
+          src="/hero-sunflower-field.png"
           alt=""
           fill
           priority
@@ -26,8 +42,8 @@ export default function HeroSection({ onReveal, revealed }: HeroSectionProps) {
       <div className="content-group">
         <div className="logo-wrap">
           <Image
-            src="/logo-new.png"
-            alt="Welcome — Anis & Zafran"
+            src="/wedding-lockup.png"
+            alt="The Wedding of Anis and Zafran"
             width={860}
             height={650}
             priority
@@ -63,8 +79,12 @@ export default function HeroSection({ onReveal, revealed }: HeroSectionProps) {
 
         .bg-wrap {
           position: absolute;
-          inset: 0;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 120%;
           z-index: 0;
+          will-change: transform;
         }
 
         .content-group {
@@ -77,21 +97,23 @@ export default function HeroSection({ onReveal, revealed }: HeroSectionProps) {
         }
 
         .logo-wrap {
-          width: min(400px, 80vw);
+          width: min(360px, 78vw);
+          filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.15));
         }
 
         /* Base button */
         .reveal-btn {
           background: #745a44;
-          color: #ffffff;
+          color: #fff;
           border: none;
-          border-radius: 50px;
+          border-radius: var(--r-pill);
           padding: 0.85rem 2.5rem;
-          font-family: 'Cormorant Garamond', serif;
+          font-family: var(--font-body);
           font-size: 1.1rem;
           cursor: pointer;
           letter-spacing: 0.02em;
           opacity: 1;
+          min-height: 44px;
           transition:
             background 0.3s ease,
             transform 0.2s ease,

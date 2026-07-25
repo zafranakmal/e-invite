@@ -1,8 +1,14 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { CSSProperties, useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 import styles from './InvitationContent.module.css';
+import PillButton from './design/PillButton';
+import ScallopCard from './design/ScallopCard';
+import FormField from './design/FormField';
+import Countdown from './design/Countdown';
+import WishCard from './design/WishCard';
 
 const RELATION_OPTIONS = [
   'Core Families',
@@ -11,6 +17,59 @@ const RELATION_OPTIONS = [
   'Colleagues',
   'Wedding Connections',
 ];
+
+const fieldStyle: CSSProperties = {
+  flex: 1,
+  border: 'none',
+  borderBottom: '1px solid var(--c-line)',
+  background: 'transparent',
+  fontFamily: 'var(--font-body)',
+  fontSize: 16,
+  color: 'var(--c-ink)',
+  padding: '0.3rem 0.2rem',
+  outline: 'none',
+  width: '100%',
+};
+
+const textareaStyle: CSSProperties = {
+  ...fieldStyle,
+  border: '1px solid var(--c-line)',
+  padding: '0.5rem',
+  background: 'rgba(255,255,255,0.3)',
+  resize: 'vertical',
+};
+
+const checkInputStyle: CSSProperties = { ...fieldStyle, flex: 'none', width: 180, textAlign: 'center' };
+
+const scriptHeading: CSSProperties = {
+  fontFamily: 'var(--font-script)',
+  fontSize: 'var(--t-script-md)',
+  color: 'var(--c-gold)',
+};
+
+function fadeUp(isIn?: boolean): CSSProperties {
+  return {
+    opacity: isIn ? 1 : 0,
+    transform: isIn ? 'translateY(0)' : 'translateY(20px)',
+    transition: 'opacity 0.7s var(--ease), transform 0.7s var(--ease)',
+  };
+}
+
+const WazeIcon = () => (
+  <svg viewBox="0 0 32 32" width="18" height="18" fill="none">
+    <path d="M16 3C9.9 3 5 7.7 5 13.5c0 4.8 3.1 8.9 7.5 10.5L11 29l5-3.5 5 3.5-1.5-5C24 21.9 27 17.5 27 13.5 27 7.7 22.1 3 16 3z" fill="#00d5d6" />
+    <circle cx="12.5" cy="13" r="1.8" fill="white" />
+    <circle cx="19.5" cy="13" r="1.8" fill="white" />
+    <path d="M12 18c1.5 2.5 7 2.5 8 0" stroke="white" strokeWidth="1.5" strokeLinecap="round" fill="none" />
+  </svg>
+);
+
+const MapsIcon = () => (
+  <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
+    <path d="M12 2C8.1 2 5 5.1 5 9c0 5.3 7 13 7 13s7-7.7 7-13c0-3.9-3.1-7-7-7z" fill="#EA4335" />
+    <circle cx="12" cy="9" r="2.5" fill="white" />
+  </svg>
+);
 
 type Wish = { id: string; name: string; message: string };
 
@@ -23,26 +82,26 @@ export default function InvitationContent({ revealed }: InvitationContentProps) 
   const ref = searchParams.get('ref') ?? '';
 
   const [wishes, setWishes] = useState<Wish[]>([]);
-  const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+  const [sectionsIn, setSectionsIn] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
-    const WEDDING = new Date('2026-10-31T00:00:00');
-    const tick = () => {
-      const diff = WEDDING.getTime() - Date.now();
-      if (diff <= 0) {
-        setCountdown({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-        return;
-      }
-      setCountdown({
-        days: Math.floor(diff / 86_400_000),
-        hours: Math.floor((diff % 86_400_000) / 3_600_000),
-        minutes: Math.floor((diff % 3_600_000) / 60_000),
-        seconds: Math.floor((diff % 60_000) / 1_000),
-      });
-    };
-    tick();
-    const id = setInterval(tick, 1000);
-    return () => clearInterval(id);
+    const ids = ['itinerary', 'rsvp', 'gift', 'wishes'];
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setSectionsIn((s) => ({ ...s, [entry.target.id]: true }));
+            io.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+    ids.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) io.observe(el);
+    });
+    return () => io.disconnect();
   }, []);
 
   useEffect(() => {
@@ -67,46 +126,7 @@ export default function InvitationContent({ revealed }: InvitationContentProps) 
   const [checkMobile, setCheckMobile] = useState('');
   const [checkResult, setCheckResult] = useState<{ name: string; attending: boolean; guests: number } | 'not-found' | null>(null);
   const [checkLoading, setCheckLoading] = useState(false);
-  const wishScrollerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const el = wishScrollerRef.current;
-    if (!el) return;
-
-    let rafId: number;
-    let paused = false;
-    let resumeTimer: ReturnType<typeof setTimeout>;
-
-    const tick = () => {
-      if (!paused) {
-        el.scrollTop += 0.5;
-        if (el.scrollTop >= el.scrollHeight / 2) {
-          el.scrollTop = 0;
-        }
-      }
-      rafId = requestAnimationFrame(tick);
-    };
-
-    rafId = requestAnimationFrame(tick);
-
-    const onInteract = () => {
-      paused = true;
-      clearTimeout(resumeTimer);
-      resumeTimer = setTimeout(() => { paused = false; }, 2500);
-    };
-
-    el.addEventListener('wheel', onInteract, { passive: true });
-    el.addEventListener('touchstart', onInteract, { passive: true });
-    el.addEventListener('touchmove', onInteract, { passive: true });
-
-    return () => {
-      cancelAnimationFrame(rafId);
-      clearTimeout(resumeTimer);
-      el.removeEventListener('wheel', onInteract);
-      el.removeEventListener('touchstart', onInteract);
-      el.removeEventListener('touchmove', onInteract);
-    };
-  }, []);
+  const [copied, setCopied] = useState(false);
 
   const handleRsvpSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -167,6 +187,12 @@ export default function InvitationContent({ revealed }: InvitationContentProps) 
     }
   };
 
+  const handleCopyAccount = () => {
+    if (navigator.clipboard) navigator.clipboard.writeText('123456789012');
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   const wazeUrl = 'https://waze.com/ul/hw282984jm';
   const googleMapsUrl = 'https://maps.app.goo.gl/hrAxPHoTWdKjrtNJ6';
   const calendarUrl =
@@ -176,347 +202,275 @@ export default function InvitationContent({ revealed }: InvitationContentProps) 
     '&details=Walimatul+Urus' +
     '&location=Grand+Ballroom,+BoraOmbak+Marina+Putrajaya';
 
+  const pillStyle = (i: number): CSSProperties => ({
+    opacity: revealed ? 1 : 0,
+    transform: revealed ? 'translateY(0)' : 'translateY(14px)',
+    transition: `opacity 0.5s var(--ease) ${0.3 + i * 0.12}s, transform 0.5s var(--ease) ${0.3 + i * 0.12}s`,
+  });
+
   return (
     <section
       id="invitation"
       className={`${styles.invitationSection}${revealed ? ' ' + styles.visible : ''}`}
     >
-      {/* ── Screen 1: Monogram + Names + CTA ── */}
+      {/* ── Screen 1: Invitation card ── */}
       <div className={styles.screenSection}>
-        {/* ── Monogram header ── */}
-        <div className={styles.monoHeader}>
-          <p className={styles.walimatul}>W A L I M A T U L &nbsp; U R U S</p>
-          <div className={styles.monogram}>
-            <span className={styles.monoA}>A</span>
-            <span className={styles.monoZ}>Z</span>
-          </div>
-          <p className={styles.detailLine}>31 OCTOBER 2026</p>
-          <p className={styles.detailLine}>GRAND BALLROOM</p>
-          <p className={styles.detailLine}>BORAOMBAK MARINA PUTRAJAYA</p>
-        </div>
+        <Image
+          src="/invitation-card.png"
+          alt="Ismail bin Tawnie & Nor Raba'ah binti Zakaria dan Haji Zainol Hisham bin Osman & Zahariah binti Yeop joyfully invite you to the reception of Anis Sufea & Zafran Akmal, 31 October 2026, 7.00 PM - 11.00 PM, Grand Ballroom, BoraOmbak Putrajaya"
+          width={1409}
+          height={2000}
+          className={styles.invitationCard}
+          priority
+        />
 
-        {/* ── Bismillah ── */}
-        <img src="/bismillah.png" alt="Bismillahi Barakatillah" width="100%" height="auto" className={styles.bismillah} />
-
-        {/* ── Parents & couple names ── */}
-        <div className={styles.namesBlock}>
-          <p className={styles.parentName}>ISMAIL BIN TAWNIE</p>
-          <p className={styles.parentName}>NOR RABA&apos;AH BINTI ZAKARIA</p>
-          <p className={styles.andConnector}>and</p>
-          <p className={styles.parentName}>ZAINOL HISHAM BIN OSMAN</p>
-          <p className={styles.parentName}>ZAHARIYAH BINTI YEOP</p>
-          <p className={styles.inviteText}>joyfully invite you to the reception of our beloved children</p>
-          <p className={styles.scriptName}>Anis Sufea binti Ismail</p>
-          <p className={styles.andConnector}>and</p>
-          <p className={styles.scriptName}>Zafran Akmal bin Zainol Hisham</p>
-          <p className={styles.eventDate}>31 October 2026</p>
-          <p className={styles.eventTime}>7.00 PM – 11.00 PM</p>
-        </div>
-
-        {/* ── CTA buttons ── */}
         <div className={styles.ctaRow}>
-          <a href={wazeUrl} target="_blank" rel="noopener noreferrer" className={styles.btnLocation}>
-            <svg viewBox="0 0 32 32" width="18" height="18" fill="none">
-              <path d="M16 3C9.9 3 5 7.7 5 13.5c0 4.8 3.1 8.9 7.5 10.5L11 29l5-3.5 5 3.5-1.5-5C24 21.9 27 17.5 27 13.5 27 7.7 22.1 3 16 3z" fill="#00d5d6"/>
-              <circle cx="12.5" cy="13" r="1.8" fill="white"/>
-              <circle cx="19.5" cy="13" r="1.8" fill="white"/>
-              <path d="M12 18c1.5 2.5 7 2.5 8 0" stroke="white" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
-            </svg>
+          <PillButton as="a" href={wazeUrl} target="_blank" rel="noopener noreferrer" variant="light" icon={<WazeIcon />} style={pillStyle(0)}>
             Waze
-          </a>
-          <a href={googleMapsUrl} target="_blank" rel="noopener noreferrer" className={styles.btnLocation}>
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
-              <path d="M12 2C8.1 2 5 5.1 5 9c0 5.3 7 13 7 13s7-7.7 7-13c0-3.9-3.1-7-7-7z" fill="#EA4335"/>
-              <circle cx="12" cy="9" r="2.5" fill="white"/>
-            </svg>
+          </PillButton>
+          <PillButton as="a" href={googleMapsUrl} target="_blank" rel="noopener noreferrer" variant="light" icon={<MapsIcon />} style={pillStyle(1)}>
             Google Maps
-          </a>
-          <a href={calendarUrl} target="_blank" rel="noopener noreferrer" className={styles.btnDark}>
+          </PillButton>
+          <PillButton as="a" href={calendarUrl} target="_blank" rel="noopener noreferrer" variant="dark" style={pillStyle(2)}>
             Add to Calendar
-          </a>
+          </PillButton>
         </div>
       </div>
-
-      <div className={styles.divider} />
 
       {/* ── Screen 2: Itinerary ── */}
       <div id="itinerary" className={styles.screenSection}>
-        <div className={styles.itineraryWrap}>
-          <div className={styles.itineraryLeft}>
-            <h2 className={styles.itineraryTitle}>
-              Reception<br />Itinerary
-            </h2>
-            <div className={styles.illustration}>
-              <img src="/reception.png" alt="Reception Itinerary" width="280" height="280" />
-            </div>
-          </div>
-          <div className={styles.itineraryRight}>
-            {[
-              { time: '7.00 PM', event: 'Arrival of guests' },
-              { time: '8.00 PM', event: 'Arrival of bride & groom' },
-              { time: '9.30 PM', event: 'Photography Session' },
-              { time: '11.00 PM', event: 'End of reception' },
-            ].map((item) => (
-              <div key={item.time} className={styles.itinRow}>
-                <span className={styles.itinTime}>{item.time}</span>
-                <span className={styles.itinEvent}>{item.event}</span>
-              </div>
-            ))}
-          </div>
+        <div style={fadeUp(sectionsIn.itinerary)}>
+          <Image
+            src="/itinerary-card.png"
+            alt="Reception Itinerary: 7.00 PM Arrival of Guests, 8.00 PM Arrival of Bride & Groom, 8.45 PM Cake-cutting Ceremony, 9.00 PM Photography Session, 11.00 PM End of Reception"
+            width={1409}
+            height={2000}
+            className={styles.invitationCard}
+          />
         </div>
       </div>
-
-      <div className={styles.divider} />
 
       {/* ── Screen 3: RSVP ── */}
       <div id="rsvp" className={styles.screenSection}>
-        <div className={styles.rsvpSection}>
-          <div className={styles.countdown}>
-            {[
-              { value: countdown.days,    label: 'Days' },
-              { value: countdown.hours,   label: 'Hours' },
-              { value: countdown.minutes, label: 'Mins' },
-              { value: countdown.seconds, label: 'Secs' },
-            ].map(({ value, label }, i, arr) => (
-              <div key={label} className={styles.countdownUnitWrap}>
-                <div className={styles.countdownUnit}>
-                  <span className={styles.countdownNum}>{String(value).padStart(2, '0')}</span>
-                  <span className={styles.countdownLabel}>{label}</span>
+        <div style={fadeUp(sectionsIn.rsvp)} className={styles.cardWrap}>
+          <ScallopCard variant="rect" tone="cream">
+            <Countdown target="2026-10-31T19:00:00" style={{ margin: '1rem 1.5rem' }} />
+            <h2 style={{ ...scriptHeading, margin: '1rem 1.5rem 1rem 1.5rem' }}>Save your seat!</h2>
+
+            {rsvpSubmitted ? (
+              <div className={styles.rsvpSuccess}>
+                <p>Thank you, <em>{rsvpData.name || 'friend'}</em>! We look forward to seeing you.</p>
+              </div>
+            ) : (
+              <form onSubmit={handleRsvpSubmit} className={styles.rsvpForm}>
+                <FormField label="Name:" htmlFor="rsvp-name" className={styles.formFieldRow} labelClassName={styles.formFieldLabel}>
+                  <input
+                    id="rsvp-name"
+                    type="text"
+                    style={fieldStyle}
+                    required
+                    placeholder="Your name"
+                    value={rsvpData.name}
+                    onChange={(e) => setRsvpData({ ...rsvpData, name: e.target.value })}
+                  />
+                </FormField>
+                <FormField label="Mobile No.:" htmlFor="rsvp-mobile" className={styles.formFieldRow} labelClassName={styles.formFieldLabel}>
+                  <input
+                    id="rsvp-mobile"
+                    type="tel"
+                    style={fieldStyle}
+                    required
+                    placeholder="e.g. 0123456789"
+                    value={rsvpData.mobile}
+                    onChange={(e) => setRsvpData({ ...rsvpData, mobile: e.target.value })}
+                  />
+                </FormField>
+                <FormField label="Will you be attending?" htmlFor="rsvp-attending" className={styles.formFieldRow} labelClassName={styles.formFieldLabel}>
+                  <select
+                    id="rsvp-attending"
+                    style={fieldStyle}
+                    required
+                    value={rsvpData.attending}
+                    onChange={(e) => setRsvpData({ ...rsvpData, attending: e.target.value })}
+                  >
+                    <option value="">Select...</option>
+                    <option value="yes">Yes, I will attend</option>
+                    <option value="no">Sorry, I cannot attend</option>
+                  </select>
+                </FormField>
+                <FormField
+                  label="Number of pax:"
+                  note="(max. 2 pax per guest)"
+                  align="top"
+                  htmlFor="rsvp-pax"
+                  className={styles.formFieldRow}
+                  labelClassName={styles.formFieldLabel}
+                >
+                  <select
+                    id="rsvp-pax"
+                    style={fieldStyle}
+                    value={rsvpData.pax}
+                    onChange={(e) => setRsvpData({ ...rsvpData, pax: e.target.value })}
+                  >
+                    <option value="">Select...</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                  </select>
+                </FormField>
+                <FormField label="Your relation to us:" htmlFor="rsvp-relation" className={styles.formFieldRow} labelClassName={styles.formFieldLabel}>
+                  <select
+                    id="rsvp-relation"
+                    style={fieldStyle}
+                    value={rsvpData.relation}
+                    onChange={(e) => setRsvpData({ ...rsvpData, relation: e.target.value })}
+                  >
+                    <option value="">Select... (optional)</option>
+                    {RELATION_OPTIONS.map((opt) => (
+                      <option key={opt} value={opt}>{opt}</option>
+                    ))}
+                  </select>
+                </FormField>
+                <FormField label="Your wish:" align="top" htmlFor="rsvp-wish" className={styles.formFieldRow} labelClassName={styles.formFieldLabel}>
+                  <textarea
+                    id="rsvp-wish"
+                    rows={4}
+                    style={textareaStyle}
+                    placeholder="Share your wishes..."
+                    value={rsvpData.wish}
+                    onChange={(e) => setRsvpData({ ...rsvpData, wish: e.target.value })}
+                  />
+                </FormField>
+
+                {/* Honeypot — hidden from humans, bots will fill it */}
+                <div className={styles.honeypot} aria-hidden="true">
+                  <label htmlFor="rsvp-website">Website</label>
+                  <input
+                    id="rsvp-website"
+                    type="text"
+                    name="website"
+                    value={rsvpData._hp}
+                    onChange={(e) => setRsvpData({ ...rsvpData, _hp: e.target.value })}
+                    tabIndex={-1}
+                    autoComplete="off"
+                  />
                 </div>
-                {i < arr.length - 1 && <span className={styles.countdownSep}>:</span>}
-              </div>
-            ))}
-          </div>
-          <h2 className={styles.rsvpTitle}>Save your seat!</h2>
-          <div className={styles.illustrationRsvp}>
-            <svg viewBox="0 0 90 90" fill="none" width="75">
-              <circle cx="45" cy="28" r="8" stroke="#3d3028" strokeWidth="1.2" />
-              <circle cx="30" cy="20" r="6" stroke="#3d3028" strokeWidth="1.1" />
-              <circle cx="60" cy="20" r="6" stroke="#3d3028" strokeWidth="1.1" />
-              <circle cx="35" cy="38" r="5" stroke="#3d3028" strokeWidth="1" />
-              <circle cx="55" cy="38" r="5" stroke="#3d3028" strokeWidth="1" />
-              <circle cx="45" cy="44" r="4" stroke="#3d3028" strokeWidth="1" />
-              <line x1="45" y1="58" x2="45" y2="78" stroke="#3d3028" strokeWidth="1.5" />
-              <path d="M35 70 Q45 64 55 70" stroke="#3d3028" strokeWidth="1" />
-              <path d="M38 62 Q45 58 52 62 M38 62 Q32 66 38 70 M52 62 Q58 66 52 70" stroke="#3d3028" strokeWidth="1" />
-            </svg>
-          </div>
 
-          {rsvpSubmitted ? (
-            <div className={styles.rsvpSuccess}>
-              <p>Thank you, <em>{rsvpData.name}</em>! We look forward to seeing you.</p>
-            </div>
-          ) : (
-            <form onSubmit={handleRsvpSubmit} className={styles.rsvpForm}>
-              <div className={styles.formRow}>
-                <label htmlFor="rsvp-name">Name:</label>
+                {rsvpError && <p className={styles.checkNotFound}>{rsvpError}</p>}
+                <PillButton as="button" type="submit" variant="dark" style={{ alignSelf: 'center', marginTop: '0.5rem' }} disabled={rsvpSubmitting}>
+                  {rsvpSubmitting ? 'Sending…' : 'Send RSVP'}
+                </PillButton>
+              </form>
+            )}
+
+            {/* ── Check RSVP ── */}
+            <div className={styles.checkRsvp}>
+              <p className={styles.checkTitle}>Already submitted? Check your RSVP.</p>
+              <div className={styles.checkRow}>
                 <input
-                  id="rsvp-name"
-                  type="text"
-                  value={rsvpData.name}
-                  onChange={(e) => setRsvpData({ ...rsvpData, name: e.target.value })}
-                  required
-                  placeholder="Your name"
-                />
-              </div>
-              <div className={styles.formRow}>
-                <label htmlFor="rsvp-mobile">Mobile No.:</label>
-                <input
-                  id="rsvp-mobile"
                   type="tel"
-                  value={rsvpData.mobile}
-                  onChange={(e) => setRsvpData({ ...rsvpData, mobile: e.target.value })}
-                  required
-                  placeholder="e.g. 0123456789"
+                  inputMode="numeric"
+                  style={checkInputStyle}
+                  value={checkMobile}
+                  onChange={(e) => {
+                    const digits = e.target.value.replace(/\D/g, '');
+                    setCheckMobile(digits);
+                    setCheckResult(null);
+                  }}
+                  placeholder="Enter your mobile no."
                 />
+                <PillButton as="button" type="button" variant="outlined" onClick={handleCheckRsvp} disabled={checkLoading}>
+                  {checkLoading ? '…' : 'Check'}
+                </PillButton>
               </div>
-              <div className={styles.formRow}>
-                <label htmlFor="rsvp-attending">Will you be attending?</label>
-                <select
-                  id="rsvp-attending"
-                  value={rsvpData.attending}
-                  onChange={(e) => setRsvpData({ ...rsvpData, attending: e.target.value })}
-                  required
-                >
-                  <option value="">Select...</option>
-                  <option value="yes">Yes, I will attend</option>
-                  <option value="no">Sorry, I cannot attend</option>
-                </select>
-              </div>
-              <div className={`${styles.formRow} ${styles.formRowTop}`}>
-                <label htmlFor="rsvp-pax">
-                  Number of pax:<br />
-                  <span className={styles.labelNote}>(max. 2 pax per guest)</span>
-                </label>
-                <select
-                  id="rsvp-pax"
-                  value={rsvpData.pax}
-                  onChange={(e) => setRsvpData({ ...rsvpData, pax: e.target.value })}
-                >
-                  <option value="">Select...</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                </select>
-              </div>
-              <div className={styles.formRow}>
-                <label htmlFor="rsvp-relation">Your relation to us:</label>
-                <select
-                  id="rsvp-relation"
-                  value={rsvpData.relation}
-                  onChange={(e) => setRsvpData({ ...rsvpData, relation: e.target.value })}
-                >
-                  <option value="">Select... (optional)</option>
-                  {RELATION_OPTIONS.map((opt) => (
-                    <option key={opt} value={opt}>{opt}</option>
-                  ))}
-                </select>
-              </div>
-              <div className={`${styles.formRow} ${styles.formRowTop}`}>
-                <label htmlFor="rsvp-wish">Your wish:</label>
-                <textarea
-                  id="rsvp-wish"
-                  value={rsvpData.wish}
-                  onChange={(e) => setRsvpData({ ...rsvpData, wish: e.target.value })}
-                  rows={4}
-                  placeholder="Share your wishes..."
-                />
-              </div>
-              {/* Honeypot — hidden from humans, bots will fill it */}
-              <div className={styles.honeypot} aria-hidden="true">
-                <label htmlFor="rsvp-website">Website</label>
-                <input
-                  id="rsvp-website"
-                  type="text"
-                  name="website"
-                  value={rsvpData._hp}
-                  onChange={(e) => setRsvpData({ ...rsvpData, _hp: e.target.value })}
-                  tabIndex={-1}
-                  autoComplete="off"
-                />
-              </div>
-              {rsvpError && <p className={styles.checkNotFound}>{rsvpError}</p>}
-              <button type="submit" className={styles.submitBtn} disabled={rsvpSubmitting}>
-                {rsvpSubmitting ? 'Sending…' : 'Send RSVP'}
-              </button>
-            </form>
-          )}
-
-          {/* ── Check RSVP ── */}
-          <div className={styles.checkRsvp}>
-            <p className={styles.checkTitle}>Already submitted? Check your RSVP.</p>
-            <div className={styles.checkRow}>
-              <input
-                type="tel"
-                inputMode="numeric"
-                value={checkMobile}
-                onChange={(e) => {
-                  const digits = e.target.value.replace(/\D/g, '');
-                  setCheckMobile(digits);
-                  setCheckResult(null);
-                }}
-                placeholder="Enter your mobile no."
-                className={styles.checkInput}
-              />
-              <button
-                type="button"
-                className={styles.checkBtn}
-                onClick={handleCheckRsvp}
-                disabled={checkLoading}
-              >
-                {checkLoading ? '…' : 'Check'}
-              </button>
+              {checkResult && checkResult !== 'not-found' && (
+                <div className={styles.checkSuccess}>
+                  <p>Your RSVP has been received.</p>
+                  {checkResult.attending ? (
+                    <p>You are attending with <strong>{checkResult.guests}</strong> {checkResult.guests === 1 ? 'guest' : 'guests'}.</p>
+                  ) : (
+                    <p>You have indicated that you will not be attending.</p>
+                  )}
+                </div>
+              )}
+              {checkResult === 'not-found' && (
+                <p className={styles.checkNotFound}>No RSVP found for this number.</p>
+              )}
             </div>
-            {checkResult && checkResult !== 'not-found' && (
-              <div className={styles.checkSuccess}>
-                <p>Your RSVP has been received.</p>
-                {checkResult.attending ? (
-                  <p>You are attending with <strong>{checkResult.guests}</strong> {checkResult.guests === 1 ? 'guest' : 'guests'}.</p>
-                ) : (
-                  <p>You have indicated that you will not be attending.</p>
-                )}
-              </div>
-            )}
-            {checkResult === 'not-found' && (
-              <p className={styles.checkNotFound}>No RSVP found for this number.</p>
-            )}
-          </div>
+          </ScallopCard>
         </div>
       </div>
-
-      <div className={styles.divider} />
 
       {/* ── Screen 4: Gift / DuitNow ── */}
       <div id="gift" className={styles.screenSection}>
-        <div className={styles.giftSection}>
-          <p className={styles.giftEyebrow}>A token of love</p>
-          <h2 className={styles.giftTitle}>Your presence is our greatest gift.</h2>
-          <p className={styles.giftDesc}>
-            Should you wish to bless our new beginning, a heartfelt contribution is warmly welcomed.
-          </p>
+        <div style={fadeUp(sectionsIn.gift)} className={styles.cardWrap}>
+          <ScallopCard variant="quilted">
+            <p className={styles.giftEyebrow}>A token of love</p>
+            <h2 style={{ ...scriptHeading, margin: '0 0 0.75rem' }}>Gift Registry</h2>
+            <p className={styles.giftDesc}>
+              Should you wish to bless our new beginning, a heartfelt contribution is warmly welcomed.
+            </p>
 
-          {/* QR card */}
-          <div className={styles.qrCard}>
-            <p className={styles.qrCardLabel}>Scan to send via DuitNow</p>
-            <div className={styles.qrFrame}>
-              <svg viewBox="0 0 120 120" width="160" height="160">
-                <rect x="5" y="5" width="50" height="50" rx="4" fill="none" stroke="#2c2218" strokeWidth="3" />
-                <rect x="15" y="15" width="30" height="30" rx="2" fill="#2c2218" />
-                <rect x="65" y="5" width="50" height="50" rx="4" fill="none" stroke="#2c2218" strokeWidth="3" />
-                <rect x="75" y="15" width="30" height="30" rx="2" fill="#2c2218" />
-                <rect x="5" y="65" width="50" height="50" rx="4" fill="none" stroke="#2c2218" strokeWidth="3" />
-                <rect x="15" y="75" width="30" height="30" rx="2" fill="#2c2218" />
-                <rect x="65" y="65" width="12" height="12" fill="#2c2218" />
-                <rect x="82" y="65" width="12" height="12" fill="#2c2218" />
-                <rect x="99" y="65" width="16" height="12" fill="#2c2218" />
-                <rect x="65" y="82" width="12" height="12" fill="#2c2218" />
-                <rect x="82" y="82" width="28" height="12" fill="#2c2218" />
-                <rect x="65" y="99" width="28" height="16" fill="#2c2218" />
-                <rect x="98" y="99" width="17" height="16" fill="#2c2218" />
-              </svg>
+            <div className={styles.qrCard}>
+              <p className={styles.qrCardLabel}>Scan to send via DuitNow</p>
+              <div className={styles.qrFrame}>
+                <svg viewBox="0 0 120 120" width="140" height="140">
+                  <rect x="5" y="5" width="50" height="50" rx="4" fill="none" stroke="#2c2218" strokeWidth="3" />
+                  <rect x="15" y="15" width="30" height="30" rx="2" fill="#2c2218" />
+                  <rect x="65" y="5" width="50" height="50" rx="4" fill="none" stroke="#2c2218" strokeWidth="3" />
+                  <rect x="75" y="15" width="30" height="30" rx="2" fill="#2c2218" />
+                  <rect x="5" y="65" width="50" height="50" rx="4" fill="none" stroke="#2c2218" strokeWidth="3" />
+                  <rect x="15" y="75" width="30" height="30" rx="2" fill="#2c2218" />
+                  <rect x="65" y="65" width="12" height="12" fill="#2c2218" />
+                  <rect x="82" y="65" width="12" height="12" fill="#2c2218" />
+                  <rect x="99" y="65" width="16" height="12" fill="#2c2218" />
+                  <rect x="65" y="82" width="12" height="12" fill="#2c2218" />
+                  <rect x="82" y="82" width="28" height="12" fill="#2c2218" />
+                  <rect x="65" y="99" width="28" height="16" fill="#2c2218" />
+                  <rect x="98" y="99" width="17" height="16" fill="#2c2218" />
+                </svg>
+              </div>
+              <p className={styles.qrName}>Zafran Akmal bin Zainol Hisham</p>
             </div>
-            <p className={styles.qrName}>Zafran Akmal bin Zainol Hisham</p>
-          </div>
 
-          {/* Bank transfer alternative */}
-          <div className={styles.bankWrap}>
-            <p className={styles.bankOr}>or transfer directly</p>
-            <p className={styles.bankName}>Maybank &nbsp;·&nbsp; 1234 5678 9012</p>
-            <p className={styles.bankHolder}>Zafran Akmal bin Zainol Hisham</p>
-          </div>
+            <div className={styles.bankWrap}>
+              <p className={styles.bankOr}>or transfer directly</p>
+              <p className={styles.bankName}>
+                Maybank &nbsp;·&nbsp; 1234 5678 9012
+                <button onClick={handleCopyAccount} className={styles.copyBtn}>{copied ? 'Copied!' : 'copy'}</button>
+              </p>
+              <p className={styles.bankHolder}>Zafran Akmal bin Zainol Hisham</p>
+            </div>
 
-          <a href="/registry" className={styles.btnRegistry}>View Gift Registry →</a>
+            <PillButton as="a" href="/registry" variant="outlined">View Gift Registry →</PillButton>
+          </ScallopCard>
         </div>
       </div>
 
-      <div className={styles.divider} />
-
       {/* ── Screen 5: Warm wishes ── */}
       <div id="wishes" className={styles.screenSection}>
-        <div className={styles.wishesSection}>
-          <h2 className={styles.wishesTitle}>Warm Wishes</h2>
+        <div style={fadeUp(sectionsIn.wishes)} className={styles.wishesSection}>
+          <h2 style={{ ...scriptHeading, marginBottom: '0.5rem' }}>Warm Wishes</h2>
           <p className={styles.wishesSubtitle}>From our loved ones</p>
-          <div className={styles.wishesContainer}>
-            <div className={styles.wishesFadeTop} />
-            <div className={styles.wishesFadeBottom} />
-            <div className={styles.wishesScroller} ref={wishScrollerRef}>
-              <div className={styles.wishesTrack}>
-                {wishes.length === 0 ? (
-                  <p className={styles.wishCardText} style={{ textAlign: 'center', padding: '2rem', fontStyle: 'italic', color: '#9a8070' }}>
-                    Wishes will appear here.
-                  </p>
-                ) : (
-                  [...wishes, ...wishes].map((w, i) => (
-                    <div key={i} className={styles.wishCard}>
-                      <p className={styles.wishCardName}>{w.name}</p>
-                      <p className={styles.wishCardText}>{w.message}</p>
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
+          <div className={styles.wishesList}>
+            {wishes.length === 0 ? (
+              <p className={styles.wishesEmpty}>Wishes will appear here.</p>
+            ) : (
+              wishes.map((w, i) => (
+                <WishCard
+                  key={w.id}
+                  name={w.name}
+                  message={w.message}
+                  style={{
+                    opacity: sectionsIn.wishes ? 1 : 0,
+                    transform: sectionsIn.wishes ? 'translateY(0)' : 'translateY(16px)',
+                    transition: `opacity 0.6s var(--ease) ${i * 0.14}s, transform 0.6s var(--ease) ${i * 0.14}s`,
+                  }}
+                />
+              ))
+            )}
           </div>
           <p className={styles.footerText}>
-            Thank you for your lovely wishes. We look forward to your presence, prayers, and blessings on this special day. <br></br>Bismillahi Barakatillah
+            Thank you for your lovely wishes. We look forward to your presence, prayers, and blessings on this special day.<br />Bismillahi Barakatillah
           </p>
         </div>
       </div>

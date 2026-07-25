@@ -1,3 +1,70 @@
+:root {
+  /* Surfaces */
+  --c-bg: #f0e8dc;
+  --c-bg-raised: #f5efe7;
+  --c-paper: #d2c8c3;
+  --c-paper-edge: #d6ccc5;
+  --c-white: #ffffff;
+
+  /* Ink */
+  --c-ink: #2c2218;
+  --c-ink-2: #3d3028;
+  --c-ink-3: #5a4a3a;
+  --c-ink-4: #7a6a5a;
+  --c-ink-mute: #9a8070;
+
+  /* Accent: bronze-gold. Display + ornament only, never body copy or fills. */
+  --c-gold: #573601;
+  --c-gold-mid: #62441e;
+  --c-gold-soft: #8b7b69;
+
+  /* Lines */
+  --c-line: #b5a090;
+  --c-line-soft: #d4c4b4;
+
+  /* Status (RSVP feedback only) */
+  --c-ok: #5a7a4a;
+  --c-err: #9a5a4a;
+
+  /* Fonts */
+  --font-script: 'Pinyon Script', cursive;
+  --font-body: 'Cormorant Garamond', serif;
+  --font-arabic: 'Amiri', serif;
+
+  --t-script-xl: clamp(2.75rem, 11vw, 4.25rem);
+  --t-script-lg: clamp(2rem, 8vw, 3rem);
+  --t-script-md: clamp(1.6rem, 6vw, 2.25rem);
+
+  --lh-body: 1.65;
+
+  /* Spacing / shape */
+  --s-1: 0.25rem; --s-2: 0.5rem; --s-3: 0.75rem; --s-4: 1rem;
+  --s-5: 1.5rem; --s-6: 2rem; --s-7: 3rem; --s-8: 4rem;
+
+  --r-pill: 999px;
+  --r-card: 14px;
+  --r-sm: 8px;
+
+  --nav-h: 4.25rem;
+
+  --shadow-emboss: inset 0 1px 0 rgba(255,255,255,0.55), inset 0 -1px 0 rgba(44,34,24,0.06), 0 2px 10px rgba(44,34,24,0.07);
+  --shadow-lift: 0 2px 8px rgba(44,34,24,0.08);
+
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --dur-fast: 200ms;
+  --dur-mid: 400ms;
+  --dur-slow: 800ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -9,8 +76,8 @@ html {
 }
 
 body {
-  background: #ffffff;
-  color: #2c2218;
+  background: var(--c-bg);
+  color: var(--c-ink);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

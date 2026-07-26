@@ -105,8 +105,7 @@ export default function BottomNav({ visible }: BottomNavProps) {
     setActiveId(id);
     const el = document.getElementById(id);
     if (el) {
-      const y = el.getBoundingClientRect().top + window.scrollY;
-      window.scrollTo({ top: y, behavior: 'smooth' });
+      window.scrollTo({ top: el.offsetTop, behavior: 'smooth' });
     }
   };
 

@@ -32,7 +32,11 @@ export default function Home() {
   const handleReveal = () => {
     setRevealed(true);
     setTimeout(() => {
-      document.getElementById('invitation')?.scrollIntoView({ behavior: 'smooth' });
+      // offsetTop (layout position) rather than scrollIntoView/getBoundingClientRect
+      // (painted position) -- the section is still mid-way through its
+      // reveal transform at this point, and only offsetTop ignores that.
+      const el = document.getElementById('invitation');
+      if (el) window.scrollTo({ top: el.offsetTop, behavior: 'smooth' });
     }, 150);
   };
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { CSSProperties, useEffect, useState } from 'react';
 
 function computeParts(target: Date) {
   const diff = target.getTime() - Date.now();
@@ -17,9 +17,10 @@ function computeParts(target: Date) {
 interface CountdownProps {
   target: string;
   pastMessage?: string;
+  style?: CSSProperties;
 }
 
-export default function Countdown({ target, pastMessage = 'The celebration has begun.' }: CountdownProps) {
+export default function Countdown({ target, pastMessage = 'The celebration has begun.', style }: CountdownProps) {
   const [parts, setParts] = useState<{ days: number | string; hours: number | string; minutes: number | string; seconds: number | string; done: boolean }>({
     days: '--',
     hours: '--',
@@ -43,7 +44,7 @@ export default function Countdown({ target, pastMessage = 'The celebration has b
 
   if (parts.done) {
     return (
-      <p style={{ fontFamily: 'var(--font-body)', fontStyle: 'italic', color: 'var(--c-ink-2)' }}>
+      <p style={{ fontFamily: 'var(--font-body)', fontStyle: 'italic', color: 'var(--c-ink-2)', ...style }}>
         {pastMessage}
       </p>
     );
@@ -57,7 +58,7 @@ export default function Countdown({ target, pastMessage = 'The celebration has b
   ];
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 0 }}>
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 0, ...style }}>
       {units.map(([key, label], i) => (
         <div key={key} style={{ display: 'flex', alignItems: 'center' }}>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 56 }}>

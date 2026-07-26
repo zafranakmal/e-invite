@@ -3,6 +3,7 @@
 import { CSSProperties, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
+import Snowfall from 'react-snowfall';
 import styles from './InvitationContent.module.css';
 import PillButton from './design/PillButton';
 import ScallopCard from './design/ScallopCard';
@@ -83,6 +84,14 @@ export default function InvitationContent({ revealed }: InvitationContentProps) 
 
   const [wishes, setWishes] = useState<Wish[]>([]);
   const [sectionsIn, setSectionsIn] = useState<Record<string, boolean>>({});
+  const [snowflakeCount, setSnowflakeCount] = useState(60);
+
+  useEffect(() => {
+    const updateSnowflakeCount = () => setSnowflakeCount(Math.round((10 * window.innerWidth) / 100));
+    updateSnowflakeCount();
+    window.addEventListener('resize', updateSnowflakeCount);
+    return () => window.removeEventListener('resize', updateSnowflakeCount);
+  }, []);
 
   useEffect(() => {
     const ids = ['itinerary', 'rsvp', 'gift', 'wishes'];
@@ -214,26 +223,83 @@ export default function InvitationContent({ revealed }: InvitationContentProps) 
       className={`${styles.invitationSection}${revealed ? ' ' + styles.visible : ''}`}
     >
       {/* ── Screen 1: Invitation card ── */}
-      <div className={styles.screenSection}>
-        <Image
-          src="/invitation-card.png"
-          alt="Ismail bin Tawnie & Nor Raba'ah binti Zakaria dan Haji Zainol Hisham bin Osman & Zahariah binti Yeop joyfully invite you to the reception of Anis Sufea & Zafran Akmal, 31 October 2026, 7.00 PM - 11.00 PM, Grand Ballroom, BoraOmbak Putrajaya"
-          width={1409}
-          height={2000}
-          className={styles.invitationCard}
-          priority
+      <div className={`${styles.screenSection} ${styles.heroCardSection}`}>
+        <div className={styles.heroCardBg}>
+          <Image
+            src="/bg-1.jpg"
+            alt=""
+            fill
+            sizes="100vw"
+            style={{ objectFit: 'cover', objectPosition: 'center' }}
+          />
+        </div>
+
+        <Snowfall
+          snowflakeCount={snowflakeCount}
+          color="rgba(248, 243, 242, 0.62)"
+          radius={[2.3, 4]}
+          speed={[0.7, 1.5]}
+          wind={[-0.5, 0.5]}
+          style={{ position: 'absolute', inset: 0, zIndex: 2, pointerEvents: 'none' }}
         />
 
-        <div className={styles.ctaRow}>
-          <PillButton as="a" href={wazeUrl} target="_blank" rel="noopener noreferrer" variant="light" icon={<WazeIcon />} style={pillStyle(0)}>
-            Waze
-          </PillButton>
-          <PillButton as="a" href={googleMapsUrl} target="_blank" rel="noopener noreferrer" variant="light" icon={<MapsIcon />} style={pillStyle(1)}>
-            Google Maps
-          </PillButton>
-          <PillButton as="a" href={calendarUrl} target="_blank" rel="noopener noreferrer" variant="dark" style={pillStyle(2)}>
-            Add to Calendar
-          </PillButton>
+        <div className={styles.heroCardContent}>
+          <div className={styles.cardFrame}>
+            <div className={styles.cardBox}>
+              <Image
+                src="/invitation-card-blank.png"
+                alt=""
+                fill
+                sizes="(max-width: 700px) 104vw, 560px"
+                className={styles.cardImage}
+                priority
+              />
+
+              <div className={styles.cardType}>
+                {/* <p className={styles.cardArabic} style={fadeUp(revealed)}>
+                  السلام عليكم ورحمة الله وبركاته
+                </p> */}
+
+                <div className={styles.cardParents} style={{ ...fadeUp(revealed), transitionDelay: '0.15s' }}>
+                  <p>Ismail bin Tawnie</p>
+                  <p>Nor Raba&rsquo;ah binti Zakaria</p>
+                  <p className={styles.cardDan}>dan</p>
+                  <p>Haji Zainol Hisham bin Osman</p>
+                  <p>Zahariyah binti Yeop</p>
+                </div>
+
+                <p className={styles.cardInvite} style={{ ...fadeUp(revealed), transitionDelay: '0.3s' }}>
+                  dengan penuh kesyukuran menjemput<br />
+                  Tan Sri / Puan Sri / Dato&rsquo; Seri / Datin Seri /<br />
+                  Dato&rsquo; / Datin / Tuan / Puan dan pasangan<br />
+                  hadir ke majlis perkahwinan anakanda kami
+                </p>
+
+                <h1 className={styles.cardCouple} style={{ ...fadeUp(revealed), transitionDelay: '0.45s' }}>
+                  Anis Sufea <br></br><span className={styles.coupleDan}>dan</span><br></br> Zafran Akmal
+                </h1>
+
+                <p className={styles.cardDetails} style={{ ...fadeUp(revealed), transitionDelay: '0.45s' }}>
+                  Sabtu, 31 Oktober 2026<br />
+                  7.00 PM &ndash; 11.00 PM<br />
+                  Grand Ballroom,<br />
+                  BoraOmbak Putrajaya
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.ctaRow}>
+            <PillButton as="a" href={wazeUrl} target="_blank" rel="noopener noreferrer" variant="light" icon={<WazeIcon />} style={pillStyle(0)}>
+              Waze
+            </PillButton>
+            <PillButton as="a" href={googleMapsUrl} target="_blank" rel="noopener noreferrer" variant="light" icon={<MapsIcon />} style={pillStyle(1)}>
+              Google Maps
+            </PillButton>
+            <PillButton as="a" href={calendarUrl} target="_blank" rel="noopener noreferrer" variant="dark" style={pillStyle(2)}>
+              Add to Calendar
+            </PillButton>
+          </div>
         </div>
       </div>
 
@@ -254,7 +320,7 @@ export default function InvitationContent({ revealed }: InvitationContentProps) 
       <div id="rsvp" className={styles.screenSection}>
         <div style={fadeUp(sectionsIn.rsvp)} className={styles.cardWrap}>
           <ScallopCard variant="rect" tone="cream">
-            <Countdown target="2026-10-31T19:00:00" style={{ margin: '1rem 1.5rem' }} />
+            <Countdown target="2026-10-31T19:00:00" style={{ margin: '1rem 1.5rem'}} />
             <h2 style={{ ...scriptHeading, margin: '1rem 1.5rem 1rem 1.5rem' }}>Save your seat!</h2>
 
             {rsvpSubmitted ? (

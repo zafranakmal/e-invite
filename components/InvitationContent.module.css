@@ -98,15 +98,15 @@
   flex: 1 1 0;
   min-height: 0;
   container-type: size;
+  padding-bottom: 0;
 }
 
 .cardBox {
   position: relative;
   aspect-ratio: 1409 / 2000;
-  width: calc(180cqw * 1409 / 2000);
-  /* width: min(102cqw, 118vw, calc(110cqh * 1409 / 2000), 950px); */
+  width: min(100cqw, calc(100cqh * 1409 / 2000), 570px);
   overflow: hidden;
-  margin-bottom: 5vh;
+  margin-bottom: vh;
 }
 
 /* Resize the actual card artwork independently of .cardBox's own box --
@@ -146,7 +146,7 @@
   font-family: var(--font-body);
   text-transform: uppercase;
   letter-spacing: 0.03em;
-  font-size: clamp(0.65rem, 5cqw, 2rem);
+  font-size: clamp(0.3rem, 5cqw, 2rem);
   line-height: 1.1;
   color: var(--c-ink);
   margin-top: 7vh;
@@ -160,14 +160,14 @@
 
 .cardInvite {
   font-family: var(--font-body);
-  font-size: clamp(0.65rem, 5cqw, 2rem);
+  font-size: clamp(0.3rem, 5cqw, 2rem);
   line-height: 1.1;
   color: var(--c-ink-2);
 }
 
 .cardCouple {
   font-family: 'Pinyon Script', cursive;
-  font-size: clamp(0.65rem, 12cqw, 4rem);
+  font-size: clamp(0.3rem, 12cqw, 4rem);
   color: var(--c-gold);
   line-height: 0.7;
   margin: 0.15em 0;
@@ -181,7 +181,7 @@
 
 .cardDetails {
   font-family: var(--font-body);
-  font-size: clamp(0.65rem, 4cqw, 2rem);
+  font-size: clamp(0.3rem, 4cqw, 2rem);
   line-height: 1.2;
   color: var(--c-ink);
   margin-top: em;
@@ -201,7 +201,7 @@
   justify-content: center;
   flex-shrink: 0;
   padding: 0 1rem;
-  margin-top: 1rem;
+  margin-top: 0vh;
 }
 
 /* ── RSVP form ── */
@@ -416,6 +416,14 @@
 
   .wishesList {
     max-height: 45svh;
+  }
+}
+
+/* ── Desktop: sit the card flush on the CTA row instead of centering
+   it in the frame, so the button group doesn't float far below it. ── */
+@media (min-width: 700px) {
+  .cardFrame {
+    align-items: flex-end;
   }
 }
 

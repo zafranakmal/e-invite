@@ -11,6 +11,13 @@ function isSafeHttpUrl(value: string): boolean {
   }
 }
 
+const UPLOAD_PATH_RE = /^\/uploads\/[A-Za-z0-9_.-]+$/;
+
+// imageUrl may be an http(s) link or a path produced by our own /api/upload endpoint
+function isSafeImageUrl(value: string): boolean {
+  return UPLOAD_PATH_RE.test(value) || isSafeHttpUrl(value);
+}
+
 // POST /api/registry/ — create a registry item (admin only)
 export async function POST(req: NextRequest) {
   try {
@@ -21,16 +28,16 @@ export async function POST(req: NextRequest) {
 
     const { name, description, url, imageUrl, price } = await req.json();
 
-    if (!name?.trim() || !description?.trim() || !imageUrl?.trim() || !price) {
+    if (!name?.trim() || !imageUrl?.trim() || !price) {
       return NextResponse.json({ error: 'Missing fields.' }, { status: 400 });
     }
 
-    if ((url?.trim() && !isSafeHttpUrl(url.trim())) || !isSafeHttpUrl(imageUrl.trim())) {
-      return NextResponse.json({ error: 'url and imageUrl must be http(s) links.' }, { status: 400 });
+    if ((url?.trim() && !isSafeHttpUrl(url.trim())) || !isSafeImageUrl(imageUrl.trim())) {
+      return NextResponse.json({ error: 'url must be an http(s) link and imageUrl must be an http(s) link or an uploaded image.' }, { status: 400 });
     }
 
     const reservation = await prisma.registryItem.create({
-      data: {name: name.trim(), description: description.trim(), url: url?.trim() || '', imageUrl: imageUrl.trim(), price: price},
+      data: {name: name.trim(), description: description?.trim() || '', url: url?.trim() || '', imageUrl: imageUrl.trim(), price: price},
     });
 
     return NextResponse.json(reservation, { status: 201 });
@@ -89,17 +96,17 @@ export async function PUT(req: NextRequest) {
 
     const { id, name, description, url, imageUrl, price } = await req.json();
 
-    if (!id || !name?.trim() || !description?.trim() || !imageUrl?.trim() || !price) {
+    if (!id || !name?.trim() || !imageUrl?.trim() || !price) {
       return NextResponse.json({ error: 'Missing fields.' }, { status: 400 });
     }
 
-    if ((url?.trim() && !isSafeHttpUrl(url.trim())) || !isSafeHttpUrl(imageUrl.trim())) {
-      return NextResponse.json({ error: 'url and imageUrl must be http(s) links.' }, { status: 400 });
+    if ((url?.trim() && !isSafeHttpUrl(url.trim())) || !isSafeImageUrl(imageUrl.trim())) {
+      return NextResponse.json({ error: 'url must be an http(s) link and imageUrl must be an http(s) link or an uploaded image.' }, { status: 400 });
     }
 
     const updatedItem = await prisma.registryItem.update({
       where: { id },
-      data: { name: name.trim(), description: description.trim(), url: url?.trim() || '', imageUrl: imageUrl.trim(), price: price },
+      data: { name: name.trim(), description: description?.trim() || '', url: url?.trim() || '', imageUrl: imageUrl.trim(), price: price },
     });
 
     return NextResponse.json(updatedItem);

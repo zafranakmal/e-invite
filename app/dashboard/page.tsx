@@ -221,8 +221,8 @@ export default function DashboardPage() {
 
   const submitForm = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.name.trim() || !form.description.trim() || !form.imageUrl.trim() || form.price === '') {
-      setFormErr('Name, description, image URL and price are required.');
+    if (!form.name.trim() || !form.imageUrl.trim() || form.price === '') {
+      setFormErr('Name, image URL and price are required.');
       return;
     }
     const price = parseFloat(form.price);
@@ -682,7 +682,7 @@ export default function DashboardPage() {
                     />
                   </div>
                   <div className={`${styles.formField} ${styles.fullWidth}`}>
-                    <label className={styles.formLabel}>Description *</label>
+                    <label className={styles.formLabel}>Description (optional)</label>
                     <textarea
                       value={form.description}
                       onChange={(e) => setForm({ ...form, description: e.target.value })}
@@ -774,7 +774,7 @@ export default function DashboardPage() {
                   <tr key={item.id}>
                     <td>
                       <p className={styles.itemName}>{item.name}</p>
-                      <p className={styles.itemDesc}>{item.description}</p>
+                      {item.description && <p className={styles.itemDesc}>{item.description}</p>}
                     </td>
                     <td className={styles.mono}>
                       {item.price === 0 ? 'Open' : `RM ${item.price.toLocaleString()}`}

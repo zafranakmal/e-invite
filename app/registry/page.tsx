@@ -194,7 +194,7 @@ export default function RegistryPage() {
                 <img src={item.imageUrl} alt={item.name} width={38} height={38} />
               </div>
               <h2 className={styles.cardTitle}>{item.name}</h2>
-              <p className={styles.cardDesc}>{item.description}</p>
+              {item.description && <p className={styles.cardDesc}>{item.description}</p>}
               <p className={styles.cardAmount}>{formatPrice(item.price)}</p>
 
               {count > 0 && (

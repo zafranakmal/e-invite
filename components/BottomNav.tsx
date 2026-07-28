@@ -105,7 +105,12 @@ export default function BottomNav({ visible }: BottomNavProps) {
     setActiveId(id);
     const el = document.getElementById(id);
     if (el) {
-      window.scrollTo({ top: el.offsetTop, behavior: 'smooth' });
+      // .invitationSection has a CSS transform (reveal animation), which makes it
+      // the offsetParent for its children -- el.offsetTop would be relative to
+      // that section instead of the document. getBoundingClientRect() is always
+      // viewport-relative, so it's unaffected by that.
+      const top = el.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({ top, behavior: 'smooth' });
     }
   };
 

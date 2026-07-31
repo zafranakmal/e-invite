@@ -66,9 +66,12 @@ export default function InvitationContent({ revealed }: InvitationContentProps) 
       <InvitationCardSection revealed={revealed} />
       <ItinerarySection style={fadeUp(sectionsIn.itinerary)} />
       <CountdownSection />
-      <RsvpSection style={fadeUp(sectionsIn.rsvp)} onWishPosted={loadWishes} />
+      {/* Elementor keeps the form and Warm Wishes on one surface — the wishes
+          block renders inside the RSVP glass card. */}
+      <RsvpSection style={fadeUp(sectionsIn.rsvp)} onWishPosted={loadWishes}>
+        <WishesSection wishes={wishes} isIn={sectionsIn.wishes} />
+      </RsvpSection>
       <GiftRegistrySection style={fadeUp(sectionsIn.gift)} />
-      <WishesSection wishes={wishes} isIn={sectionsIn.wishes} style={fadeUp(sectionsIn.wishes)} />
       <SiteFooter />
     </div>
   );

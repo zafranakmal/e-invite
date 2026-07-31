@@ -1,6 +1,6 @@
 'use client';
 
-import { CSSProperties, useState } from 'react';
+import { CSSProperties, ReactNode, useState } from 'react';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 import styles from './RsvpSection.module.css';
@@ -36,9 +36,11 @@ interface RsvpSectionProps {
   style?: CSSProperties;
   /** Called after a wish is successfully posted, so the wishes list can refresh. */
   onWishPosted?: () => void;
+  /** Rendered inside the glass card, below the form — the Warm Wishes block. */
+  children?: ReactNode;
 }
 
-export default function RsvpSection({ style, onWishPosted }: RsvpSectionProps) {
+export default function RsvpSection({ style, onWishPosted, children }: RsvpSectionProps) {
   const searchParams = useSearchParams();
   const ref = searchParams.get('ref') ?? '';
 
@@ -271,6 +273,8 @@ export default function RsvpSection({ style, onWishPosted }: RsvpSectionProps) {
             )}
             {checkResult === 'not-found' && <p className={styles.checkNotFound}>No RSVP found for this number.</p>}
           </div>
+
+          {children}
         </div>
       </div>
     </section>

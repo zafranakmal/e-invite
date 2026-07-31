@@ -48,14 +48,17 @@
    treatment moves onto the inner column. */
 @media (max-width: 767px) {
   .glass {
-    max-width: 75vw;
+    max-width: 90vw;
     padding: 0;
     background: rgba(255, 255, 255, 0);
     border-color: rgba(255, 255, 255, 0.1);
   }
 
   .inner {
-    max-width: 74vw;
+    max-width: 88vw;
+    /* The desktop floor would exceed 88vw on narrow phones and push the card
+       past the viewport — the max-width governs on its own here. */
+    min-width: 0;
     margin: 0;
     background: rgba(255, 255, 255, 0.31);
     border-radius: 16px;

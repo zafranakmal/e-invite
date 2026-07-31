@@ -70,7 +70,10 @@ export default function Home() {
         </p>
       </div>
 
-      <main style={{ paddingBottom: revealed ? '64px' : 0 }}>
+      {/* No bottom padding here — it painted a strip of body background between
+          the footer and the fixed nav. SiteFooter reserves that space itself so
+          its own dark surface runs behind the nav. */}
+      <main>
         <HeroSection onReveal={handleReveal} revealed={revealed} />
         <Suspense fallback={null}>
           <InvitationContent revealed={revealed} />

@@ -6,6 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import styles from './RsvpSection.module.css';
 import PillButton from '../design/PillButton';
 import FormField from '../design/FormField';
+import GlassCard from '../design/GlassCard';
 
 const RELATION_OPTIONS = ['Core Families', 'Families', 'Friends', 'Colleagues', 'Wedding Connections'];
 
@@ -36,7 +37,7 @@ interface RsvpSectionProps {
   style?: CSSProperties;
   /** Called after a wish is successfully posted, so the wishes list can refresh. */
   onWishPosted?: () => void;
-  /** Rendered inside the glass card, below the form — the Warm Wishes block. */
+  /** Rendered as a sibling card in the same section — the Warm Wishes block. */
   children?: ReactNode;
 }
 
@@ -126,157 +127,155 @@ export default function RsvpSection({ style, onWishPosted, children }: RsvpSecti
         <Image src="/el-bg-rsvp.png" alt="" fill sizes="100vw" style={{ objectFit: 'cover', objectPosition: 'left top' }} />
       </div>
 
-      <div className={styles.glass} style={style}>
-        <div className={styles.inner}>
-          <h2 className={styles.heading}>Save your seat!</h2>
+      <GlassCard id="rsvp-card" style={style}>
+        <h2 className={styles.heading}>Save your seat!</h2>
 
-          {rsvpSubmitted ? (
-            <div className={styles.rsvpSuccess}>
-              <p>
-                Thank you, <em>{rsvpData.name || 'friend'}</em>! We look forward to seeing you.
-              </p>
-            </div>
-          ) : (
-            <form onSubmit={handleRsvpSubmit} className={styles.rsvpForm}>
-              <FormField label="Name:" htmlFor="rsvp-name" className={styles.formFieldRow} labelClassName={styles.formFieldLabel}>
-                <input
-                  id="rsvp-name"
-                  type="text"
-                  style={fieldStyle}
-                  required
-                  placeholder="Your name"
-                  value={rsvpData.name}
-                  onChange={(e) => setRsvpData({ ...rsvpData, name: e.target.value })}
-                />
-              </FormField>
-              <FormField label="Mobile No.:" htmlFor="rsvp-mobile" className={styles.formFieldRow} labelClassName={styles.formFieldLabel}>
-                <input
-                  id="rsvp-mobile"
-                  type="tel"
-                  style={fieldStyle}
-                  required
-                  placeholder="e.g. 0123456789"
-                  value={rsvpData.mobile}
-                  onChange={(e) => setRsvpData({ ...rsvpData, mobile: e.target.value })}
-                />
-              </FormField>
-              <FormField label="Will you be attending?" htmlFor="rsvp-attending" className={styles.formFieldRow} labelClassName={styles.formFieldLabel}>
-                <select
-                  id="rsvp-attending"
-                  style={fieldStyle}
-                  required
-                  value={rsvpData.attending}
-                  onChange={(e) => setRsvpData({ ...rsvpData, attending: e.target.value })}
-                >
-                  <option value="">Select...</option>
-                  <option value="yes">Yes, I will attend</option>
-                  <option value="no">Sorry, I cannot attend</option>
-                </select>
-              </FormField>
-              <FormField
-                label="Number of pax:"
-                note="(max. 2 pax per guest)"
-                align="top"
-                htmlFor="rsvp-pax"
-                className={styles.formFieldRow}
-                labelClassName={styles.formFieldLabel}
-              >
-                <select
-                  id="rsvp-pax"
-                  style={fieldStyle}
-                  value={rsvpData.pax}
-                  onChange={(e) => setRsvpData({ ...rsvpData, pax: e.target.value })}
-                >
-                  <option value="">Select...</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                </select>
-              </FormField>
-              <FormField label="Your relation to us:" htmlFor="rsvp-relation" className={styles.formFieldRow} labelClassName={styles.formFieldLabel}>
-                <select
-                  id="rsvp-relation"
-                  style={fieldStyle}
-                  value={rsvpData.relation}
-                  onChange={(e) => setRsvpData({ ...rsvpData, relation: e.target.value })}
-                >
-                  <option value="">Select... (optional)</option>
-                  {RELATION_OPTIONS.map((opt) => (
-                    <option key={opt} value={opt}>
-                      {opt}
-                    </option>
-                  ))}
-                </select>
-              </FormField>
-              <FormField label="Your wish:" align="top" htmlFor="rsvp-wish" className={styles.formFieldRow} labelClassName={styles.formFieldLabel}>
-                <textarea
-                  id="rsvp-wish"
-                  rows={4}
-                  style={textareaStyle}
-                  placeholder="Share your wishes..."
-                  value={rsvpData.wish}
-                  onChange={(e) => setRsvpData({ ...rsvpData, wish: e.target.value })}
-                />
-              </FormField>
-
-              {/* Honeypot — hidden from humans, bots will fill it */}
-              <div className={styles.honeypot} aria-hidden="true">
-                <label htmlFor="rsvp-website">Website</label>
-                <input
-                  id="rsvp-website"
-                  type="text"
-                  name="website"
-                  value={rsvpData._hp}
-                  onChange={(e) => setRsvpData({ ...rsvpData, _hp: e.target.value })}
-                  tabIndex={-1}
-                  autoComplete="off"
-                />
-              </div>
-
-              {rsvpError && <p className={styles.checkNotFound}>{rsvpError}</p>}
-              <PillButton as="button" type="submit" variant="dark" style={{ alignSelf: 'center', marginTop: '0.5rem' }} disabled={rsvpSubmitting}>
-                {rsvpSubmitting ? 'Sending…' : 'Send RSVP'}
-              </PillButton>
-            </form>
-          )}
-
-          {/* ── Check RSVP ── */}
-          <div className={styles.checkRsvp}>
-            <p className={styles.checkTitle}>Already submitted? Check your RSVP.</p>
-            <div className={styles.checkRow}>
-              <input
-                type="tel"
-                inputMode="numeric"
-                style={checkInputStyle}
-                value={checkMobile}
-                onChange={(e) => {
-                  const digits = e.target.value.replace(/\D/g, '');
-                  setCheckMobile(digits);
-                  setCheckResult(null);
-                }}
-                placeholder="Enter your mobile no."
-              />
-              <PillButton as="button" type="button" variant="outlined" onClick={handleCheckRsvp} disabled={checkLoading}>
-                {checkLoading ? '…' : 'Check'}
-              </PillButton>
-            </div>
-            {checkResult && checkResult !== 'not-found' && (
-              <div className={styles.checkSuccess}>
-                <p>Your RSVP has been received.</p>
-                {checkResult.attending ? (
-                  <p>
-                    You are attending with <strong>{checkResult.guests}</strong> {checkResult.guests === 1 ? 'guest' : 'guests'}.
-                  </p>
-                ) : (
-                  <p>You have indicated that you will not be attending.</p>
-                )}
-              </div>
-            )}
-            {checkResult === 'not-found' && <p className={styles.checkNotFound}>No RSVP found for this number.</p>}
+        {rsvpSubmitted ? (
+          <div className={styles.rsvpSuccess}>
+            <p>
+              Thank you, <em>{rsvpData.name || 'friend'}</em>! We look forward to seeing you.
+            </p>
           </div>
+        ) : (
+          <form onSubmit={handleRsvpSubmit} className={styles.rsvpForm}>
+            <FormField label="Name:" htmlFor="rsvp-name" className={styles.formFieldRow} labelClassName={styles.formFieldLabel}>
+              <input
+                id="rsvp-name"
+                type="text"
+                style={fieldStyle}
+                required
+                placeholder="Your name"
+                value={rsvpData.name}
+                onChange={(e) => setRsvpData({ ...rsvpData, name: e.target.value })}
+              />
+            </FormField>
+            <FormField label="Mobile No.:" htmlFor="rsvp-mobile" className={styles.formFieldRow} labelClassName={styles.formFieldLabel}>
+              <input
+                id="rsvp-mobile"
+                type="tel"
+                style={fieldStyle}
+                required
+                placeholder="e.g. 0123456789"
+                value={rsvpData.mobile}
+                onChange={(e) => setRsvpData({ ...rsvpData, mobile: e.target.value })}
+              />
+            </FormField>
+            <FormField label="Will you be attending?" htmlFor="rsvp-attending" className={styles.formFieldRow} labelClassName={styles.formFieldLabel}>
+              <select
+                id="rsvp-attending"
+                style={fieldStyle}
+                required
+                value={rsvpData.attending}
+                onChange={(e) => setRsvpData({ ...rsvpData, attending: e.target.value })}
+              >
+                <option value="">Select...</option>
+                <option value="yes">Yes, I will attend</option>
+                <option value="no">Sorry, I cannot attend</option>
+              </select>
+            </FormField>
+            <FormField
+              label="Number of pax:"
+              note="(max. 2 pax per guest)"
+              align="top"
+              htmlFor="rsvp-pax"
+              className={styles.formFieldRow}
+              labelClassName={styles.formFieldLabel}
+            >
+              <select
+                id="rsvp-pax"
+                style={fieldStyle}
+                value={rsvpData.pax}
+                onChange={(e) => setRsvpData({ ...rsvpData, pax: e.target.value })}
+              >
+                <option value="">Select...</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+              </select>
+            </FormField>
+            <FormField label="Your relation to us:" htmlFor="rsvp-relation" className={styles.formFieldRow} labelClassName={styles.formFieldLabel}>
+              <select
+                id="rsvp-relation"
+                style={fieldStyle}
+                value={rsvpData.relation}
+                onChange={(e) => setRsvpData({ ...rsvpData, relation: e.target.value })}
+              >
+                <option value="">Select... (optional)</option>
+                {RELATION_OPTIONS.map((opt) => (
+                  <option key={opt} value={opt}>
+                    {opt}
+                  </option>
+                ))}
+              </select>
+            </FormField>
+            <FormField label="Your wish:" align="top" htmlFor="rsvp-wish" className={styles.formFieldRow} labelClassName={styles.formFieldLabel}>
+              <textarea
+                id="rsvp-wish"
+                rows={4}
+                style={textareaStyle}
+                placeholder="Share your wishes..."
+                value={rsvpData.wish}
+                onChange={(e) => setRsvpData({ ...rsvpData, wish: e.target.value })}
+              />
+            </FormField>
 
-          {children}
+            {/* Honeypot — hidden from humans, bots will fill it */}
+            <div className={styles.honeypot} aria-hidden="true">
+              <label htmlFor="rsvp-website">Website</label>
+              <input
+                id="rsvp-website"
+                type="text"
+                name="website"
+                value={rsvpData._hp}
+                onChange={(e) => setRsvpData({ ...rsvpData, _hp: e.target.value })}
+                tabIndex={-1}
+                autoComplete="off"
+              />
+            </div>
+
+            {rsvpError && <p className={styles.checkNotFound}>{rsvpError}</p>}
+            <PillButton as="button" type="submit" variant="dark" style={{ alignSelf: 'center', marginTop: '0.5rem' }} disabled={rsvpSubmitting}>
+              {rsvpSubmitting ? 'Sending…' : 'Send RSVP'}
+            </PillButton>
+          </form>
+        )}
+
+        {/* ── Check RSVP ── */}
+        <div className={styles.checkRsvp}>
+          <p className={styles.checkTitle}>Already submitted? Check your RSVP.</p>
+          <div className={styles.checkRow}>
+            <input
+              type="tel"
+              inputMode="numeric"
+              style={checkInputStyle}
+              value={checkMobile}
+              onChange={(e) => {
+                const digits = e.target.value.replace(/\D/g, '');
+                setCheckMobile(digits);
+                setCheckResult(null);
+              }}
+              placeholder="Enter your mobile no."
+            />
+            <PillButton as="button" type="button" variant="outlined" onClick={handleCheckRsvp} disabled={checkLoading}>
+              {checkLoading ? '…' : 'Check'}
+            </PillButton>
+          </div>
+          {checkResult && checkResult !== 'not-found' && (
+            <div className={styles.checkSuccess}>
+              <p>Your RSVP has been received.</p>
+              {checkResult.attending ? (
+                <p>
+                  You are attending with <strong>{checkResult.guests}</strong> {checkResult.guests === 1 ? 'guest' : 'guests'}.
+                </p>
+              ) : (
+                <p>You have indicated that you will not be attending.</p>
+              )}
+            </div>
+          )}
+          {checkResult === 'not-found' && <p className={styles.checkNotFound}>No RSVP found for this number.</p>}
         </div>
-      </div>
+      </GlassCard>
+
+      {children}
     </section>
   );
 }

@@ -5,7 +5,9 @@
   flex-direction: row;
   align-items: center;
   background: var(--c-el-dark);
-  padding-block: 1rem;
+  /* The extra bottom padding runs the footer's surface behind the fixed
+     BottomNav, so no lighter band shows between the two. */
+  padding-block: 1rem calc(1rem + var(--nav-h));
 }
 
 /* Elementor: .e-8fe7b24 — width 12%, logo pinned to the column's end */

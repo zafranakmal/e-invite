@@ -72,7 +72,10 @@ export default function HeroSection({ onReveal, revealed }: HeroSectionProps) {
           flex-direction: column;
           align-items: center;
           justify-content: center;
-          padding: 2rem;
+          /* Still a full viewport tall (shrinking it would expose a band of
+             the section below), but the extra bottom padding keeps the logo
+             and CTA centred above the nav bar rather than behind it. */
+          padding: 2rem 2rem calc(2rem + var(--nav-h));
           overflow: hidden;
           box-sizing: border-box;
         }

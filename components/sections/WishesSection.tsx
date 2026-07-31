@@ -2,6 +2,7 @@
 
 import styles from './WishesSection.module.css';
 import WishCard from '../design/WishCard';
+import GlassCard from '../design/GlassCard';
 
 export type Wish = { id: string; name: string; message: string };
 
@@ -11,10 +12,11 @@ interface WishesSectionProps {
   isIn?: boolean;
 }
 
-/** Rendered inside RsvpSection's glass card — it owns no background of its own. */
+/** Its own card, sharing RsvpSection's surface — Elementor keeps both in
+    .e-20ea165-d7890c0. */
 export default function WishesSection({ wishes, isIn }: WishesSectionProps) {
   return (
-    <div id="wishes" className={styles.wishes}>
+    <GlassCard id="wishes">
       <h2 className={styles.heading}>Warm Wishes</h2>
       <p className={styles.subtitle}>From our loved ones</p>
 
@@ -42,6 +44,6 @@ export default function WishesSection({ wishes, isIn }: WishesSectionProps) {
         <br />
         Bismillahi Barakatillah
       </p>
-    </div>
+    </GlassCard>
   );
 }

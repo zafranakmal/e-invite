@@ -1,4 +1,5 @@
-/* Elementor: .e-20ea165-d7890c0 — min-height 28vh, bg cover 0% 0% over #f4eadb */
+/* Elementor: .e-20ea165-d7890c0 — min-height 28vh, bg cover 0% 0% over #f4eadb.
+   Holds two GlassCards: the RSVP form and Warm Wishes. */
 .section {
   position: relative;
   width: 100%;
@@ -16,39 +17,6 @@
   position: absolute;
   inset: 0;
   z-index: 0;
-}
-
-/* Elementor: .e-a64c36b-333640c — the css.glass card */
-.glass {
-  position: relative;
-  z-index: 1;
-  min-height: 40vh;
-  max-width: 30vw;
-  width: 100%;
-  margin: 2vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background: rgba(255, 255, 255, 0.31);
-  border-radius: 16px;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-/* Elementor: .e-a6d8fb7-fb8568a — inner column */
-.inner {
-  width: 100%;
-  max-width: 23vw;
-  min-width: 300px;
-  padding-block: 5%;
-  padding-inline: 2%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
 }
 
 /* Elementor: #ad53411 — Pinyon Script 3.2em */
@@ -71,6 +39,10 @@
   padding: 1rem;
 }
 
+/* Labels stay above the field at every width — matching Elementor's
+   .elementor-labels-above. The original form's side-by-side layout assumed a
+   440px card; inside this 23vw glass card it squeezed the selects until their
+   option text was cut off. */
 .formFieldRow {
   display: grid;
   grid-template-columns: 1fr;
@@ -139,49 +111,15 @@
   pointer-events: none;
 }
 
-/* Labels stay above the field at every width — matching Elementor's
-   .elementor-labels-above. The original form's side-by-side layout assumed a
-   440px card; inside this 23vw glass card it squeezed the selects until their
-   option text was cut off. */
-
-/* Elementor tablet breakpoint.
-   Elementor also sets max-height:10% on the inner column here — skipped, it
-   would clip the form to a sliver. */
+/* Elementor tablet breakpoint */
 @media (max-width: 1024px) {
-  .glass {
-    max-width: 70vw;
-  }
-
-  .inner {
-    max-width: 40vw;
-  }
-
   .heading {
     font-size: 2.6rem;
   }
 }
 
-/* Elementor mobile breakpoint — the outer card goes transparent and the
-   glass treatment moves onto the inner column. */
+/* Elementor mobile breakpoint */
 @media (max-width: 767px) {
-  .glass {
-    max-width: 75vw;
-    padding: 0;
-    background: rgba(255, 255, 255, 0);
-    border-color: rgba(255, 255, 255, 0.1);
-  }
-
-  .inner {
-    max-width: 74vw;
-    margin: 0;
-    background: rgba(255, 255, 255, 0.31);
-    border-radius: 16px;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-  }
-
   .heading {
     font-size: 1.9rem;
   }

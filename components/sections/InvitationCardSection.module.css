@@ -1,8 +1,9 @@
-/* Elementor: .e-279513a — min-height 100vh, bg cover from 0% 0% */
+/* Elementor: .e-279513a — min-height 100vh, bg cover from 0% 0%.
+   Held back by the nav bar's height so the CTA row never sits under it. */
 .section {
   position: relative;
   width: 100%;
-  min-height: 100svh;
+  min-height: calc(100svh - var(--nav-h));
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -32,7 +33,7 @@
 .card {
   position: relative;
   z-index: 1;
-  width: min(92vw, calc(80svh * 721 / 1024));
+  width: min(92vw, calc((80svh - var(--nav-h)) * 721 / 1024));
   aspect-ratio: 721 / 1024;
   flex-shrink: 0;
   /* Sizing container: every type size below is a share of the card's own

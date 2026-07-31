@@ -1,0 +1,67 @@
+/* Elementor: .e-a64c36b-333640c — the "css.glass" card used by both the RSVP
+   form and the Warm Wishes block in .e-20ea165-d7890c0 */
+.glass {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 30vw;
+  margin: 2vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.31);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Elementor: .e-a6d8fb7-fb8568a — inner column */
+.inner {
+  width: 100%;
+  max-width: 23vw;
+  min-width: 300px;
+  padding-block: 5%;
+  padding-inline: 2%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Elementor tablet breakpoint.
+   Elementor also sets max-height:10% on the inner column — skipped, it would
+   clip the card to a sliver. */
+@media (max-width: 1024px) {
+  .glass {
+    max-width: 70vw;
+  }
+
+  .inner {
+    max-width: 40vw;
+  }
+}
+
+/* Elementor mobile breakpoint — the outer card goes transparent and the glass
+   treatment moves onto the inner column. */
+@media (max-width: 767px) {
+  .glass {
+    max-width: 75vw;
+    padding: 0;
+    background: rgba(255, 255, 255, 0);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .inner {
+    max-width: 74vw;
+    margin: 0;
+    background: rgba(255, 255, 255, 0.31);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+}

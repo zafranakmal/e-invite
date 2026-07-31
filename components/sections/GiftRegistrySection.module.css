@@ -1,0 +1,166 @@
+/* Elementor: .e-ad766c3-4a7bb01 — min-height 28vh, bg cover 0% 0% over #f4eadb */
+.section {
+  position: relative;
+  width: 100%;
+  min-height: 28vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  padding-block: 3rem;
+  overflow: hidden;
+  background: var(--c-el-cream);
+}
+
+.bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.row {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+/* Elementor: #1fe2eea max-width 41vw */
+.registryCard {
+  width: 41vw;
+  max-width: 746px;
+  height: auto;
+}
+
+/* Elementor: #ca0380e max-width 41vw (107vw at tablet — capped here at 100vw
+   so the page never scrolls sideways) */
+.heart {
+  width: 41vw;
+  max-width: 660px;
+  height: auto;
+}
+
+/* ── Questions card: Elementor .e-dc10453-1635186, artwork as a contained
+   background with copy laid over it. Explicit width + the artwork's 730:566
+   ratio makes the box fully deterministic, and every type size below is a
+   share of that width (cqw) — so the copy scales with the doily and can
+   never spill outside it. ── */
+.questions {
+  position: relative;
+  z-index: 1;
+  width: min(30vw, 730px);
+  aspect-ratio: 730 / 566;
+  container-type: size;
+}
+
+.questionsArt {
+  object-fit: contain;
+}
+
+/* Flat inner area of the doily, inset from the scalloped border */
+.questionsType {
+  position: absolute;
+  top: 18%;
+  bottom: 18%;
+  left: 20%;
+  right: 20%;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2cqw;
+  text-align: center;
+}
+
+/* Elementor: #e658211 — Pinyon Script 2.5em */
+.questionsHeading {
+  font-family: var(--font-script);
+  font-size: 6.2cqw;
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--c-gold);
+}
+
+/* Elementor: #cf95975 — Bellefair 500 */
+.questionsSub {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 2.8cqw;
+  line-height: 1.3;
+  color: var(--c-ink-2);
+}
+
+/* Held in from the well's edges — the doily's flat area narrows towards the
+   bottom, where these two pills sit. */
+.contactList {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1.6cqw;
+  width: 86%;
+}
+
+/* Elementor: #93f96d4 / #230348b — #504534 pill, Bellefair 500.
+   Sized in cqw (not PillButton's fixed 44px) so the pair stays inside the
+   doily at every breakpoint; floored at 40px for a usable tap target. */
+.contactBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 1.4cqw 3cqw;
+  border-radius: 28px;
+  background: var(--c-el-brown);
+  color: #fff;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 2.6cqw;
+  line-height: 1.2;
+  text-decoration: none;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+  transition: background var(--dur-fast) var(--ease);
+}
+
+.contactBtn:hover {
+  background: #62553f;
+}
+
+/* Elementor tablet breakpoint */
+@media (max-width: 1024px) {
+  .registryCard {
+    width: 100vw;
+  }
+
+  .heart {
+    width: 100vw;
+  }
+
+  .questions {
+    width: min(70vw, 730px);
+  }
+}
+
+/* Elementor mobile breakpoint */
+@media (max-width: 767px) {
+  .registryCard {
+    width: 96vw;
+  }
+
+  .heart {
+    width: 95vw;
+  }
+
+  .questions {
+    width: 96vw;
+  }
+
+  .questionsType {
+    top: 15%;
+    bottom: 15%;
+    left: 17%;
+    right: 17%;
+  }
+}

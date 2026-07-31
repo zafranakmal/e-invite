@@ -1,11 +1,20 @@
 import { AnchorHTMLAttributes, ButtonHTMLAttributes, CSSProperties, ReactNode } from 'react';
 
-type Variant = 'dark' | 'light' | 'outlined';
+type Variant = 'dark' | 'light' | 'outlined' | 'brown';
 
 const VARIANTS: Record<Variant, CSSProperties> = {
   dark: { background: 'var(--c-ink)', color: 'var(--c-bg)', border: 'none' },
   light: { background: 'var(--c-white)', color: 'var(--c-ink)', border: '1px solid var(--c-line-soft)' },
   outlined: { background: 'transparent', color: 'var(--c-ink)', border: '1px solid var(--c-line)' },
+  // Elementor template pill: #504534 with a soft drop shadow, Bellefair label
+  brown: {
+    background: 'var(--c-el-brown)',
+    color: '#fff',
+    border: 'none',
+    fontFamily: 'var(--font-display)',
+    fontWeight: 500,
+    boxShadow: '0 0 10px 0 rgba(0,0,0,0.5)',
+  },
 };
 
 const baseStyle: CSSProperties = {

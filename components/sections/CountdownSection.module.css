@@ -1,0 +1,65 @@
+/* Elementor: .e-572fa5a — min-height 40vh, bg cover 0% 0% over #3c362d */
+.section {
+  position: relative;
+  width: 100%;
+  min-height: 40vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-block: 2.5rem;
+  overflow: hidden;
+  background: var(--c-el-dark);
+}
+
+.bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+/* Elementor: .e-996c64a-731939f — padding-inline 20% */
+.rail {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding-inline: 20%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Elementor: #aa4b4ef img width 41% */
+.heading {
+  width: 41%;
+  height: auto;
+}
+
+/* Elementor: #65475ba .elementor-countdown-wrapper max-width 29% */
+.clock {
+  width: 100%;
+  max-width: 29%;
+  margin-top: -1.5rem;
+}
+
+/* Elementor tablet breakpoint */
+@media (max-width: 1024px) {
+  .section {
+    min-height: 0;
+  }
+
+  .heading {
+    width: 100%;
+  }
+
+  .clock {
+    max-width: 100%;
+  }
+}
+
+/* Elementor mobile breakpoint */
+@media (max-width: 767px) {
+  .rail {
+    padding-inline: 0;
+  }
+}

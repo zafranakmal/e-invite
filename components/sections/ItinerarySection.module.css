@@ -1,0 +1,71 @@
+/* Elementor: .e-25f7539-bce45d6 — min-height 40vh, bg cover 0% 0% over #f4eadb */
+.section {
+  position: relative;
+  width: 100%;
+  min-height: 40vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-block: 3rem;
+  overflow: hidden;
+  background: var(--c-el-cream);
+}
+
+.bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Elementor: .e-eacf02b-454fdc4 / .e-0865660-536776f — padding-inline 20% */
+.rail {
+  width: 100%;
+  padding-inline: 20%;
+  display: flex;
+  justify-content: center;
+}
+
+/* Elementor: .e-89771e0-916301f — dress code pulled up under the card */
+.dressRail {
+  margin-block-start: -14vh;
+}
+
+/* Elementor: #82e4561 img width 57% */
+.itineraryCard {
+  width: 57%;
+  height: auto;
+}
+
+/* Elementor: #8998b9d img — natural width, capped by the rail */
+.dressCode {
+  width: 100%;
+  max-width: 800px;
+  height: auto;
+}
+
+/* Elementor tablet breakpoint */
+@media (max-width: 1024px) {
+  .itineraryCard {
+    width: 100%;
+  }
+
+  .dressRail {
+    margin-block-start: -8vh;
+  }
+}
+
+/* Elementor mobile breakpoint */
+@media (max-width: 767px) {
+  .rail {
+    padding-inline: 0;
+  }
+}

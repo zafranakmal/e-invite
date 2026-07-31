@@ -18,9 +18,12 @@ interface CountdownProps {
   target: string;
   pastMessage?: string;
   style?: CSSProperties;
+  className?: string;
+  /** 'elementor' matches the Elementor template: full labels, Bellefair, no colons. */
+  variant?: 'default' | 'elementor';
 }
 
-export default function Countdown({ target, pastMessage = 'The celebration has begun.', style }: CountdownProps) {
+export default function Countdown({ target, pastMessage = 'The celebration has begun.', style, className, variant = 'default' }: CountdownProps) {
   const [parts, setParts] = useState<{ days: number | string; hours: number | string; minutes: number | string; seconds: number | string; done: boolean }>({
     days: '--',
     hours: '--',
@@ -50,23 +53,25 @@ export default function Countdown({ target, pastMessage = 'The celebration has b
     );
   }
 
+  const el = variant === 'elementor';
+
   const units: Array<[keyof typeof parts, string]> = [
     ['days', 'Days'],
     ['hours', 'Hours'],
-    ['minutes', 'Mins'],
-    ['seconds', 'Secs'],
+    ['minutes', el ? 'Minutes' : 'Mins'],
+    ['seconds', el ? 'Seconds' : 'Secs'],
   ];
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 0, ...style }}>
+    <div className={className} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: el ? '1.3em' : 0, ...style }}>
       {units.map(([key, label], i) => (
         <div key={key} style={{ display: 'flex', alignItems: 'center' }}>
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 56 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: el ? 0 : 56 }}>
             <span
               style={{
-                fontFamily: 'var(--font-body)',
-                fontSize: 'clamp(2rem, 6vw, 2.6rem)',
-                color: 'var(--c-ink)',
+                fontFamily: el ? 'var(--font-display)' : 'var(--font-body)',
+                fontSize: el ? 'clamp(2.3rem, 7vw, 4rem)' : 'clamp(2rem, 6vw, 2.6rem)',
+                color: el ? 'var(--c-gold)' : 'var(--c-ink)',
                 fontVariantNumeric: 'tabular-nums',
                 letterSpacing: '0.04em',
                 lineHeight: 1,
@@ -76,17 +81,18 @@ export default function Countdown({ target, pastMessage = 'The celebration has b
             </span>
             <span
               style={{
-                fontSize: '0.58rem',
-                letterSpacing: '0.18em',
-                textTransform: 'uppercase',
-                color: 'var(--c-ink-mute)',
+                fontFamily: el ? 'var(--font-display)' : undefined,
+                fontSize: el ? '0.9rem' : '0.58rem',
+                letterSpacing: el ? '0.06em' : '0.18em',
+                textTransform: el ? 'none' : 'uppercase',
+                color: el ? 'var(--c-gold)' : 'var(--c-ink-mute)',
                 marginTop: '0.25rem',
               }}
             >
               {label}
             </span>
           </div>
-          {i < units.length - 1 && (
+          {!el && i < units.length - 1 && (
             <span
               style={{
                 fontFamily: 'var(--font-body)',

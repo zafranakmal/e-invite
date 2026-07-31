@@ -96,8 +96,11 @@ export default function HeroSection({ onReveal, revealed }: HeroSectionProps) {
           gap: 1.5rem;
         }
 
+        /* Elementor sizes the lockup as a % of the viewport-wide section:
+           72% at tablet-and-below, 33% on desktop. Capped at the image's
+           intrinsic 860px so it never upscales. */
         .logo-wrap {
-          width: min(360px, 78vw);
+          width: min(72vw, 860px);
           filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.15));
         }
 
@@ -132,10 +135,10 @@ export default function HeroSection({ onReveal, revealed }: HeroSectionProps) {
           cursor: default;
         }
 
-        /* PC / large screens */
-        @media (min-width: 1024px) {
+        /* Desktop — above Elementor's 1024px tablet breakpoint */
+        @media (min-width: 1025px) {
           .logo-wrap {
-            width: min(700px, 55vw);
+            width: min(33vw, 860px);
           }
 
           .reveal-btn {
@@ -147,7 +150,7 @@ export default function HeroSection({ onReveal, revealed }: HeroSectionProps) {
         /* Short viewports — e.g. ThinkPad at 150% scaling (~720px CSS height) */
         @media (max-height: 800px) {
           .logo-wrap {
-            width: min(380px, 52vh);
+            width: min(72vw, 52vh);
           }
 
           .content-group {

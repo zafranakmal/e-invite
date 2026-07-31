@@ -1,0 +1,140 @@
+/* Elementor: .e-279513a — min-height 100vh, bg cover from 0% 0% */
+.section {
+  position: relative;
+  width: 100%;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 2rem 0 3rem;
+  overflow: hidden;
+  background: var(--c-el-cream);
+}
+
+.bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.snow {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Elementor: .e-c98cc70-bb0250e — min-height 80vh, card artwork as a
+   contained background. Width is the explicit dimension here so the box can
+   never exceed either axis; height follows from the artwork's 721:1024 ratio. */
+.card {
+  position: relative;
+  z-index: 1;
+  width: min(92vw, calc(80svh * 721 / 1024));
+  aspect-ratio: 721 / 1024;
+  flex-shrink: 0;
+  /* Sizing container: every type size below is a share of the card's own
+     width (cqw), so the copy scales with the artwork and the block keeps
+     the same proportions at every breakpoint — it can never outgrow the
+     medallion. */
+  container-type: size;
+}
+
+.cardArt {
+  object-fit: contain;
+}
+
+/* Type well: inset to the flat area inside the engraved medallion border,
+   starting below the Assalamualaikum calligraphy baked into the artwork. */
+.type {
+  position: absolute;
+  top: 32%;
+  bottom: 10%;
+  /* The medallion is an oval, so its flat area narrows towards the top and
+     bottom of the well — these insets clear the engraved border on the
+     widest lines (the parents' names and the couple's script). */
+  left: 19%;
+  right: 19%;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2.6cqw;
+  text-align: center;
+}
+
+.parents {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  font-size: 2.85cqw;
+  line-height: 1.28;
+  color: var(--c-ink);
+}
+
+.dan {
+  font-style: italic;
+  text-transform: none;
+}
+
+.invite {
+  font-family: var(--font-display);
+  font-size: 2.7cqw;
+  line-height: 1.32;
+  color: var(--c-ink-2);
+}
+
+/* Elementor: #3df8b8b — Pinyon Script, #583701, soft text shadow */
+.couple {
+  font-family: var(--font-script);
+  font-size: 7cqw;
+  line-height: 1.18;
+  font-weight: 400;
+  color: var(--c-gold);
+  text-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+}
+
+.details {
+  font-family: var(--font-display);
+  font-size: 2.85cqw;
+  line-height: 1.32;
+  color: var(--c-ink);
+}
+
+/* Elementor: .e-97c9902-89bd6be padding-inline 35% > .e-ef01843-b82b98b grid 3 */
+.ctaWrap {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  padding-inline: 35%;
+}
+
+.ctaGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0 0.5rem;
+}
+
+.ctaGrid > * {
+  justify-content: center;
+  white-space: nowrap;
+}
+
+/* Elementor tablet breakpoint */
+@media (max-width: 1024px) {
+  .ctaWrap {
+    padding-inline: 1rem;
+  }
+}
+
+/* Elementor mobile breakpoint — buttons stack */
+@media (max-width: 767px) {
+  .ctaGrid {
+    display: flex;
+    flex-direction: column;
+    row-gap: 1vh;
+  }
+}

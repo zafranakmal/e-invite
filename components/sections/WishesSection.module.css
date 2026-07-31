@@ -1,0 +1,93 @@
+/* Same Elementor surface as the RSVP block — both live in .e-20ea165-d7890c0 */
+.section {
+  position: relative;
+  width: 100%;
+  min-height: 28vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-block: 3rem;
+  overflow: hidden;
+  background: var(--c-el-cream);
+}
+
+.bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+/* Elementor: .e-b423017-957d637 — padding-inline 20% */
+.rail {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding-inline: 20%;
+  text-align: center;
+}
+
+/* Elementor: #aa7329c — Pinyon Script 3.2em */
+.heading {
+  font-family: var(--font-script);
+  font-size: 3.2rem;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--c-gold);
+}
+
+.subtitle {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--c-ink-3);
+  margin-bottom: 1.5rem;
+}
+
+.list {
+  max-height: 40svh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  margin-bottom: 2rem;
+  scrollbar-width: none;
+}
+
+.list::-webkit-scrollbar {
+  display: none;
+}
+
+.empty {
+  font-family: var(--font-body);
+  font-style: italic;
+  color: var(--c-ink-mute);
+  text-align: center;
+  padding: 2rem;
+}
+
+.footerText {
+  font-family: var(--font-body);
+  font-style: italic;
+  color: var(--c-ink-3);
+  line-height: var(--lh-body);
+}
+
+/* Elementor tablet breakpoint */
+@media (max-width: 1024px) {
+  .rail {
+    padding-inline: 10%;
+  }
+}
+
+/* Elementor mobile breakpoint */
+@media (max-width: 767px) {
+  .rail {
+    padding-inline: 1.5rem;
+  }
+
+  .heading {
+    font-size: 2.2rem;
+  }
+}

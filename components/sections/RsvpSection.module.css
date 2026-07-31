@@ -1,0 +1,192 @@
+/* Elementor: .e-20ea165-d7890c0 — min-height 28vh, bg cover 0% 0% over #f4eadb */
+.section {
+  position: relative;
+  width: 100%;
+  min-height: 28vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-block: 3rem;
+  overflow: hidden;
+  background: var(--c-el-cream);
+}
+
+.bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+/* Elementor: .e-a64c36b-333640c — the css.glass card */
+.glass {
+  position: relative;
+  z-index: 1;
+  min-height: 40vh;
+  max-width: 30vw;
+  width: 100%;
+  margin: 2vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.31);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Elementor: .e-a6d8fb7-fb8568a — inner column */
+.inner {
+  width: 100%;
+  max-width: 23vw;
+  min-width: 300px;
+  padding-block: 5%;
+  padding-inline: 2%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Elementor: #ad53411 — Pinyon Script 3.2em */
+.heading {
+  font-family: var(--font-script);
+  font-size: 3.2rem;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--c-gold);
+  margin-bottom: 0.5rem;
+}
+
+/* ── Form (carried over unchanged from the original InvitationContent) ── */
+.rsvpForm {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  text-align: left;
+  padding: 1rem;
+}
+
+.formFieldRow {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.25rem;
+}
+
+.formFieldLabel {
+  text-align: left;
+}
+
+.rsvpSuccess {
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 12px;
+  padding: 1.5rem;
+  font-family: var(--font-body);
+  font-style: italic;
+  color: var(--c-ink);
+}
+
+.checkRsvp {
+  width: 100%;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--c-line-soft);
+}
+
+.checkTitle {
+  font-family: var(--font-body);
+  font-style: italic;
+  color: var(--c-ink-3);
+  margin-bottom: 0.9rem;
+}
+
+.checkRow {
+  display: flex;
+  gap: 0.6rem;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.checkSuccess {
+  font-family: var(--font-body);
+  font-style: italic;
+  color: var(--c-ok);
+  margin-top: 0.75rem;
+}
+
+.checkNotFound {
+  font-family: var(--font-body);
+  font-style: italic;
+  color: var(--c-err);
+  margin-top: 0.75rem;
+}
+
+/* Honeypot — keep bots away */
+.honeypot {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Labels stay above the field at every width — matching Elementor's
+   .elementor-labels-above. The original form's side-by-side layout assumed a
+   440px card; inside this 23vw glass card it squeezed the selects until their
+   option text was cut off. */
+
+/* Elementor tablet breakpoint.
+   Elementor also sets max-height:10% on the inner column here — skipped, it
+   would clip the form to a sliver. */
+@media (max-width: 1024px) {
+  .glass {
+    max-width: 70vw;
+  }
+
+  .inner {
+    max-width: 40vw;
+  }
+
+  .heading {
+    font-size: 2.6rem;
+  }
+}
+
+/* Elementor mobile breakpoint — the outer card goes transparent and the
+   glass treatment moves onto the inner column. */
+@media (max-width: 767px) {
+  .glass {
+    max-width: 75vw;
+    padding: 0;
+    background: rgba(255, 255, 255, 0);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .inner {
+    max-width: 74vw;
+    margin: 0;
+    background: rgba(255, 255, 255, 0.31);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  .heading {
+    font-size: 1.9rem;
+  }
+
+  .rsvpForm {
+    padding: 0.5rem;
+  }
+}

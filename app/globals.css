@@ -26,10 +26,17 @@
   --c-ok: #5a7a4a;
   --c-err: #9a5a4a;
 
+  /* Elementor template palette (staging.anissufea…, Elementor #7) */
+  --c-el-brown: #504534;   /* pill buttons */
+  --c-el-dark: #3c362d;    /* countdown + footer surface */
+  --c-el-cream: #f4eadb;   /* section fallback behind bg images */
+
   /* Fonts */
   --font-script: 'Pinyon Script', cursive;
   --font-body: 'Cormorant Garamond', serif;
   --font-arabic: 'Amiri', serif;
+  --font-display: 'Bellefair', serif;   /* Elementor body/label face */
+  --font-credit: 'Belleza', sans-serif; /* Elementor footer credit */
 
   --t-script-xl: clamp(2.75rem, 11vw, 4.25rem);
   --t-script-lg: clamp(2rem, 8vw, 3rem);

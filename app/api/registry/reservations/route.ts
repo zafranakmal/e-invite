@@ -20,42 +20,42 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // 1️⃣ Check if item exists
-    const item = await prisma.registryItem.findUnique({
-      where: { id: itemId },
-      include: { reservation: true }
-    })
+    // A gift takes up to maxReservations guests. Counting and inserting in one
+    // transaction keeps two guests submitting at once from overshooting the cap.
+    const result = await prisma.$transaction(async (tx) => {
+      const item = await tx.registryItem.findUnique({
+        where: { id: itemId },
+        select: { id: true, maxReservations: true },
+      })
 
-    if (!item) {
-      return NextResponse.json(
-        { error: 'Item not found.' },
-        { status: 404 }
-      )
-    }
+      if (!item) return { status: 404 as const, error: 'Item not found.' }
 
-    // 2️⃣ Check if already reserved
-    if (item.reservation || item.reserved) {
-      return NextResponse.json(
-        { error: 'Item already reserved.' },
-        { status: 409 }
-      )
-    }
-
-    // 3️⃣ Create reservation
-    const reservation = await prisma.reservation.create({
-      data: {
-        name: name.trim(),
-        mobile: mobile.trim(),
-        itemId
+      const taken = await tx.reservation.count({ where: { itemId } })
+      if (taken >= item.maxReservations) {
+        return { status: 409 as const, error: 'This gift is fully reserved.' }
       }
+
+      const reservation = await tx.reservation.create({
+        data: {
+          name: name.trim(),
+          mobile: mobile.trim(),
+          itemId
+        }
+      })
+
+      await tx.registryItem.update({
+        where: { id: itemId },
+        data: { reserved: taken + 1 >= item.maxReservations }
+      })
+
+      return { status: 201 as const, reservation }
     })
 
-    await prisma.registryItem.update({
-      where: { id: itemId },
-      data: { reserved: true }
-    })
+    if (result.status !== 201) {
+      return NextResponse.json({ error: result.error }, { status: result.status })
+    }
 
-    return NextResponse.json(reservation, { status: 201 })
+    return NextResponse.json(result.reservation, { status: 201 })
 
   } catch (error) {
     console.error('Reservation POST error:', error)
@@ -66,7 +66,8 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// DELETE /api/registry/reservations — admin: clear a reservation by itemId
+// DELETE /api/registry/reservations — admin: clear reservations.
+// { reservationId } drops one guest; { itemId } drops every guest on that gift.
 export async function DELETE(req: NextRequest) {
   try {
     const session = await auth.api.getSession({ headers: req.headers });
@@ -74,13 +75,38 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized.' }, { status: 401 });
     }
 
-    const { itemId } = await req.json();
-    if (!itemId) return NextResponse.json({ error: 'Provide itemId.' }, { status: 400 });
+    const { itemId, reservationId } = await req.json();
+    if (!itemId && !reservationId) {
+      return NextResponse.json({ error: 'Provide itemId or reservationId.' }, { status: 400 });
+    }
 
-    await prisma.reservation.deleteMany({ where: { itemId } });
-    await prisma.registryItem.update({
-      where: { id: itemId },
-      data: { reserved: false },
+    await prisma.$transaction(async (tx) => {
+      let targetItemId = itemId;
+
+      if (reservationId) {
+        const existing = await tx.reservation.findUnique({
+          where: { id: reservationId },
+          select: { itemId: true },
+        });
+        if (!existing) return;
+        targetItemId = existing.itemId;
+        await tx.reservation.delete({ where: { id: reservationId } });
+      } else {
+        await tx.reservation.deleteMany({ where: { itemId } });
+      }
+
+      // Freeing a slot can reopen an item that was full.
+      const item = await tx.registryItem.findUnique({
+        where: { id: targetItemId },
+        select: { maxReservations: true },
+      });
+      if (!item) return;
+
+      const taken = await tx.reservation.count({ where: { itemId: targetItemId } });
+      await tx.registryItem.update({
+        where: { id: targetItemId },
+        data: { reserved: taken >= item.maxReservations },
+      });
     });
 
     return NextResponse.json({ ok: true });

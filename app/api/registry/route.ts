@@ -18,6 +18,14 @@ function isSafeImageUrl(value: string): boolean {
   return UPLOAD_PATH_RE.test(value) || isSafeHttpUrl(value);
 }
 
+// How many guests may reserve one gift. Absent means 1 — the old behaviour.
+function parseMaxReservations(value: unknown): number | null {
+  if (value === undefined || value === null || value === '') return 1;
+  const n = Number(value);
+  if (!Number.isInteger(n) || n < 1) return null;
+  return n;
+}
+
 // POST /api/registry/ — create a registry item (admin only)
 export async function POST(req: NextRequest) {
   try {
@@ -26,7 +34,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized.' }, { status: 401 });
     }
 
-    const { name, description, url, imageUrl, price } = await req.json();
+    const { name, description, url, imageUrl, price, maxReservations } = await req.json();
 
     if (!name?.trim() || !imageUrl?.trim() || !price) {
       return NextResponse.json({ error: 'Missing fields.' }, { status: 400 });
@@ -36,8 +44,13 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'url must be an http(s) link and imageUrl must be an http(s) link or an uploaded image.' }, { status: 400 });
     }
 
+    const max = parseMaxReservations(maxReservations);
+    if (max === null) {
+      return NextResponse.json({ error: 'maxReservations must be a whole number of 1 or more.' }, { status: 400 });
+    }
+
     const reservation = await prisma.registryItem.create({
-      data: {name: name.trim(), description: description?.trim() || '', url: url?.trim() || '', imageUrl: imageUrl.trim(), price: price},
+      data: {name: name.trim(), description: description?.trim() || '', url: url?.trim() || '', imageUrl: imageUrl.trim(), price: price, maxReservations: max},
     });
 
     return NextResponse.json(reservation, { status: 201 });
@@ -48,16 +61,26 @@ export async function POST(req: NextRequest) {
 }
 
 // GET /api/registry/
-// Public: returns items without reservation details
-// Admin (session): returns items including who reserved each
+// Public: returns items with a reservedCount only — never who reserved them
+// Admin (session): returns items including every reserver
 export async function GET(req: NextRequest) {
   try {
     const session = await auth.api.getSession({ headers: req.headers });
+
     const items = await prisma.registryItem.findMany({
       orderBy: { createdAt: 'asc' },
-      ...(session ? { include: { reservation: { select: { name: true, mobile: true } } } } : {}),
+      include: {
+        _count: { select: { reservations: true } },
+        ...(session
+          ? { reservations: { select: { id: true, name: true, mobile: true, createdAt: true }, orderBy: { createdAt: 'asc' as const } } }
+          : {}),
+      },
     });
-    return NextResponse.json(items);
+
+    // _count is an implementation detail — hand callers a plain reservedCount.
+    return NextResponse.json(
+      items.map(({ _count, ...item }) => ({ ...item, reservedCount: _count.reservations })),
+    );
   } catch {
     return NextResponse.json({ error: 'Server error.' }, { status: 500 });
   }
@@ -94,7 +117,7 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized.' }, { status: 401 });
     }
 
-    const { id, name, description, url, imageUrl, price } = await req.json();
+    const { id, name, description, url, imageUrl, price, maxReservations } = await req.json();
 
     if (!id || !name?.trim() || !imageUrl?.trim() || !price) {
       return NextResponse.json({ error: 'Missing fields.' }, { status: 400 });
@@ -104,9 +127,20 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ error: 'url must be an http(s) link and imageUrl must be an http(s) link or an uploaded image.' }, { status: 400 });
     }
 
-    const updatedItem = await prisma.registryItem.update({
-      where: { id },
-      data: { name: name.trim(), description: description?.trim() || '', url: url?.trim() || '', imageUrl: imageUrl.trim(), price: price },
+    const max = parseMaxReservations(maxReservations);
+    if (max === null) {
+      return NextResponse.json({ error: 'maxReservations must be a whole number of 1 or more.' }, { status: 400 });
+    }
+
+    const updatedItem = await prisma.$transaction(async (tx) => {
+      const item = await tx.registryItem.update({
+        where: { id },
+        data: { name: name.trim(), description: description?.trim() || '', url: url?.trim() || '', imageUrl: imageUrl.trim(), price: price, maxReservations: max },
+      });
+
+      // Raising or lowering the cap can flip the item between full and open.
+      const taken = await tx.reservation.count({ where: { itemId: id } });
+      return tx.registryItem.update({ where: { id }, data: { reserved: taken >= item.maxReservations } });
     });
 
     return NextResponse.json(updatedItem);

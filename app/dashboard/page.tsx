@@ -34,7 +34,9 @@ type RegistryItem = {
   price: number;
   imageUrl: string;
   reserved: boolean;
-  reservation: { name: string; mobile: string } | null;
+  maxReservations: number;
+  reservedCount: number;
+  reservations: { id: string; name: string; mobile: string }[];
 };
 
 type Wish = {
@@ -44,7 +46,7 @@ type Wish = {
   createdAt: string;
 };
 
-const BLANK_FORM = { name: '', description: '', url: '', price: '', imageUrl: '' };
+const BLANK_FORM = { name: '', description: '', url: '', price: '', imageUrl: '', maxReservations: '1' };
 const TOTAL_CAPACITY = 1000;
 const PAGE_SIZE = 10;
 const WEDDING_DATE = new Date('2026-10-31T00:00:00');
@@ -186,6 +188,7 @@ export default function DashboardPage() {
       url: item.url,
       price: String(item.price),
       imageUrl: item.imageUrl,
+      maxReservations: String(item.maxReservations ?? 1),
     });
     setFormErr('');
     setImageMode('url');
@@ -230,6 +233,11 @@ export default function DashboardPage() {
       setFormErr('Enter a valid price (0 = open amount).');
       return;
     }
+    const maxReservations = parseInt(form.maxReservations, 10);
+    if (isNaN(maxReservations) || maxReservations < 1) {
+      setFormErr('Max reservations must be 1 or more.');
+      return;
+    }
     setFormBusy(true);
     try {
       const body = {
@@ -239,6 +247,7 @@ export default function DashboardPage() {
         url: form.url.trim(),
         price,
         imageUrl: form.imageUrl.trim(),
+        maxReservations,
       };
       const res = await fetch('/api/registry', {
         method: editId ? 'PUT' : 'POST',
@@ -269,17 +278,17 @@ export default function DashboardPage() {
     if (res.ok) setRegistry((prev) => prev.filter((i) => i.id !== id));
   };
 
-  const clearReservation = async (itemId: string) => {
-    if (!confirm('Clear this reservation? The item will be available again.')) return;
+  // Clears one guest's reservation, freeing a single slot on that gift.
+  const clearReservation = async (reservationId: string) => {
+    if (!confirm('Clear this reservation? The slot will be available again.')) return;
     const res = await fetch('/api/registry/reservations', {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ itemId }),
+      body: JSON.stringify({ reservationId }),
     });
     if (res.ok) {
-      setRegistry((prev) =>
-        prev.map((i) => i.id === itemId ? { ...i, reserved: false, reservation: null } : i)
-      );
+      const r = await fetch('/api/registry');
+      setRegistry(await r.json());
     }
   };
 
@@ -574,12 +583,17 @@ export default function DashboardPage() {
                           </td>
                           <td>
                             <span className={item.reserved ? styles.badgeReserved : styles.badgeOpen}>
-                              {item.reserved ? 'Reserved' : 'Available'}
+                              {item.reserved ? 'Full' : 'Available'}
                             </span>
+                            {item.maxReservations > 1 && (
+                              <span className={styles.dateCell}> {item.reservedCount}/{item.maxReservations}</span>
+                            )}
                           </td>
                           <td>
-                            {item.reservation ? (
-                              <span>{item.reservation.name} · <span className={styles.mono}>{item.reservation.mobile}</span></span>
+                            {item.reservations?.length ? (
+                              item.reservations.map((r) => (
+                                <div key={r.id}>{r.name} · <span className={styles.mono}>{r.mobile}</span></div>
+                              ))
                             ) : (
                               <span className={styles.dateCell}>—</span>
                             )}
@@ -744,6 +758,19 @@ export default function DashboardPage() {
                       placeholder="https://shopee.com/..."
                     />
                   </div>
+                  <div className={styles.formField}>
+                    <label className={styles.formLabel}>Max reservations *</label>
+                    <input
+                      type="number"
+                      min="1"
+                      step="1"
+                      value={form.maxReservations}
+                      onChange={(e) => setForm({ ...form, maxReservations: e.target.value })}
+                      className={styles.formInput}
+                      placeholder="1"
+                    />
+                    <p className={styles.itemDesc}>How many guests may reserve this gift. 1 = only one.</p>
+                  </div>
                 </div>
                 {formErr && <p className={styles.formErr}>{formErr}</p>}
                 <div className={styles.formActions}>
@@ -781,23 +808,28 @@ export default function DashboardPage() {
                     </td>
                     <td>
                       <span className={item.reserved ? styles.badgeReserved : styles.badgeOpen}>
-                        {item.reserved ? 'Reserved' : 'Available'}
+                        {item.reserved ? 'Full' : 'Available'}
                       </span>
+                      <p className={styles.itemDesc} style={{ marginTop: '0.3rem' }}>
+                        {item.reservedCount} of {item.maxReservations} reserved
+                      </p>
                     </td>
                     <td>
-                      {item.reserved && item.reservation ? (
-                        <div>
-                          <p className={styles.itemName}>{item.reservation.name}</p>
-                          <p className={styles.mono}>{item.reservation.mobile}</p>
+                      {item.reservations?.map((r) => (
+                        <div key={r.id} style={{ marginBottom: '0.6rem' }}>
+                          <p className={styles.itemName}>{r.name}</p>
+                          <p className={styles.mono}>{r.mobile}</p>
                           <button
-                            onClick={() => clearReservation(item.id)}
+                            onClick={() => clearReservation(r.id)}
                             className={styles.deleteBtn}
                             style={{ marginTop: '0.4rem' }}
                           >
                             Clear
                           </button>
                         </div>
-                      ) : assigningItemId === item.id ? (
+                      ))}
+
+                      {item.reserved && assigningItemId !== item.id ? null : assigningItemId === item.id ? (
                         <div className={styles.assignForm}>
                           <input
                             value={assignForm.name}

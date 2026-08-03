@@ -11,25 +11,29 @@ datasource db {
 
 model Reservation {
   id        String       @id @default(uuid())
-  itemId    String       @unique
+  itemId    String
   name      String
   mobile    String
   createdAt DateTime     @default(now())
   item      RegistryItem @relation(fields: [itemId], references: [id])
 
   @@index([mobile])
+  @@index([itemId])
 }
 
 model RegistryItem {
-  id          String       @id @default(uuid())
+  id          String        @id @default(uuid())
   name        String
   description String
   url         String
   price       Float
   imageUrl    String
-  reserved    Boolean      @default(false)
-  reservation Reservation?
-  createdAt   DateTime     @default(now())
+  /// How many guests may reserve this gift. Cap, not a quantity to buy.
+  maxReservations Int       @default(1)
+  /// Denormalised "no slots left" flag, kept in sync by the reservations route.
+  reserved    Boolean       @default(false)
+  reservations Reservation[]
+  createdAt   DateTime      @default(now())
 }
 
 model Rsvp {

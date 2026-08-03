@@ -44,3 +44,6 @@ next-env.d.ts
 
 # Uploaded images (local storage)
 /public/uploads
+
+# Local scratch from the Elementor migration (~56MB of source screenshots/zips)
+/TODO

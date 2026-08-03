@@ -51,13 +51,13 @@
    starting below the Assalamualaikum calligraphy baked into the artwork. */
 .type {
   position: absolute;
-  top: 32%;
+  top: 20%;
   bottom: 10%;
   /* The medallion is an oval, so its flat area narrows towards the top and
      bottom of the well — these insets clear the engraved border on the
      widest lines (the parents' names and the couple's script). */
-  left: 19%;
-  right: 19%;
+  left: 16%;
+  right: 16%;
   z-index: 1;
   display: flex;
   flex-direction: column;
@@ -84,7 +84,7 @@
 .invite {
   font-family: var(--font-display);
   font-size: 2.7cqw;
-  line-height: 1.32;
+  line-height: 1.1;
   color: var(--c-ink-2);
 }
 
@@ -101,7 +101,7 @@
 .details {
   font-family: var(--font-display);
   font-size: 2.85cqw;
-  line-height: 1.32;
+  line-height: 1.1;
   color: var(--c-ink);
 }
 

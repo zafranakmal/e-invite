@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import styles from './registry.module.css';
 
 import { useState, useEffect } from 'react';
@@ -13,13 +14,30 @@ type RegistryItem = {
   price: number;
   imageUrl: string;
   reserved: boolean;
+  /** How many guests this gift takes. */
+  maxReservations: number;
+  /** How many have reserved it so far. */
+  reservedCount: number;
 };
 
 type Reservation = { id: string; itemId: string; name: string; mobile: string };
 
-function formatPrice(price: number) {
-  return price === 0 ? 'Any amount welcome' : `RM ${price.toLocaleString()}`;
-}
+// Written with spaces for readability — the copy button strips them, so the
+// clipboard always gets the bare digits.
+const BANK_ACCOUNT = '0506 7021 3143 22';
+
+const ClipboardIcon = () => (
+  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+    <rect x="9" y="9" width="12" height="12" rx="2" />
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+  </svg>
+);
+
+const CheckIcon = () => (
+  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
+    <path d="M20 6 9 17l-5-5" />
+  </svg>
+);
 
 export default function RegistryPage() {
   const [items, setItems] = useState<RegistryItem[]>([]);
@@ -33,27 +51,36 @@ export default function RegistryPage() {
   const [checkMobile, setCheckMobile] = useState('');
   const [checkResult, setCheckResult] = useState<Reservation[] | null>(null);
   const [checking, setChecking] = useState(false);
-  const [page, setPage] = useState(0);
+  const [copied, setCopied] = useState(false);
 
-  const ITEMS_PER_PAGE = 3;
-  const totalPages = Math.ceil(items.length / ITEMS_PER_PAGE);
-  const visibleItems = items.slice(page * ITEMS_PER_PAGE, (page + 1) * ITEMS_PER_PAGE);
+  const copyAccount = async () => {
+    const digits = BANK_ACCOUNT.replace(/\s+/g, '');
+    try {
+      await navigator.clipboard.writeText(digits);
+    } catch {
+      // navigator.clipboard needs a secure context; fall back for plain http.
+      const el = document.createElement('textarea');
+      el.value = digits;
+      el.setAttribute('readonly', '');
+      el.style.position = 'fixed';
+      el.style.opacity = '0';
+      document.body.appendChild(el);
+      el.select();
+      try { document.execCommand('copy'); } catch { /* nothing more to try */ }
+      document.body.removeChild(el);
+    }
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1800);
+  };
 
-  // Fetch registry items, then load interest counts
+  // /api/registry already carries reservedCount per item, so one request does it
   useEffect(() => {
     fetch('/api/registry')
       .then((r) => r.json())
       .then((data: RegistryItem[]) => {
         setItems(data);
-        return Promise.all(
-          data.map((item) =>
-            fetch(`/api/registry/reservations?itemId=${item.id}`)
-              .then((r) => r.json())
-              .then((d) => [item.id, d.count ?? 0] as [string, number])
-          )
-        );
+        setCounts(Object.fromEntries(data.map((item) => [item.id, item.reservedCount ?? 0])));
       })
-      .then((entries) => setCounts(Object.fromEntries(entries)))
       .catch(() => {});
   }, []);
 
@@ -82,7 +109,12 @@ export default function RegistryPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ itemId, name: form.name, mobile: form.mobile }),
       });
-      if (!res.ok) throw new Error();
+      if (!res.ok) {
+        // Surfaces "This gift is fully reserved." when the last slot went to
+        // someone else while this form was open.
+        const data = await res.json().catch(() => null);
+        throw new Error(data?.error || 'Something went wrong. Please try again.');
+      }
       setMyReservedIds((prev) => [...prev, itemId]);
       setCounts((prev) => ({ ...prev, [itemId]: (prev[itemId] ?? 0) + 1 }));
       setReservingId(null);
@@ -91,8 +123,8 @@ export default function RegistryPage() {
         const el = document.getElementById('registry-payment');
         if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY, behavior: 'smooth' });
       }, 300);
-    } catch {
-      setFormError('Something went wrong. Please try again.');
+    } catch (err) {
+      setFormError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
     } finally {
       setSubmitting(false);
     }
@@ -122,12 +154,13 @@ export default function RegistryPage() {
 
       {/* ── Hero ── */}
       <section className={styles.hero}>
-        <p className={styles.monogram}>A &amp; Z</p>
+        {/* The footer monogram is a white PNG — masked here so it takes the
+            page's ink colour instead of vanishing into the light background. */}
+        <div className={styles.monogram} role="img" aria-label="Anis &amp; Zafran" />
         <h1 className={styles.heading}>Gift Registry</h1>
         <p className={styles.sub}>
-          Your presence at our celebration is the greatest gift of all.
-          For those who wish to bless our new beginning, here are a few ideas close to our hearts.
-        </p>
+          Your presence at our wedding is the greatest gift of all! If you'd like to give a gift, feel free to use this registry as a guide — it just helps us avoid ending up with duplicates of the same item. Feel free to be creative and get anything you think we’d love too! In any case, we truly appreciate the thought and love.<br></br><br></br>p/s: Don’t be shy and do text either of us if you need our mailing address! 
+          </p>
       </section>
 
       {/* ── Check my reservation ── */}
@@ -168,7 +201,6 @@ export default function RegistryPage() {
                       <li key={i} className={styles.checkListItem}>
                         <span className={styles.checkTick}>✓</span>
                         {item?.name}
-                        <span className={styles.checkAmt}>{item ? formatPrice(item.price) : ''}</span>
                       </li>
                     );
                   })}
@@ -179,112 +211,96 @@ export default function RegistryPage() {
         )}
       </div>
 
-      {/* ── Registry items grid ── */}
+      {/* ── Registry items grid — every item at once, no paging ── */}
       <section className={styles.gridWrap}>
         <div className={styles.grid}>
-        {visibleItems.map((item) => {
+        {items.map((item) => {
           const count = getCount(item.id);
+          const capacity = item.maxReservations ?? 1;
+          const spotsLeft = Math.max(capacity - count, 0);
           const isMine = myReservedIds.includes(item.id);
+          const isFull = spotsLeft === 0;
           const isReservingThis = reservingId === item.id;
 
           return (
-            <div key={item.id} className={`${styles.card}${isMine ? ' ' + styles.cardReserved : ''}`}>
-              <div className={styles.cardIcon}>
+            <article key={item.id} className={`${styles.card}${isMine ? ' ' + styles.cardReserved : ''}`}>
+              <div className={styles.cardMedia}>
+                {/* cardMedia is a fixed viewport; the image covers it, so mixed
+                    source ratios don't make the grid ragged. */}
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={item.imageUrl} alt={item.name} width={38} height={38} />
+                <img src={item.imageUrl} alt={item.name} className={styles.cardImg} />
               </div>
-              <h2 className={styles.cardTitle}>{item.name}</h2>
-              {item.description && <p className={styles.cardDesc}>{item.description}</p>}
-              <p className={styles.cardAmount}>{formatPrice(item.price)}</p>
 
-              {count > 0 && (
-                <p className={styles.interestCount}>
-                  {count} {count === 1 ? 'person' : 'people'} interested
-                </p>
-              )}
+              <div className={styles.cardBody}>
+                <h2 className={styles.cardTitle}>{item.name}</h2>
+                {/* title carries the full text — the desktop card clamps it to
+                    three lines to keep the uniform card height down. */}
+                {item.description && (
+                  <p className={styles.cardDesc} title={item.description}>{item.description}</p>
+                )}
 
-              {isMine ? (
-                <p className={styles.reservedBadge}>Reserved by you ✓</p>
-              ) : item.reserved ? (
-                <button disabled className={styles.reservedBtn}>Reserved</button>
-              ) : isReservingThis ? (
-                <div className={styles.reserveForm}>
-                  <input
-                    type="text"
-                    placeholder="Your name"
-                    value={form.name}
-                    onChange={(e) => setForm({ ...form, name: e.target.value })}
-                    className={styles.reserveInput}
-                  />
-                  <input
-                    type="tel"
-                    placeholder="Mobile no."
-                    value={form.mobile}
-                    onChange={(e) => setForm({ ...form, mobile: e.target.value })}
-                    className={styles.reserveInput}
-                  />
-                  {formError && <p className={styles.reserveError}>{formError}</p>}
-                  <div className={styles.reserveActions}>
-                    <button onClick={() => handleReserve(item.id)} className={styles.cardBtn} disabled={submitting}>
-                      {submitting ? '…' : 'Confirm'}
-                    </button>
-                    <button onClick={cancelReserving} className={styles.cancelBtn}>
-                      Cancel
+                {capacity > 1 ? (
+                  <p className={styles.interestCount}>
+                    {count} of {capacity} reserved
+                    {!isFull && ` · ${spotsLeft} left`}
+                  </p>
+                ) : count > 0 && (
+                  <p className={styles.interestCount}>
+                    {count} {count === 1 ? 'person' : 'people'} interested
+                  </p>
+                )}
+
+                {isMine ? (
+                  <p className={styles.reservedBadge}>Reserved by you ✓</p>
+                ) : isFull ? (
+                  <button disabled className={styles.reservedBtn}>Fully reserved</button>
+                ) : isReservingThis ? (
+                  <div className={styles.reserveForm}>
+                    <input
+                      type="text"
+                      placeholder="Your name"
+                      value={form.name}
+                      onChange={(e) => setForm({ ...form, name: e.target.value })}
+                      className={styles.reserveInput}
+                    />
+                    <input
+                      type="tel"
+                      placeholder="Mobile no."
+                      value={form.mobile}
+                      onChange={(e) => setForm({ ...form, mobile: e.target.value })}
+                      className={styles.reserveInput}
+                    />
+                    {formError && <p className={styles.reserveError}>{formError}</p>}
+                    <div className={styles.reserveActions}>
+                      <button onClick={() => handleReserve(item.id)} className={styles.cardBtn} disabled={submitting}>
+                        {submitting ? '…' : 'Confirm'}
+                      </button>
+                      <button onClick={cancelReserving} className={styles.cancelBtn}>
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className={styles.cardActions}>
+                    {item.url && (
+                      <a
+                        href={item.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={styles.viewItemLink}
+                      >
+                        View item →
+                      </a>
+                    )}
+                    <button onClick={() => startReserving(item.id)} className={styles.cardBtn}>
+                      Reserve this gift
                     </button>
                   </div>
-                </div>
-              ) : (
-                <div className={styles.cardActions}>
-                  <button onClick={() => startReserving(item.id)} className={styles.cardBtn}>
-                    Reserve this gift
-                  </button>
-                  {item.url && (
-                    <a
-                      href={item.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={styles.viewItemLink}
-                    >
-                      View item →
-                    </a>
-                  )}
-                </div>
-              )}
-            </div>
+                )}
+              </div>
+            </article>
           );
         })}
-        </div>
-
-        {/* ── Pagination nav ── */}
-        <div className={styles.pageNav}>
-          <button
-            className={styles.pageArrow}
-            onClick={() => { setPage(p => p - 1); setReservingId(null); }}
-            disabled={page === 0}
-            aria-label="Previous page"
-          >
-            ←
-          </button>
-
-          <div className={styles.pageDots}>
-            {Array.from({ length: totalPages }).map((_, i) => (
-              <button
-                key={i}
-                className={`${styles.pageDot}${i === page ? ' ' + styles.pageDotActive : ''}`}
-                onClick={() => { setPage(i); setReservingId(null); }}
-                aria-label={`Page ${i + 1}`}
-              />
-            ))}
-          </div>
-
-          <button
-            className={styles.pageArrow}
-            onClick={() => { setPage(p => p + 1); setReservingId(null); }}
-            disabled={page === totalPages - 1}
-            aria-label="Next page"
-          >
-            →
-          </button>
         </div>
       </section>
 
@@ -300,23 +316,21 @@ export default function RegistryPage() {
           <div className={styles.paymentCard}>
             <p className={styles.paymentCardLabel}>Scan via DuitNow</p>
             <div className={styles.qrFrame}>
-              <svg viewBox="0 0 120 120" width="160" height="160">
-                <rect x="5" y="5" width="50" height="50" rx="4" fill="none" stroke="#2c2218" strokeWidth="3" />
-                <rect x="15" y="15" width="30" height="30" rx="2" fill="#2c2218" />
-                <rect x="65" y="5" width="50" height="50" rx="4" fill="none" stroke="#2c2218" strokeWidth="3" />
-                <rect x="75" y="15" width="30" height="30" rx="2" fill="#2c2218" />
-                <rect x="5" y="65" width="50" height="50" rx="4" fill="none" stroke="#2c2218" strokeWidth="3" />
-                <rect x="15" y="75" width="30" height="30" rx="2" fill="#2c2218" />
-                <rect x="65" y="65" width="12" height="12" fill="#2c2218" />
-                <rect x="82" y="65" width="12" height="12" fill="#2c2218" />
-                <rect x="99" y="65" width="16" height="12" fill="#2c2218" />
-                <rect x="65" y="82" width="12" height="12" fill="#2c2218" />
-                <rect x="82" y="82" width="28" height="12" fill="#2c2218" />
-                <rect x="65" y="99" width="28" height="16" fill="#2c2218" />
-                <rect x="98" y="99" width="17" height="16" fill="#2c2218" />
-              </svg>
+              <Image
+                src="/anis-qr.png"
+                alt="DuitNow QR code for Bank Islam"
+                width={1200}
+                height={1200}
+                className={styles.qrImg}
+                sizes="(min-width: 1280px) 180px, 160px"
+              />
             </div>
-            <p className={styles.paymentName}>Zafran Akmal bin Zainol Hisham</p>
+            <p className={styles.paymentName}>Cik Anis Sufea Binti Ismail</p>
+            {/* Same-origin, so `download` sets the saved filename rather than
+                opening the image in a tab. */}
+            <a href="/qr-bank-download.jpeg" download className={styles.qrDownload}>
+              Download QR
+            </a>
           </div>
 
           {/* Bank transfer */}
@@ -325,15 +339,24 @@ export default function RegistryPage() {
             <div className={styles.bankDetails}>
               <div className={styles.bankRow}>
                 <span className={styles.bankRowLabel}>Bank</span>
-                <span className={styles.bankRowValue}>Maybank</span>
+                <span className={styles.bankRowValue}>Bank Islam</span>
               </div>
               <div className={styles.bankRow}>
                 <span className={styles.bankRowLabel}>Account</span>
-                <span className={styles.bankRowValue}>1234 5678 9012</span>
+                <span className={styles.bankRowValue}>{BANK_ACCOUNT}</span>
+                <button
+                  type="button"
+                  onClick={copyAccount}
+                  className={styles.copyBtn}
+                  aria-label={copied ? 'Account number copied' : 'Copy account number'}
+                  title="Copy account number"
+                >
+                  {copied ? <CheckIcon /> : <ClipboardIcon />}
+                </button>
               </div>
               <div className={styles.bankRow}>
                 <span className={styles.bankRowLabel}>Name</span>
-                <span className={styles.bankRowValue}>Zafran Akmal bin Zainol Hisham</span>
+                <span className={styles.bankRowValue}>Cik Anis Sufea Binti Ismail</span>
               </div>
             </div>
           </div>

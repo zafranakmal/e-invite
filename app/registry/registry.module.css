@@ -1,7 +1,21 @@
 .page {
+  position: relative;
   min-height: 100svh;
   background: #f0e8dc;
   color: #2c2218;
+  /* Own stacking context, so the fixed backdrop below sits above .page's own
+     background but still behind every child. */
+  isolation: isolate;
+}
+
+/* The gift-registry section's floral, pinned to the viewport. The glass cards
+   need something behind them to actually blur. */
+.page::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: url('/el-bg-registry.jpg') center / cover no-repeat;
 }
 
 /* ── Top bar ── */
@@ -30,13 +44,15 @@
   border-bottom: 1px solid #d4c4b4;
 }
 
+/* The A&Z lockup shared with the site footer. That PNG is solid white, so it
+   is used as a mask and filled with ink rather than drawn directly. */
 .monogram {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 0.85rem;
-  font-style: italic;
-  letter-spacing: 0.25em;
-  color: #9a8070;
-  margin-bottom: 0.5rem;
+  width: clamp(4.5rem, 14vw, 6.5rem);
+  aspect-ratio: 1;
+  margin: 0 auto 0.35rem;
+  background-color: #2c2218;
+  -webkit-mask: url('/el-footer-logo.png') center / contain no-repeat;
+  mask: url('/el-footer-logo.png') center / contain no-repeat;
 }
 
 .heading {
@@ -182,111 +198,77 @@
   font-size: 0.75rem;
 }
 
-.checkAmt {
-  margin-left: auto;
-  color: #7a6a5a;
-  font-size: 0.78rem;
-}
-
-/* ── Items grid ── */
+/* ── Items grid — the full registry, one column on phones ── */
 .gridWrap {
-  max-width: 960px;
+  /* Wider cards let long descriptions wrap in fewer lines, which lowers the
+     uniform card height every card is pinned to. */
+  max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem 1.25rem 1rem;
+  padding: 2rem 1.25rem 2.5rem;
 }
 
 .grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 1rem;
+  /* On phones each card hugs its own content — one tall image shouldn't stretch
+     every card below it. Desktop overrides this to a uniform height. */
+  align-items: start;
 }
 
-/* ── Pagination ── */
-.pageNav {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1.25rem;
-  padding: 1.5rem 0 2rem;
-}
-
-.pageArrow {
-  background: none;
-  border: 1px solid #b5a090;
-  border-radius: 50%;
-  width: 2.1rem;
-  height: 2.1rem;
-  font-size: 0.95rem;
-  color: #7a6a5a;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.2s, color 0.2s, border-color 0.2s;
-  line-height: 1;
-}
-
-.pageArrow:hover:not(:disabled) {
-  background: #2c2218;
-  color: #f0e8dc;
-  border-color: #2c2218;
-}
-
-.pageArrow:disabled {
-  opacity: 0.3;
-  cursor: default;
-}
-
-.pageDots {
-  display: flex;
-  gap: 0.55rem;
-  align-items: center;
-}
-
-.pageDot {
-  width: 0.45rem;
-  height: 0.45rem;
-  border-radius: 50%;
-  background: #c8b8a8;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  transition: background 0.2s, transform 0.2s;
-}
-
-.pageDotActive {
-  background: #2c2218;
-  transform: scale(1.4);
-}
-
+/* Glass card, split 40:60 — art on the left, everything else on the right. */
 .card {
-  background: rgba(255, 255, 255, 0.45);
-  border: 1px solid #ddd0c0;
-  border-radius: 12px;
-  padding: 1.4rem 1.2rem 1.1rem;
+  display: grid;
+  /* minmax(0, …) so a wide word or button can't push a track past its share and
+     break the 40:60 split on narrow phones. */
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  gap: 1rem;
+  /* Both columns stretch to the card's height, so the image can centre against
+     the text and the actions can be pinned to the bottom on desktop. */
+  align-items: stretch;
+  padding: 1rem;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.31);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: box-shadow 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+}
+
+.card:hover {
+  background: rgba(255, 255, 255, 0.42);
+  border-color: rgba(255, 255, 255, 0.6);
+  box-shadow: 0 6px 34px rgba(44, 34, 24, 0.14);
+}
+
+/* A fixed viewport for the art. Source images come from all over (Shopee, IKEA,
+   Harvey Norman…) at wildly different ratios, so the box is what stays constant
+   and the image covers it. align-self: start keeps the square from being
+   stretched to the row height by the card's align-items: stretch. */
+.cardMedia {
+  align-self: start;
+  aspect-ratio: 1;
+  border-radius: 10px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.cardImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.cardBody {
+  min-width: 0;
+  overflow-wrap: anywhere;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 0.3rem;
-  transition: box-shadow 0.25s ease, border-color 0.25s ease;
-}
-
-.card:hover {
-  border-color: #b5a090;
-  box-shadow: 0 4px 20px rgba(44, 34, 24, 0.08);
-}
-
-.cardIcon {
-  margin-bottom: 0.5rem;
-  opacity: 0.75;
-}
-
-.cardCategory {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 0.65rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: #9a8070;
 }
 
 .cardTitle {
@@ -303,24 +285,15 @@
   font-size: 0.8rem;
   color: #5a4a3a;
   line-height: 1.65;
-  flex: 1;
   margin-top: 0.15rem;
 }
 
-.cardAmount {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 0.88rem;
-  font-weight: 600;
-  color: #2c2218;
-  letter-spacing: 0.03em;
-  margin-top: 0.25rem;
-}
-
+/* "View item" sits above "Reserve this gift". */
 .cardActions {
   display: flex;
-  align-items: center;
-  gap: 1rem;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.6rem;
   margin-top: 0.6rem;
 }
 
@@ -359,8 +332,8 @@
 }
 
 .cardReserved {
-  border-color: #a8c490;
-  background: rgba(168, 196, 144, 0.12);
+  border-color: rgba(168, 196, 144, 0.75);
+  background: rgba(168, 196, 144, 0.22);
 }
 
 .reservedBtn {
@@ -478,8 +451,11 @@
 }
 
 .paymentCard {
-  background: rgba(255, 255, 255, 0.55);
-  border: 1px solid #d4c4b4;
+  background: rgba(255, 255, 255, 0.42);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border-radius: 14px;
   padding: 1.5rem 1.75rem;
   display: flex;
@@ -506,11 +482,36 @@
   justify-content: center;
 }
 
+/* Square by definition — the source is 1200×1200, drawn down to scanning size. */
+.qrImg {
+  width: 160px;
+  height: 160px;
+  display: block;
+}
+
 .paymentName {
   font-family: 'Cormorant Garamond', serif;
   font-size: 0.78rem;
   color: #3d3028;
   text-align: center;
+}
+
+.qrDownload {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  color: #2c2218;
+  text-decoration: none;
+  border: 1px solid #b5a090;
+  border-radius: 50px;
+  padding: 0.35rem 1.1rem;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.qrDownload:hover {
+  background: #2c2218;
+  color: #f0e8dc;
+  border-color: #2c2218;
 }
 
 /* Bank details table */
@@ -545,6 +546,25 @@
   font-weight: 500;
 }
 
+.copyBtn {
+  background: none;
+  border: none;
+  padding: 0.15rem;
+  margin-left: -0.35rem;
+  color: #9a8070;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  align-self: center;
+  border-radius: 4px;
+  transition: color 0.2s, background 0.2s;
+}
+
+.copyBtn:hover {
+  color: #2c2218;
+  background: rgba(44, 34, 24, 0.07);
+}
+
 .paymentNote {
   font-family: 'Cormorant Garamond', serif;
   font-size: 0.82rem;
@@ -572,7 +592,6 @@
 /* ── Responsive ── */
 @media (max-width: 480px) {
   .grid {
-    grid-template-columns: 1fr;
     gap: 0.85rem;
   }
 
@@ -587,14 +606,58 @@
   }
 }
 
+/* Tablet — two across; a single 40:60 card would be uncomfortably wide here. */
 @media (min-width: 768px) {
   .grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 1.25rem;
   }
 
   .hero {
     padding: 4rem 2rem 3rem;
+  }
+}
+
+/* Desktop — three across, every card the same height.
+   grid-auto-rows: 1fr equalises the rows themselves, so cards match across the
+   whole grid rather than only within their own row. */
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 1fr;
+    align-items: stretch;
+  }
+
+  /* Every card is the tallest card's height, so short items always have spare
+     room. Centring both columns splits that slack above and below the content
+     instead of dumping it all in one gap under the title. */
+  .cardBody {
+    justify-content: center;
+  }
+
+  .cardMedia {
+    /* The panel keeps the base 1:1 box here rather than stretching to the
+       card's full height — filling a uniform-height card made it read tall and
+       narrow. Swap to 4 / 3 for a shorter, more landscape crop. */
+    aspect-ratio: 1;
+    align-self: center;
+  }
+
+  /* Pinning these to the bottom was what opened the gap under the title. */
+  .cardActions {
+    margin-top: 0.75rem;
+  }
+
+  /* Every card inherits the tallest card's height, so the longest description
+     alone decides how much dead space the other 34 carry. Capping it at three
+     lines pulls that ceiling down; the full text stays in the title tooltip. */
+  .cardDesc {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: 1.5;
   }
 }
 
@@ -611,15 +674,11 @@
     font-size: 0.9rem;
   }
 
-  .cardAmount {
-    font-size: 1rem;
-  }
-
   .paymentTitle {
     font-size: 2.6rem;
   }
 
-  .qrFrame svg {
+  .qrImg {
     width: 180px;
     height: 180px;
   }

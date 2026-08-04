@@ -5,9 +5,22 @@ import Image from 'next/image';
 import styles from './GiftRegistrySection.module.css';
 import PillButton from '../design/PillButton';
 
-const CONTACTS = [
-  { label: 'Aufa (Sister of the Bride)', href: 'https://wasap.my/60129599423' },
-  { label: 'Iqmal (Brother of the Groom)', href: 'https://wasap.my/60129599423' },
+const CONTACT_GROUPS = [
+  {
+    side: 'Bride’s Side',
+    people: [
+      // Elementor #142b9c9 — no number on the source button, link left as exported
+      { name: 'Ismail (Father)', href: 'https://wasap.my/' },
+      { name: "Raba'ah (Mother)", href: 'https://wasap.my/60196650855' },
+    ],
+  },
+  {
+    side: 'Groom’s Side',
+    people: [
+      { name: 'Zainol (Father)', href: 'https://wasap.my/60123159674' },
+      { name: 'Zahariyah (Mother)', href: 'https://wasap.my/60123159374' },
+    ],
+  },
 ];
 
 const ArrowIcon = () => (
@@ -46,20 +59,30 @@ export default function GiftRegistrySection({ style }: GiftRegistrySectionProps)
           src="/el-questions-card.png"
           alt=""
           fill
-          sizes="(max-width: 767px) 96vw, (max-width: 1024px) 70vw, 30vw"
+          sizes="(max-width: 767px) 96vw, (max-width: 1024px) 100vw, 41vw"
           className={styles.questionsArt}
         />
 
         <div className={styles.questionsType}>
           <h2 className={styles.questionsHeading}>Have any questions?</h2>
           <p className={styles.questionsSub}>Contact us directly or our family members:</p>
-          <div className={styles.contactList}>
-            {CONTACTS.map((c) => (
-              <a key={c.label} className={styles.contactBtn} href={c.href} target="_blank" rel="noopener noreferrer">
-                {c.label}
-              </a>
-            ))}
-          </div>
+
+          {CONTACT_GROUPS.map((group) => (
+            <div key={group.side} className={styles.contactGroup}>
+              <h3 className={styles.sideLabel}>{group.side}</h3>
+              {group.people.map((person) => (
+                <a
+                  key={person.name}
+                  className={styles.contactBtn}
+                  href={person.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {person.name}
+                </a>
+              ))}
+            </div>
+          ))}
         </div>
       </div>
 

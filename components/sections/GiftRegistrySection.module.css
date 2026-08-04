@@ -37,16 +37,34 @@
   height: auto;
 }
 
-/* ── Questions card: Elementor .e-dc10453-1635186, artwork as a contained
-   background with copy laid over it. Explicit width + the artwork's 730:566
-   ratio makes the box fully deterministic, and every type size below is a
-   share of that width (cqw) — so the copy scales with the doily and can
-   never spill outside it. ── */
+/* ── Questions card: Elementor .e-c2b42af-ffd03ea — the scalloped card as a
+   contained background with the contact column laid over it.
+
+   Deviates from Elementor on sizing: there the box is min-height 60vh and the
+   artwork is sized by `contain` against it, i.e. height-driven, which left the
+   card visibly narrower than the registry and thank-you artwork it sits
+   between. Width is the driving dimension here instead, mirroring
+   .registryCard step for step (41vw / 100vw / 96vw, capped at 746px) so all
+   three cards share an edge down the column. Height follows from the
+   artwork's 1120:1530 ratio.
+
+   The second cap keeps the card under 95svh tall. It is expressed as a width
+   (95svh x the ratio) rather than a max-height because max-height would clamp
+   the box against the aspect-ratio and letterbox the artwork inside it. Only
+   binds on short/landscape viewports — 41vw is the smaller term on a normal
+   desktop, 96vw on a phone. svh, not vh: on mobile vh means the tall viewport
+   with the address bar hidden, so a vh cap can still run past the visible
+   screen. Matches InvitationCardSection.
+
+   Every type size below is a share of the card's own width (cqw), so the copy
+   scales with the card and can never spill outside it — Elementor's own stack
+   overflows the bottom scallop once all four buttons are in. ── */
 .questions {
   position: relative;
   z-index: 1;
-  width: min(30vw, 730px);
-  aspect-ratio: 730 / 566;
+  width: 30vw;
+  max-width: min(746px, calc(95svh * 1120 / 1530));
+  aspect-ratio: 1120 / 1530;
   container-type: size;
 }
 
@@ -54,65 +72,95 @@
   object-fit: contain;
 }
 
-/* Flat inner area of the doily, inset from the scalloped border */
+/* Flat inner panel, inset to clear the embossed lace border (measured at
+   ~13% / ~87% across, ~10% / ~90% down on the artwork). */
 .questionsType {
   position: absolute;
-  top: 18%;
-  bottom: 18%;
+  top: 14%;
+  bottom: 13%;
   left: 20%;
   right: 20%;
   z-index: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
   justify-content: center;
-  gap: 2cqw;
+  gap: 3.4cqw;
   text-align: center;
 }
 
-/* Elementor: #e658211 — Pinyon Script 2.5em */
+/* Elementor: #dd646c1 — Pinyon Script 1.9em, #583701 */
 .questionsHeading {
   font-family: var(--font-script);
-  font-size: 6.2cqw;
+  font-size: 7.7cqw;
   font-weight: 600;
   line-height: 1.15;
   color: var(--c-gold);
 }
 
-/* Elementor: #cf95975 — Bellefair 500 */
+/* Elementor: #3d8881b — Bellefair 500 */
 .questionsSub {
   font-family: var(--font-display);
   font-weight: 500;
-  font-size: 2.8cqw;
+  font-size: 3.6cqw;
   line-height: 1.3;
-  color: var(--c-ink-2);
+  color: var(--c-gold);
 }
 
-/* Held in from the well's edges — the doily's flat area narrows towards the
-   bottom, where these two pills sit. */
-.contactList {
+.contactGroup {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 1.6cqw;
-  width: 86%;
+  gap: 2cqw;
 }
 
-/* Elementor: #93f96d4 / #230348b — #504534 pill, Bellefair 500.
-   Sized in cqw (not PillButton's fixed 44px) so the pair stays inside the
-   doily at every breakpoint; floored at 40px for a usable tap target. */
+/* Elementor opens a wider gap above Groom's Side (11% margin) than above
+   Bride's Side — keeps the two pairs reading as separate groups. */
+.contactGroup + .contactGroup {
+  margin-top: 2.6cqw;
+}
+
+/* Elementor: #f544b9c / #313f969 — Bellefair 600 */
+.sideLabel {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 4cqw;
+  line-height: 1.2;
+  color: var(--c-gold);
+}
+
+/* Elementor: #504534 pill, Bellefair 500, justified (full-column width).
+   Sized in cqw (not PillButton's fixed 44px, and deliberately no px min-height)
+   so all four stay inside the card at every size. Elementor's .elementor-size-sm
+   floors this at 40px, but a px floor is the one dimension in the well that
+   doesn't shrink with the card — on a small card four of them overflow the
+   panel, and .questionsType centres its content, so the spill escapes through
+   both the top and bottom scallops.
+
+   Height is stated explicitly rather than built up out of padding. Height is
+   auto by default, so padding-block has nothing to subtract from under the
+   global box-sizing: border-box and simply grows the pill; against a specified
+   height it insets the label instead. That makes this one value the whole size
+   control. The inline-flex centring places the label, so no padding-block is
+   needed — 8.6cqw is what 2.5cqw padding + 3cqw text worked out to. */
 .contactBtn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 40px;
-  padding: 1.4cqw 3cqw;
+  height: 8.6cqw;
+  width: 50cqw;
+  /* .contactGroup aligns stretch, which falls back to flex-start once an item
+     is narrower than the panel — auto inline margins re-centre it. Definite
+     width rather than max-width: under an auto margin the pill would shrink to
+     its label instead, leaving the four of them at ragged widths. */
+  margin-inline: auto;
+  padding-inline: 0.7cqw;
   border-radius: 28px;
   background: var(--c-el-brown);
   color: #fff;
   font-family: var(--font-display);
   font-weight: 500;
-  font-size: 2.6cqw;
+  font-size: 3cqw;
   line-height: 1.2;
   text-decoration: none;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
@@ -123,7 +171,9 @@
   background: #62553f;
 }
 
-/* Elementor tablet breakpoint */
+/* Elementor tablet breakpoint. The card box needs no override — its
+   height-driven width already tracks the viewport — so only the type scale
+   moves, matching Elementor's per-breakpoint font sizes. */
 @media (max-width: 1024px) {
   .registryCard {
     width: 100vw;
@@ -134,7 +184,12 @@
   }
 
   .questions {
-    width: min(70vw, 730px);
+    width: 100vw;
+  }
+
+  /* Elementor: #dd646c1 1.7em */
+  .questionsHeading {
+    font-size: 8cqw;
   }
 }
 
@@ -148,14 +203,21 @@
     width: 95vw;
   }
 
-  .questions {
-    width: 96vw;
+  /* Elementor: heading 1.5em, sub + side labels 0.7em, buttons 0.6em — the
+     type sits proportionally smaller on the card here than on desktop. */
+  .questionsHeading {
+    font-size: 6.5cqw;
   }
 
-  .questionsType {
-    top: 15%;
-    bottom: 15%;
-    left: 17%;
-    right: 17%;
+  .questionsSub {
+    font-size: 3cqw;
+  }
+
+  .sideLabel {
+    font-size: 3.4cqw;
+  }
+
+  .contactBtn {
+    font-size: 2.8cqw;
   }
 }

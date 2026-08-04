@@ -1,7 +1,9 @@
-/* Elementor: .e-20ea165-d7890c0 — min-height 28vh, bg cover 0% 0% over #f4eadb.
-   Holds two GlassCards: the RSVP form and Warm Wishes. */
+/* Elementor: .e-20ea165-d7890c0 — min-height 28vh. Holds two GlassCards: the
+   RSVP form and Warm Wishes. Transparent: the backdrop comes from the shared
+   scroll stage in InvitationContent.module.css. */
 .section {
   position: relative;
+  z-index: 1;
   width: 100%;
   min-height: 28vh;
   display: flex;
@@ -10,13 +12,6 @@
   justify-content: center;
   padding-block: 3rem;
   overflow: hidden;
-  background: var(--c-el-cream);
-}
-
-.bg {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
 }
 
 /* Elementor: #ad53411 — Pinyon Script 3.2em */

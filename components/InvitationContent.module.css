@@ -23,3 +23,33 @@
   transform: translateY(0);
   pointer-events: auto;
 }
+
+/* ── Scroll stage ──
+   Itinerary → Countdown → RSVP/Wishes → Gift Registry all sit on one pinned
+   backdrop instead of each painting its own full-bleed image. The sections are
+   transparent and scroll up over it.
+
+   Never give this overflow: hidden — it would clip the sticky backdrop. */
+.stage {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--c-el-cream);
+}
+
+/* The pinned backdrop. Sticky takes part in flow, so the negative block-end
+   margin cancels the 100vh it would otherwise add to the stage's height.
+   100vh (not svh) is deliberate: mobile browsers resolve it to the *large*
+   viewport height, so no gap opens up when the URL bar retracts. */
+.stageBg {
+  position: sticky;
+  top: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100vh;
+  margin-block-end: -100vh;
+  pointer-events: none;
+}

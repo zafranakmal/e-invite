@@ -62,15 +62,18 @@ export default function Countdown({ target, pastMessage = 'The celebration has b
     ['seconds', el ? 'Seconds' : 'Secs'],
   ];
 
+  // The elementor variant's sizing is overridable through --countdown-gap /
+  // --countdown-size: the defaults below assume a full-width rail and overflow
+  // a glass card, so CountdownSection dials them down.
   return (
-    <div className={className} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: el ? '1.3em' : 0, ...style }}>
+    <div className={className} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: el ? 'var(--countdown-gap, 1.3em)' : 0, ...style }}>
       {units.map(([key, label], i) => (
         <div key={key} style={{ display: 'flex', alignItems: 'center' }}>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: el ? 0 : 56 }}>
             <span
               style={{
                 fontFamily: el ? 'var(--font-display)' : 'var(--font-body)',
-                fontSize: el ? 'clamp(2.3rem, 7vw, 4rem)' : 'clamp(2rem, 6vw, 2.6rem)',
+                fontSize: el ? 'var(--countdown-size, clamp(2.3rem, 7vw, 4rem))' : 'clamp(2rem, 6vw, 2.6rem)',
                 color: el ? 'var(--c-gold)' : 'var(--c-ink)',
                 fontVariantNumeric: 'tabular-nums',
                 letterSpacing: '0.04em',

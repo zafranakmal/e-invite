@@ -1,6 +1,9 @@
-/* Elementor: .e-572fa5a — min-height 40vh, bg cover 0% 0% over #3c362d */
+/* Elementor: .e-572fa5a — min-height 40vh. Transparent: the backdrop comes from
+   the shared scroll stage in InvitationContent.module.css, and the heading +
+   clock now sit in a GlassCard like the RSVP form. */
 .section {
   position: relative;
+  z-index: 1;
   width: 100%;
   min-height: 40vh;
   display: flex;
@@ -9,37 +12,27 @@
   justify-content: center;
   padding-block: 2.5rem;
   overflow: hidden;
-  background: var(--c-el-dark);
 }
 
-.bg {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-}
-
-/* Elementor: .e-996c64a-731939f — padding-inline 20% */
-.rail {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  padding-inline: 20%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-/* Elementor: #aa4b4ef img width 41% */
+/* Elementor: #aa4b4ef img — was 41% of a 60vw rail, which lands at roughly the
+   same pixel width as 100% of the glass card's inner column. */
 .heading {
-  width: 41%;
+  width: 100%;
   height: auto;
 }
 
-/* Elementor: #65475ba .elementor-countdown-wrapper max-width 29% */
+/* Elementor: #65475ba .elementor-countdown-wrapper. The negative margin tucks
+   the clock under the arc of the heading artwork.
+
+   The clock's own type sizes are inline styles in Countdown.tsx, so they are
+   driven through these custom properties — the defaults there are tuned for a
+   full-width rail and would overflow the glass card. */
 .clock {
   width: 100%;
-  max-width: 29%;
+  max-width: 100%;
   margin-top: -1.5rem;
+  --countdown-size: clamp(1.8rem, 2.6vw, 2.6rem);
+  --countdown-gap: 0.8em;
 }
 
 /* Elementor tablet breakpoint */
@@ -48,18 +41,17 @@
     min-height: 0;
   }
 
-  .heading {
-    width: 100%;
-  }
-
   .clock {
-    max-width: 100%;
+    --countdown-size: clamp(2rem, 4vw, 3rem);
+    --countdown-gap: 1em;
   }
 }
 
-/* Elementor mobile breakpoint */
+/* Elementor mobile breakpoint — the glass card goes transparent here (see
+   GlassCard.module.css), so the clock sits straight on the backdrop. */
 @media (max-width: 767px) {
-  .rail {
-    padding-inline: 0;
+  .clock {
+    --countdown-size: clamp(1.7rem, 7vw, 2.6rem);
+    --countdown-gap: 0.7em;
   }
 }

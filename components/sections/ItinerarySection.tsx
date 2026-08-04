@@ -11,10 +11,6 @@ interface ItinerarySectionProps {
 export default function ItinerarySection({ style }: ItinerarySectionProps) {
   return (
     <section id="itinerary" className={styles.section}>
-      <div className={styles.bg}>
-        <Image src="/el-bg-itinerary.jpg" alt="" fill sizes="100vw" style={{ objectFit: 'cover', objectPosition: 'left top' }} />
-      </div>
-
       <div className={styles.inner} style={style}>
         <div className={styles.rail}>
           <Image

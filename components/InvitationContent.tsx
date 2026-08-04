@@ -1,6 +1,7 @@
 'use client';
 
 import { CSSProperties, useCallback, useEffect, useState } from 'react';
+import Image from 'next/image';
 import styles from './InvitationContent.module.css';
 import InvitationCardSection from './sections/InvitationCardSection';
 import ItinerarySection from './sections/ItinerarySection';
@@ -64,14 +65,25 @@ export default function InvitationContent({ revealed }: InvitationContentProps) 
   return (
     <div id="invitation" className={`${styles.invitationSection}${revealed ? ' ' + styles.visible : ''}`}>
       <InvitationCardSection revealed={revealed} />
-      <ItinerarySection style={fadeUp(sectionsIn.itinerary)} />
-      <CountdownSection />
-      {/* Elementor keeps the form and Warm Wishes on one surface — the wishes
-          block renders inside the RSVP glass card. */}
-      <RsvpSection style={fadeUp(sectionsIn.rsvp)} onWishPosted={loadWishes}>
-        <WishesSection wishes={wishes} isIn={sectionsIn.wishes} />
-      </RsvpSection>
-      <GiftRegistrySection style={fadeUp(sectionsIn.gift)} />
+
+      {/* Itinerary down to the registry share one pinned backdrop — the sections
+          are transparent and swipe up over it. The footer sits outside the stage
+          and keeps its dark bar as the end-cap. */}
+      <div className={styles.stage}>
+        <div className={styles.stageBg} aria-hidden="true">
+          <Image src="/el-bg-itinerary.jpg" alt="" fill sizes="100vw" style={{ objectFit: 'cover', objectPosition: 'left top' }} />
+        </div>
+
+        <ItinerarySection style={fadeUp(sectionsIn.itinerary)} />
+        <CountdownSection />
+        {/* Elementor keeps the form and Warm Wishes on one surface — the wishes
+            block renders inside the RSVP glass card. */}
+        <RsvpSection style={fadeUp(sectionsIn.rsvp)} onWishPosted={loadWishes}>
+          <WishesSection wishes={wishes} isIn={sectionsIn.wishes} />
+        </RsvpSection>
+        <GiftRegistrySection style={fadeUp(sectionsIn.gift)} />
+      </div>
+
       <SiteFooter />
     </div>
   );

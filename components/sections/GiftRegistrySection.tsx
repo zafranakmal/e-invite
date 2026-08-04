@@ -23,10 +23,6 @@ interface GiftRegistrySectionProps {
 export default function GiftRegistrySection({ style }: GiftRegistrySectionProps) {
   return (
     <section id="gift" className={styles.section}>
-      <div className={styles.bg}>
-        <Image src="/el-bg-registry.jpg" alt="" fill sizes="100vw" style={{ objectFit: 'cover', objectPosition: 'left top' }} />
-      </div>
-
       <div className={styles.row} style={style}>
         <Image
           src="/el-gift-registry.png"

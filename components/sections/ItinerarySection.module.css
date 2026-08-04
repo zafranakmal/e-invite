@@ -1,6 +1,8 @@
-/* Elementor: .e-25f7539-bce45d6 — min-height 40vh, bg cover 0% 0% over #f4eadb */
+/* Elementor: .e-25f7539-bce45d6 — min-height 40vh. Transparent: the backdrop
+   comes from the shared scroll stage in InvitationContent.module.css. */
 .section {
   position: relative;
+  z-index: 1;
   width: 100%;
   min-height: 40vh;
   display: flex;
@@ -8,13 +10,6 @@
   align-items: center;
   padding-block: 3rem;
   overflow: hidden;
-  background: var(--c-el-cream);
-}
-
-.bg {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
 }
 
 .inner {

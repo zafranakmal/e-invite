@@ -1,7 +1,6 @@
 'use client';
 
 import { CSSProperties, ReactNode, useState } from 'react';
-import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 import styles from './RsvpSection.module.css';
 import PillButton from '../design/PillButton';
@@ -123,10 +122,6 @@ export default function RsvpSection({ style, onWishPosted, children }: RsvpSecti
 
   return (
     <section id="rsvp" className={styles.section}>
-      <div className={styles.bg}>
-        <Image src="/el-bg-rsvp.png" alt="" fill sizes="100vw" style={{ objectFit: 'cover', objectPosition: 'left top' }} />
-      </div>
-
       <GlassCard id="rsvp-card" style={style}>
         <h2 className={styles.heading}>Save your seat!</h2>
 

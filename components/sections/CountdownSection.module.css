@@ -30,9 +30,10 @@
 .clock {
   width: 100%;
   max-width: 100%;
-  margin-top: -1.5rem;
+  margin-top: 0rem;
   --countdown-size: clamp(1.8rem, 2.6vw, 2.6rem);
   --countdown-gap: 0.8em;
+  margin-bottom: 1.4rem;  
 }
 
 /* Elementor tablet breakpoint */

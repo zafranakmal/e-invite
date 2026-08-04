@@ -23,7 +23,9 @@ const baseStyle: CSSProperties = {
   gap: 'var(--s-2)',
   borderRadius: 'var(--r-pill)',
   minHeight: 44,
-  padding: '0.6rem 1.4rem',
+  // Overridable by an ancestor: these are inline styles, so a stylesheet can't
+  // reach them otherwise. The mobile CTA grid tightens the inline padding.
+  padding: 'var(--pill-padding-block, 0.6rem) var(--pill-padding-inline, 1.4rem)',
   fontFamily: 'var(--font-body)',
   fontSize: '0.95rem',
   cursor: 'pointer',

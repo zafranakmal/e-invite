@@ -131,11 +131,18 @@
   }
 }
 
-/* Elementor mobile breakpoint — buttons stack */
+/* Elementor mobile breakpoint — the two navigation buttons share the first row
+   and Add to Calendar takes the second on its own. */
 @media (max-width: 767px) {
   .ctaGrid {
-    display: flex;
-    flex-direction: column;
-    row-gap: 1vh;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1vh 0.5rem;
+    /* The pill's own padding is too generous for a half-width column — "Google
+       Maps" plus its icon would overflow on a 360px screen. */
+    --pill-padding-inline: 0.85rem;
+  }
+
+  .ctaGrid > *:last-child {
+    grid-column: 1 / -1;
   }
 }

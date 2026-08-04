@@ -1,5 +1,12 @@
 import type { Metadata } from 'next';
+import { config } from '@fortawesome/fontawesome-svg-core';
+import '@fortawesome/fontawesome-svg-core/styles.css';
 import './globals.css';
+
+// FontAwesome injects its CSS at runtime by default, which makes icons flash at
+// a huge size before hydration. Importing the stylesheet above and turning the
+// injection off keeps them sized correctly on first paint.
+config.autoAddCss = false;
 
 export const metadata: Metadata = {
   title: 'Anis & Zafran | 31 October 2026',

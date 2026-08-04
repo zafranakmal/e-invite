@@ -9,38 +9,44 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+  /* Logo + credit sit as one centred group rather than hugging the left edge */
+  justify-content: center;
+  gap: 1.25rem;
   background: var(--c-el-dark);
   /* The extra bottom padding runs the footer's surface behind the fixed
      BottomNav, so no lighter band shows between the two. */
   padding-block: 1rem calc(1rem + var(--nav-h));
 }
 
-/* Elementor: .e-8fe7b24 — width 12%, logo pinned to the column's end */
+/* Elementor: .e-8fe7b24. Sized to the logo on desktop so the centred group is
+   only as wide as its content; the tablet rule below restores a % column. */
 .logoCol {
-  width: 12%;
+  width: auto;
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: center;
 }
 
-/* Elementor: #9ddc090 max-width 24% */
+/* Elementor: #9ddc090 max-width 24% — the old 24% of a 12% column */
 .logo {
-  width: 24%;
+  width: 44px;
   height: auto;
 }
 
-/* Elementor: .e-72247b4 — width 70%, copy left-aligned */
+/* Elementor: .e-72247b4 */
 .creditCol {
-  width: 70%;
+  width: auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
 }
 
-/* Elementor: #62ca0bb — Belleza 0.9em, white, width 38.658% */
+/* Elementor: #62ca0bb — Belleza 0.9em, white. The max-width keeps the credit
+   wrapping to two lines the way the old 38.658% column did. */
 .credit {
-  width: 38.658%;
+  width: auto;
+  max-width: 40rem;
   margin-top: 10px;
   text-align: center;
   font-family: var(--font-credit);
@@ -54,8 +60,12 @@
   vertical-align: -0.1em;
 }
 
-/* Elementor tablet breakpoint */
+/* Elementor tablet breakpoint — back to percentage columns that fill the bar */
 @media (max-width: 1024px) {
+  .footer {
+    gap: 0;
+  }
+
   .logoCol {
     width: 20%;
   }
@@ -72,11 +82,17 @@
 
   .credit {
     width: 87%;
+    max-width: none;
   }
 }
 
 /* Elementor mobile breakpoint */
 @media (max-width: 767px) {
+  /* Keeps the logo off the very edge of the screen */
+  .logoCol {
+    padding-inline-start: 1rem;
+  }
+
   .logo {
     width: 100%;
   }

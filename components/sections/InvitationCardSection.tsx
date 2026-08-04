@@ -3,6 +3,9 @@
 import { CSSProperties, useEffect, useState } from 'react';
 import Image from 'next/image';
 import Snowfall from 'react-snowfall';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faWaze } from '@fortawesome/free-brands-svg-icons';
+import { faLocationDot, faCalendarPlus } from '@fortawesome/free-solid-svg-icons';
 import styles from './InvitationCardSection.module.css';
 import PillButton from '../design/PillButton';
 
@@ -31,28 +34,6 @@ const INVITE_LINES = [
 ];
 
 const DETAIL_LINES = ['Sabtu, 31 Oktober 2026', '7.00 PM – 11.00 PM', 'Grand Ballroom,', 'BoraOmbak Putrajaya'];
-
-const WazeIcon = () => (
-  <svg viewBox="0 0 32 32" width="18" height="18" fill="none" aria-hidden="true">
-    <path d="M16 3C9.9 3 5 7.7 5 13.5c0 4.8 3.1 8.9 7.5 10.5L11 29l5-3.5 5 3.5-1.5-5C24 21.9 27 17.5 27 13.5 27 7.7 22.1 3 16 3z" fill="#00d5d6" />
-    <circle cx="12.5" cy="13" r="1.8" fill="white" />
-    <circle cx="19.5" cy="13" r="1.8" fill="white" />
-    <path d="M12 18c1.5 2.5 7 2.5 8 0" stroke="white" strokeWidth="1.5" strokeLinecap="round" fill="none" />
-  </svg>
-);
-
-const MapsIcon = () => (
-  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" aria-hidden="true">
-    <path d="M12 2C8.1 2 5 5.1 5 9c0 5.3 7 13 7 13s7-7.7 7-13c0-3.9-3.1-7-7-7z" fill="#EA4335" />
-    <circle cx="12" cy="9" r="2.5" fill="white" />
-  </svg>
-);
-
-const CalendarIcon = () => (
-  <svg viewBox="0 0 448 512" width="15" height="15" fill="currentColor" aria-hidden="true">
-    <path d="M336 292v24c0 6.6-5.4 12-12 12h-76v76c0 6.6-5.4 12-12 12h-24c-6.6 0-12-5.4-12-12v-76h-76c-6.6 0-12-5.4-12-12v-24c0-6.6 5.4-12 12-12h76v-76c0-6.6 5.4-12 12-12h24c6.6 0 12 5.4 12 12v76h76c6.6 0 12 5.4 12 12zm112-180v352c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V112c0-26.5 21.5-48 48-48h48V12c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v52h128V12c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v52h48c26.5 0 48 21.5 48 48zm-48 346V160H48v298c0 3.3 2.7 6 6 6h340c3.3 0 6-2.7 6-6z" />
-  </svg>
-);
 
 interface InvitationCardSectionProps {
   revealed: boolean;
@@ -145,13 +126,14 @@ export default function InvitationCardSection({ revealed }: InvitationCardSectio
 
       <div className={styles.ctaWrap}>
         <div className={styles.ctaGrid}>
-          <PillButton as="a" href={WAZE_URL} target="_blank" rel="noopener noreferrer" variant="brown" icon={<WazeIcon />} style={pill(0)}>
+          <PillButton as="a" href={WAZE_URL} target="_blank" rel="noopener noreferrer" variant="brown" icon={<FontAwesomeIcon icon={faWaze} />} style={pill(0)}>
             Waze
           </PillButton>
-          <PillButton as="a" href={MAPS_URL} target="_blank" rel="noopener noreferrer" variant="brown" icon={<MapsIcon />} style={pill(1)}>
+          <PillButton as="a" href={MAPS_URL} target="_blank" rel="noopener noreferrer" variant="brown" icon={<FontAwesomeIcon icon={faLocationDot} />} style={pill(1)}>
             Google Maps
           </PillButton>
-          <PillButton as="a" href={CALENDAR_URL} target="_blank" rel="noopener noreferrer" variant="brown" icon={<CalendarIcon />} style={pill(2)}>
+          {/* Spans both columns on the mobile grid — see .ctaGrid */}
+          <PillButton as="a" href={CALENDAR_URL} target="_blank" rel="noopener noreferrer" variant="brown" icon={<FontAwesomeIcon icon={faCalendarPlus} />} style={pill(2)}>
             Add to Calendar
           </PillButton>
         </div>

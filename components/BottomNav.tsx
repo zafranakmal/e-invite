@@ -66,6 +66,23 @@ const NAV_ITEMS = [
 export default function BottomNav({ visible }: BottomNavProps) {
   const [activeId, setActiveId] = useState<string>('invitation');
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [mounted, setMounted] = useState(false);
+  const [shown, setShown] = useState(false);
+
+  // The styles below are styled-jsx, which isn't part of the server-rendered
+  // HTML — so until hydration the nav would paint with browser defaults, fully
+  // opaque and in flow. Rendering nothing until the reveal avoids that flash.
+  useEffect(() => {
+    if (visible) setMounted(true);
+  }, [visible]);
+
+  // Mount hidden, then flip to .visible one frame later so the entrance
+  // transition actually runs instead of the bar snapping straight in.
+  useEffect(() => {
+    if (!mounted) return;
+    const id = requestAnimationFrame(() => setShown(true));
+    return () => cancelAnimationFrame(id);
+  }, [mounted]);
 
   // Highlight nav item + track scroll progress
   useEffect(() => {
@@ -114,8 +131,10 @@ export default function BottomNav({ visible }: BottomNavProps) {
     }
   };
 
+  if (!mounted) return null;
+
   return (
-    <nav className={`bottom-nav${visible ? ' visible' : ''}`} role="navigation" aria-label="Page sections">
+    <nav className={`bottom-nav${shown ? ' visible' : ''}`} role="navigation" aria-label="Page sections">
       <div className="scroll-progress" style={{ width: `${scrollProgress * 100}%` }} />
       {NAV_ITEMS.map((item) => (
         <button

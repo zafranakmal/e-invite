@@ -10,7 +10,7 @@ export default function SiteFooter() {
 
       <div className={styles.creditCol}>
         <p className={styles.credit}>
-          Handcrafted with <span className={styles.heart}>❤️</span> by Zafran &amp; Anis. Built on Next.js, PostgreSQL and lots of coffee
+          Handcrafted with <span className={styles.heart}>❤️</span> by Zafran &amp; Anis. <br></br>Built on Next.js, PostgreSQL and lots of coffee
         </p>
       </div>
     </footer>

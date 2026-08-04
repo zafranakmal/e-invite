@@ -15,7 +15,7 @@
   background: var(--c-el-dark);
   /* The extra bottom padding runs the footer's surface behind the fixed
      BottomNav, so no lighter band shows between the two. */
-  padding-block: 1rem calc(1rem + var(--nav-h));
+  padding-block: 0.2rem calc(1rem + var(--nav-h));
 }
 
 /* Elementor: .e-8fe7b24. Sized to the logo on desktop so the centred group is
@@ -29,8 +29,9 @@
 
 /* Elementor: #9ddc090 max-width 24% — the old 24% of a 12% column */
 .logo {
-  width: 44px;
+  width: 4vw;
   height: auto;
+  margin-top: 0.5rem
 }
 
 /* Elementor: .e-72247b4 */
@@ -71,7 +72,7 @@
   }
 
   .logo {
-    width: 44%;
+    width: 70%;
   }
 
   .creditCol {

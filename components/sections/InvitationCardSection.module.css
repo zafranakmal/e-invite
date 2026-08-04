@@ -3,7 +3,7 @@
 .section {
   position: relative;
   width: 100%;
-  min-height: calc(100svh - var(--nav-h));
+  min-height: calc(103svh - var(--nav-h));
   display: flex;
   flex-direction: column;
   align-items: center;

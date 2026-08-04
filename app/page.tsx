@@ -2,15 +2,17 @@
 
 //added "use client" directive to ensure this component is rendered on the client side, as it uses hooks and browser APIs
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import HeroSection from '../components/HeroSection';
 import InvitationContent from '../components/InvitationContent';
 import BottomNav from '../components/BottomNav';
+import MusicControl, { MusicControlHandle } from '../components/MusicControl';
 import { Suspense } from 'react';
 
 export default function Home() {
   const [revealed, setRevealed] = useState(false);
   const [fontsReady, setFontsReady] = useState(false);
+  const musicRef = useRef<MusicControlHandle>(null);
 
   useEffect(() => {
     // Prevent browser from restoring previous scroll position on reload
@@ -30,6 +32,10 @@ export default function Home() {
   }, [revealed]);
 
   const handleReveal = () => {
+    // Kicked off synchronously here, inside the click's gesture, rather than
+    // from an effect on `revealed` — iOS Safari is strict about audio starting
+    // in the same task as the interaction that asked for it.
+    musicRef.current?.play();
     setRevealed(true);
     setTimeout(() => {
       // offsetTop (layout position) rather than scrollIntoView/getBoundingClientRect
@@ -79,6 +85,9 @@ export default function Home() {
           <InvitationContent revealed={revealed} />
         </Suspense>
       </main>
+      {/* Always mounted so the <audio> element exists when handleReveal fires;
+          the control itself stays hidden until `visible`. */}
+      <MusicControl ref={musicRef} visible={revealed} />
       <BottomNav visible={revealed} />
     </>
   );

@@ -11,7 +11,7 @@ const CONTACT_GROUPS = [
     people: [
       // Elementor #142b9c9 — no number on the source button, link left as exported
       { name: 'Ismail (Father)', href: 'https://wasap.my/' },
-      { name: "Raba'ah (Mother)", href: 'https://wasap.my/60196650855' },
+      { name: "Nora (Mother)", href: 'https://wasap.my/60196650855' },
     ],
   },
   {

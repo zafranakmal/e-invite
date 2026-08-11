@@ -7,7 +7,7 @@ import PillButton from '../design/PillButton';
 import FormField from '../design/FormField';
 import GlassCard from '../design/GlassCard';
 
-const RELATION_OPTIONS = ['Family', 'Friend', 'Colleague', 'Other'];
+const RELATION_OPTIONS = ['Family', 'Friend', 'Colleague', 'Others'];
 
 const fieldStyle: CSSProperties = {
   flex: 1,

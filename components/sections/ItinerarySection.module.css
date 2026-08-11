@@ -23,7 +23,7 @@
 
 /* Elementor: .e-eacf02b-454fdc4 / .e-0865660-536776f — padding-inline 20% */
 .rail {
-  width: 100%;
+  width: 98%;
   padding-inline: 20%;
   display: flex;
   justify-content: center;
@@ -31,20 +31,22 @@
 
 /* Elementor: .e-89771e0-916301f — dress code pulled up under the card */
 .dressRail {
-  margin-block-start: -14vh;
+  margin-block-start: -15vh;
 }
 
 /* Elementor: #82e4561 img width 57% */
 .itineraryCard {
   width: 57%;
   height: auto;
+  margin-top: -8vh
 }
 
 /* Elementor: #8998b9d img — natural width, capped by the rail */
 .dressCode {
   width: 100%;
-  max-width: 800px;
+  max-width: 98vw;
   height: auto;
+  margin-top: 20%;
 }
 
 /* Elementor tablet breakpoint */

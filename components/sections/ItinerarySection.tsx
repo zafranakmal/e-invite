@@ -30,7 +30,7 @@ export default function ItinerarySection({ style }: ItinerarySectionProps) {
             width={1024}
             height={538}
             className={styles.dressCode}
-            sizes="(max-width: 1024px) 100vw, 60vw"
+            sizes="(max-width: 1024px) 98vw, 80vw"
           />
         </div>
       </div>

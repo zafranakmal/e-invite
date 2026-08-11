@@ -9,6 +9,7 @@ import CountdownSection from './sections/CountdownSection';
 import RsvpSection from './sections/RsvpSection';
 import WishesSection, { Wish } from './sections/WishesSection';
 import GiftRegistrySection from './sections/GiftRegistrySection';
+import ThankYouSection from './sections/ThankYouSection';
 import SiteFooter from './sections/SiteFooter';
 
 /** Sections the IntersectionObserver watches — must match the ids BottomNav scrolls to. */
@@ -82,6 +83,7 @@ export default function InvitationContent({ revealed }: InvitationContentProps) 
           <WishesSection wishes={wishes} isIn={sectionsIn.wishes} />
         </RsvpSection>
         <GiftRegistrySection style={fadeUp(sectionsIn.gift)} />
+        <ThankYouSection />
       </div>
 
       <SiteFooter />

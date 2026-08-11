@@ -1,0 +1,138 @@
+/* Elementor: .e-9f8dec3 — min-height 18vh, column. Transparent: the backdrop
+   comes from the shared scroll stage in InvitationContent.module.css. */
+.section {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  min-height: 18vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-block: 3rem;
+  overflow: hidden;
+}
+
+/* ── The doily heart: Elementor .e-9b20c2e-a82e884 — the artwork as a
+   contained background with the note laid over it.
+
+   Deviates from Elementor on sizing. There the box is min-height 50vh with the
+   artwork sized by `contain`, so the heart is height-driven and its width
+   swings with the viewport's aspect ratio; the copy inside is fixed px and
+   doesn't follow. Width drives it here instead, mirroring .registryCard and
+   .questions in GiftRegistrySection so the three cards share an edge down the
+   column. 38vw is what Elementor's 50vh works out to on a 1440x900 desktop.
+
+   The second cap keeps the heart under 85svh tall, expressed as a width
+   (85svh x the ratio) rather than a max-height — max-height would clamp the
+   box against the aspect-ratio and letterbox the artwork inside it. svh, not
+   vh: on mobile vh means the tall viewport with the address bar hidden, so a
+   vh cap can still run past the visible screen. Matches InvitationCardSection.
+   ── */
+.heart {
+  position: relative;
+  z-index: 1;
+  width: 38vw;
+  max-width: min(724px, calc(85svh * 724 / 602));
+  aspect-ratio: 724 / 602;
+  /* Sizing container: every type size below is a share of the heart's own
+     width (cqw), so the note scales with the artwork and keeps the same
+     proportions at every breakpoint — it can never outgrow the doily. */
+  container-type: size;
+}
+
+.heartArt {
+  object-fit: contain;
+}
+
+/* Type well, inset to the flat cream field inside the lace border. The heart
+   tapers to a point, so the bottom inset is the binding one: at 78% down the
+   artwork the flat field is only ~44% wide, which is what holds the signature
+   line's size. Measured against the artwork's alpha channel. */
+.type {
+  position: absolute;
+  top: 21%;
+  bottom: 21%;
+  left: 13%;
+  right: 13%;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3cqw;
+  text-align: center;
+}
+
+/* ── Type scale.
+
+   Every size is a share of the heart's width, taken from the note that used to
+   be baked into this PNG: its lines were measured off the old raster, scaled to
+   this artwork's canvas, and divided by each string's width at font-size 1em
+   (Pinyon Script 12.56em for the heading, 6.25em for the signature; Bellefair
+   25.44em for the longest note line). Deliberately smaller than Elementor's
+   fixed px sizes — those are set against a heart whose width swings with the
+   viewport, and at 1440x900 they run the heading out over the lace. ── */
+
+/* Elementor: #46765f7 — Pinyon Script 2.5em, 600, #583701 */
+.heading {
+  font-family: var(--font-script);
+  font-size: 5.7cqw;
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--c-gold);
+}
+
+/* Elementor: #2a6235f — Bellefair 1.4em/1.1, #000, padding-inline 16%/18% of
+   its column. That inset is folded into the width here, which is what wraps
+   the middle paragraph onto two lines and holds "We are so grateful…" on one.
+   The gap is the export's <p><br></p> spacers, tightened: at a full blank line
+   each the stack runs past the point of the heart. */
+.note {
+  width: 66cqw;
+  display: flex;
+  flex-direction: column;
+  gap: 1.6cqw;
+  font-family: var(--font-display);
+  font-size: 2.45cqw;
+  font-weight: 400;
+  line-height: 1.15;
+  color: #000;
+}
+
+/* Elementor: #9a4693e — same face and size as the note, set further below it */
+.signOff {
+  margin-top: 2.2cqw;
+  font-family: var(--font-display);
+  font-size: 2.45cqw;
+  font-weight: 400;
+  line-height: 1.15;
+  color: #000;
+}
+
+/* Elementor: #69b2791 — Pinyon Script 2.3em, 600, #583701. Sits close under
+   "With love," rather than a full gap below it. */
+.signature {
+  margin-top: -1.6cqw;
+  font-family: var(--font-script);
+  font-size: 4.85cqw;
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--c-gold);
+}
+
+/* Elementor tablet breakpoint — the box widens (there, 50vh contained inside a
+   100vw container); the type is in cqw so it follows on its own. */
+@media (max-width: 1024px) {
+  .heart {
+    width: 78vw;
+  }
+}
+
+/* Elementor mobile breakpoint — .e-9b20c2e-a82e884 goes min-width 100vw,
+   pulled back to 95vw here so the lace never touches the screen edge. */
+@media (max-width: 767px) {
+  .heart {
+    width: 95vw;
+  }
+}

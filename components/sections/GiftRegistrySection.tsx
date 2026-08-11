@@ -39,7 +39,7 @@ export default function GiftRegistrySection({ style }: GiftRegistrySectionProps)
       <div className={styles.row} style={style}>
         <Image
           src="/el-gift-registry.png"
-          alt="Gift Registry — your presence at our wedding is the greatest gift of all. For those who wish to contribute, you may transfer directly to Bank Islam 05067021314322, Anis Sufea Binti Ismail."
+          alt="Gift Registry — your presence at our wedding is the greatest gift of all. However, for those who wish to contribute, you may transfer directly to Bank Islam 05067021314322, Anis Sufea Binti Ismail."
           width={746}
           height={570}
           className={styles.registryCard}
@@ -64,7 +64,7 @@ export default function GiftRegistrySection({ style }: GiftRegistrySectionProps)
         />
 
         <div className={styles.questionsType}>
-          <h2 className={styles.questionsHeading}>Have any questions?</h2>
+          <h2 className={styles.questionsHeading}>Further Questions:</h2>
           <p className={styles.questionsSub}>Contact us directly or our family members:</p>
 
           {CONTACT_GROUPS.map((group) => (
@@ -84,17 +84,6 @@ export default function GiftRegistrySection({ style }: GiftRegistrySectionProps)
             </div>
           ))}
         </div>
-      </div>
-
-      <div className={styles.row}>
-        <Image
-          src="/el-thankyou-heart.png"
-          alt="From the bottom of our hearts — thank you for being a part of our special day. We appreciate all the love and support that we receive from our loved ones, be it near or far. We are so grateful for your attendance, kind wishes and prayers. With love, Anis and Zafran."
-          width={660}
-          height={576}
-          className={styles.heart}
-          sizes="(max-width: 1024px) 100vw, 41vw"
-        />
       </div>
     </section>
   );

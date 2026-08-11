@@ -29,14 +29,6 @@
   height: auto;
 }
 
-/* Elementor: #ca0380e max-width 41vw (107vw at tablet — capped here at 100vw
-   so the page never scrolls sideways) */
-.heart {
-  width: 41vw;
-  max-width: 660px;
-  height: auto;
-}
-
 /* ── Questions card: Elementor .e-c2b42af-ffd03ea — the scalloped card as a
    contained background with the contact column laid over it.
 
@@ -179,10 +171,6 @@
     width: 100vw;
   }
 
-  .heart {
-    width: 100vw;
-  }
-
   .questions {
     width: 100vw;
   }
@@ -197,10 +185,6 @@
 @media (max-width: 767px) {
   .registryCard {
     width: 96vw;
-  }
-
-  .heart {
-    width: 95vw;
   }
 
   /* Elementor: heading 1.5em, sub + side labels 0.7em, buttons 0.6em — the

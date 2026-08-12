@@ -4,6 +4,7 @@ import { CSSProperties } from 'react';
 import Image from 'next/image';
 import styles from './GiftRegistrySection.module.css';
 import PillButton from '../design/PillButton';
+import { useInviteVariant } from '../../lib/invite-variant';
 
 const CONTACT_GROUPS = [
   {
@@ -34,25 +35,33 @@ interface GiftRegistrySectionProps {
 }
 
 export default function GiftRegistrySection({ style }: GiftRegistrySectionProps) {
+  // ?p=v1 drops the registry card and its button; the Further Questions card
+  // below is not part of the registry and stays on every variant.
+  const { showRegistry } = useInviteVariant();
+
   return (
     <section id="gift" className={styles.section}>
-      <div className={styles.row} style={style}>
-        <Image
-          src="/el-gift-registry.png"
-          alt="Gift Registry — your presence at our wedding is the greatest gift of all. However, for those who wish to contribute, you may transfer directly to Bank Islam 05067021314322, Anis Sufea Binti Ismail."
-          width={746}
-          height={570}
-          className={styles.registryCard}
-          sizes="(max-width: 1024px) 100vw, 41vw"
-        />
-      </div>
+      {showRegistry && (
+        <>
+          <div className={styles.row} style={style}>
+            <Image
+              src="/el-gift-registry.png"
+              alt="Gift Registry — your presence at our wedding is the greatest gift of all. However, for those who wish to contribute, you may transfer directly to Bank Islam 05067021314322, Anis Sufea Binti Ismail."
+              width={746}
+              height={570}
+              className={styles.registryCard}
+              sizes="(max-width: 1024px) 100vw, 41vw"
+            />
+          </div>
 
-      <div className={styles.row}>
-        {/* Elementor sets flex-direction: row-reverse on this button — arrow trails the label */}
-        <PillButton as="a" href="/registry" variant="brown">
-          View our Registry <ArrowIcon />
-        </PillButton>
-      </div>
+          <div className={styles.row}>
+            {/* Elementor sets flex-direction: row-reverse on this button — arrow trails the label */}
+            <PillButton as="a" href="/registry" variant="brown">
+              View our Registry <ArrowIcon />
+            </PillButton>
+          </div>
+        </>
+      )}
 
       <div className={styles.questions}>
         <Image

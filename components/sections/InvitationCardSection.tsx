@@ -8,13 +8,14 @@ import { faWaze } from '@fortawesome/free-brands-svg-icons';
 import { faLocationDot, faCalendarPlus } from '@fortawesome/free-solid-svg-icons';
 import styles from './InvitationCardSection.module.css';
 import PillButton from '../design/PillButton';
+import { useInviteVariant } from '../../lib/invite-variant';
 
 const WAZE_URL = 'https://waze.com/ul/hw282984j5';
 const MAPS_URL = 'https://maps.app.goo.gl/hrAxPHoTWdKjrtNJ6';
-const CALENDAR_URL =
+const calendarUrl = (dates: string) =>
   'https://www.google.com/calendar/render?action=TEMPLATE' +
   '&text=The+Wedding+of+Anis+%26+Zafran' +
-  '&dates=20261031T190000/20261031T230000' +
+  `&dates=${dates}` +
   '&details=Walimatul+Urus' +
   '&location=Grand+Ballroom,+BoraOmbak+Marina+Putrajaya';
 
@@ -33,7 +34,13 @@ const INVITE_LINES = [
   'hadir ke majlis perkahwinan anakanda kami',
 ];
 
-const DETAIL_LINES = ['Sabtu, 31 Oktober 2026', '7.00 PM – 11.00 PM', 'Grand Ballroom,', 'BoraOmbak Putrajaya'];
+/** The time line comes from the ?p= variant — see lib/invite-variant.ts */
+const detailLines = (timeLabel: string) => [
+  'Sabtu, 31 Oktober 2026',
+  timeLabel,
+  'Grand Ballroom,',
+  'BoraOmbak Putrajaya',
+];
 
 interface InvitationCardSectionProps {
   revealed: boolean;
@@ -48,6 +55,7 @@ function fadeUp(isIn: boolean, delay: string): CSSProperties {
 }
 
 export default function InvitationCardSection({ revealed }: InvitationCardSectionProps) {
+  const variant = useInviteVariant();
   const [snowflakeCount, setSnowflakeCount] = useState(60);
 
   useEffect(() => {
@@ -117,7 +125,7 @@ export default function InvitationCardSection({ revealed }: InvitationCardSectio
           </h1>
 
           <div className={styles.details} style={fadeUp(revealed, '0.6s')}>
-            {DETAIL_LINES.map((line) => (
+            {detailLines(variant.timeLabel).map((line) => (
               <p key={line}>{line}</p>
             ))}
           </div>
@@ -133,7 +141,7 @@ export default function InvitationCardSection({ revealed }: InvitationCardSectio
             Google Maps
           </PillButton>
           {/* Spans both columns on the mobile grid — see .ctaGrid */}
-          <PillButton as="a" href={CALENDAR_URL} target="_blank" rel="noopener noreferrer" variant="brown" icon={<FontAwesomeIcon icon={faCalendarPlus} />} style={pill(2)}>
+          <PillButton as="a" href={calendarUrl(variant.calendarDates)} target="_blank" rel="noopener noreferrer" variant="brown" icon={<FontAwesomeIcon icon={faCalendarPlus} />} style={pill(2)}>
             Add to Calendar
           </PillButton>
         </div>

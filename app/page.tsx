@@ -88,7 +88,10 @@ export default function Home() {
       {/* Always mounted so the <audio> element exists when handleReveal fires;
           the control itself stays hidden until `visible`. */}
       <MusicControl ref={musicRef} visible={revealed} />
-      <BottomNav visible={revealed} />
+      {/* Suspense: BottomNav reads the ?p= variant via useSearchParams */}
+      <Suspense fallback={null}>
+        <BottomNav visible={revealed} />
+      </Suspense>
     </>
   );
 }

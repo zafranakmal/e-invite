@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useInviteVariant } from '../lib/invite-variant';
 
 interface BottomNavProps {
   visible: boolean; // only show after invitation is revealed
@@ -64,6 +65,11 @@ const NAV_ITEMS = [
 ];
 
 export default function BottomNav({ visible }: BottomNavProps) {
+  // On the no-registry variant the Gift tab would scroll to a section that no
+  // longer holds a gift — drop the tab and leave the rest of the bar untouched.
+  const { showRegistry } = useInviteVariant();
+  const navItems = showRegistry ? NAV_ITEMS : NAV_ITEMS.filter((item) => item.id !== 'gift');
+
   const [activeId, setActiveId] = useState<string>('invitation');
   const [scrollProgress, setScrollProgress] = useState(0);
   const [mounted, setMounted] = useState(false);
@@ -96,7 +102,7 @@ export default function BottomNav({ visible }: BottomNavProps) {
         const max = doc.scrollHeight - doc.clientHeight;
         setScrollProgress(max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0);
 
-        const ids = NAV_ITEMS.map((item) => item.id);
+        const ids = NAV_ITEMS.filter((item) => showRegistry || item.id !== 'gift').map((item) => item.id);
         for (let i = ids.length - 1; i >= 0; i--) {
           const el = document.getElementById(ids[i]);
           if (el) {
@@ -116,7 +122,7 @@ export default function BottomNav({ visible }: BottomNavProps) {
       window.removeEventListener('scroll', handleScroll);
       cancelAnimationFrame(rafId);
     };
-  }, [visible]);
+  }, [visible, showRegistry]);
 
   const handleNav = (id: string) => {
     setActiveId(id);
@@ -136,7 +142,7 @@ export default function BottomNav({ visible }: BottomNavProps) {
   return (
     <nav className={`bottom-nav${shown ? ' visible' : ''}`} role="navigation" aria-label="Page sections">
       <div className="scroll-progress" style={{ width: `${scrollProgress * 100}%` }} />
-      {NAV_ITEMS.map((item) => (
+      {navItems.map((item) => (
         <button
           key={item.id}
           onClick={() => handleNav(item.id)}

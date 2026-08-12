@@ -151,6 +151,59 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ---
 
+## Sharing & SEO
+
+The invite is sent by WhatsApp and Instagram DM, so the link preview is a
+first-class feature rather than an afterthought.
+
+| File | Role |
+|---|---|
+| `app/opengraph-image.jpg` | 1200×630 preview card — generated, committed |
+| `app/opengraph-image.alt.txt` | its alt text (**no trailing newline** — Next doesn't trim it) |
+| `scripts/build-og-image.py` | regenerates the card from `public/hero-sunflower-field.png` + `public/wedding-lockup.png` |
+| `scripts/build-icons.py` | regenerates `app/icon.png` and `app/apple-icon.png` from the A&Z monogram |
+
+Both scripts are run by hand (`python3 scripts/build-og-image.py`), like the
+Elementor exports in `public/` — they are not part of `npm run build`. They need
+Pillow and nothing else.
+
+The tab icon trims the monogram's trailing swash and thickens the strokes
+before downscaling. Both moves are needed: downscaled whole, the mark keeps
+0% solid ink at 16px and is pure antialiasing haze. The iOS icon keeps the
+mark entire, since at 180px the swash survives.
+
+The preview uses Next's `opengraph-image` file convention rather than a manual
+`openGraph.images` entry, which buys three things: real `og:image:width`/`height`
+(WhatsApp and Facebook use them to pick the large card over a small thumbnail), a
+content hash on the URL that busts WhatsApp's per-URL cache — it has no purge
+tool — and `twitter:card` for free.
+
+### Why robots.txt is permissive while every page is `noindex`
+
+**Do not add `Disallow: /` to `app/robots.ts`.** It looks like the way to keep
+the invite private, and it breaks two things at once:
+
+1. `facebookexternalhit` serves Facebook **and Instagram** DM previews, and it
+   honours robots.txt. Disallowing kills the previews the site is shared with.
+2. Google never fetches a URL it's disallowed from, so it would never see the
+   `noindex` tag — and the bare URL could still get listed. Blocking the crawl
+   and noindexing are mutually exclusive.
+
+Privacy comes from `metadata.robots` in `app/layout.tsx` instead, which Google
+honours and social scrapers ignore — exactly the split we want. It matters here
+because the page prints a bank account number and four family mobile numbers.
+
+`/api/` is the one exception: it's disallowed in robots.txt *and* sent
+`X-Robots-Tag: noindex` from `next.config.js`, since JSON has no `<head>` to
+carry a meta tag and `GET /api/wishes` returns guest names.
+
+### Testing a preview
+
+- **Facebook / Instagram** — [Sharing Debugger](https://developers.facebook.com/tools/debug/) → paste the URL → **Scrape Again**. Same crawler and cache as IG.
+- **WhatsApp** — send the link to yourself in "Message yourself". It caches per-URL with no purge, so append a throwaway `?t=2` while iterating.
+
+---
+
 ## Deployment
 
 ### Vercel (recommended)

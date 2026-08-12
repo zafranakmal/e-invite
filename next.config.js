@@ -45,6 +45,14 @@ const nextConfig = {
           },
         ],
       },
+      // Header sets merge, so the block above still applies here. This is the
+      // half of the /api/ rule in app/robots.ts that actually bites: robots.txt
+      // only asks a crawler not to fetch, and JSON responses have no <head> to
+      // put a meta tag in. GET /api/wishes returns guest names.
+      {
+        source: '/api/:path*',
+        headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
+      },
     ];
   },
 };

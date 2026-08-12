@@ -308,7 +308,7 @@ export default function RegistryPage() {
       <section id="registry-payment" className={styles.payment}>
         <h2 className={styles.paymentTitle}>Send Your Gift</h2>
         <p className={styles.paymentSub}>
-          All contributions go directly toward building our life together.
+          All contributions go directly towards building our lives together.
         </p>
 
         <div className={styles.paymentGrid}>

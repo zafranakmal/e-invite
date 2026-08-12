@@ -7,7 +7,7 @@ import styles from './ThankYouSection.module.css';
 const NOTE = [
   'Thank you for being part of our special day.',
   'We appreciate all the love and support that we receive from our loved ones, be it near or far.',
-  'We are so grateful for your attendance, kind wishes and prayers',
+  'We are so grateful for your attendance, kind wishes and prayers.',
 ];
 
 export default function ThankYouSection() {

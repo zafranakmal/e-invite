@@ -5,7 +5,7 @@ import styles from './ThankYouSection.module.css';
    <p><br></p> spacers. "your attendance" is corrected from the export's
    "you attendance". */
 const NOTE = [
-  'Thank you for being a part of our special day.',
+  'Thank you for being part of our special day.',
   'We appreciate all the love and support that we receive from our loved ones, be it near or far.',
   'We are so grateful for your attendance, kind wishes and prayers',
 ];

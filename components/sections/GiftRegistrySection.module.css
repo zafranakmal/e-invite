@@ -1,16 +1,14 @@
-/* Elementor: .e-ad766c3-4a7bb01 — min-height 28vh. Transparent: the backdrop
-   comes from the shared scroll stage in InvitationContent.module.css. */
+/* Elementor: .e-ad766c3-4a7bb01. Transparent: the backdrop comes from the
+   shared scroll stage in InvitationContent.module.css. */
 .section {
   position: relative;
   z-index: 1;
   width: 100%;
-  min-height: 28vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 1.5rem;
-  padding-block: 3rem;
+  gap: var(--sec-gap);
+  padding-block: var(--sec-pad);
   overflow: hidden;
 }
 
@@ -29,12 +27,12 @@
    name, not a swap in place: the optimizer keys its cache on the URL, so the
    old raster would keep being served under the old one.
 
-   Sizing keeps the old raster's box — 41vw / 100vw / 96vw, capped at 746px —
-   so the card still shares an edge with .questions below it. The second cap
-   keeps it under 85svh tall, expressed as a width (85svh x the ratio) rather
-   than a max-height, which would clamp the box against the aspect-ratio and
-   letterbox the artwork inside it. svh, not vh: on mobile vh means the tall
-   viewport with the address bar hidden. Matches ThankYouSection.
+   On the page's shared measure (--card-w), so it lines up with .questions
+   below it and with every other card down the column — its own 41vw / 100vw /
+   96vw ladder had it wider than the glass cards on desktop and running edge to
+   edge on tablet. The height ceiling is a --card-h share expressed as a width
+   (x the ratio) rather than a max-height, which would clamp the box against
+   the aspect-ratio and letterbox the artwork inside it.
 
    Elementor's own box can't be ported literally: it is min-height 40vh with
    the artwork sized by `contain` (height-driven, so the card's width swings
@@ -45,8 +43,8 @@
 .registryCard {
   position: relative;
   z-index: 1;
-  width: 41vw;
-  max-width: min(746px, calc(85svh * 1353 / 1033));
+  width: var(--card-w);
+  max-width: min(var(--card-max), calc(var(--card-h) * 1353 / 1033));
   aspect-ratio: 1353 / 1033;
   /* Sizing container: every size below is a share of the card's own width
      (cqw), so the copy scales with the artwork and keeps the raster's
@@ -150,18 +148,10 @@
    Deviates from Elementor on sizing: there the box is min-height 60vh and the
    artwork is sized by `contain` against it, i.e. height-driven, which left the
    card visibly narrower than the registry and thank-you artwork it sits
-   between. Width is the driving dimension here instead, mirroring
-   .registryCard step for step (41vw / 100vw / 96vw, capped at 746px) so all
-   three cards share an edge down the column. Height follows from the
-   artwork's 1120:1530 ratio.
-
-   The second cap keeps the card under 95svh tall. It is expressed as a width
-   (95svh x the ratio) rather than a max-height because max-height would clamp
-   the box against the aspect-ratio and letterbox the artwork inside it. Only
-   binds on short/landscape viewports — 41vw is the smaller term on a normal
-   desktop, 96vw on a phone. svh, not vh: on mobile vh means the tall viewport
-   with the address bar hidden, so a vh cap can still run past the visible
-   screen. Matches InvitationCardSection.
+   between. Width is the driving dimension here instead, on the same --card-w
+   as .registryCard so the two share an edge. Height follows from the artwork's
+   1120:1530 ratio — the tallest ratio of the three cards, so this is the one
+   whose --card-h ceiling binds first on a short viewport.
 
    Every type size below is a share of the card's own width (cqw), so the copy
    scales with the card and can never spill outside it — Elementor's own stack
@@ -169,8 +159,8 @@
 .questions {
   position: relative;
   z-index: 1;
-  width: 30vw;
-  max-width: min(746px, calc(95svh * 1120 / 1530));
+  width: var(--card-w);
+  max-width: min(var(--card-max), calc(var(--card-h) * 1120 / 1530));
   aspect-ratio: 1120 / 1530;
   container-type: size;
 }
@@ -278,18 +268,9 @@
   background: #62553f;
 }
 
-/* Elementor tablet breakpoint. The card box needs no override — its
-   height-driven width already tracks the viewport — so only the type scale
-   moves, matching Elementor's per-breakpoint font sizes. */
+/* Elementor tablet breakpoint. Both card boxes track --card-w on their own, so
+   only the type scale moves here, matching Elementor's per-breakpoint sizes. */
 @media (max-width: 1024px) {
-  .registryCard {
-    width: 100vw;
-  }
-
-  .questions {
-    width: 100vw;
-  }
-
   /* Elementor: #dd646c1 1.7em */
   .questionsHeading {
     font-size: 8cqw;
@@ -298,10 +279,6 @@
 
 /* Elementor mobile breakpoint */
 @media (max-width: 767px) {
-  .registryCard {
-    width: 96vw;
-  }
-
   /* Elementor: heading 1.5em, sub + side labels 0.7em, buttons 0.6em — the
      type sits proportionally smaller on the card here than on desktop. */
   .questionsHeading {

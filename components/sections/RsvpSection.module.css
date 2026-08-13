@@ -1,37 +1,40 @@
-/* Elementor: .e-20ea165-d7890c0 — min-height 28vh. Holds two GlassCards: the
-   RSVP form and Warm Wishes. Transparent: the backdrop comes from the shared
-   scroll stage in InvitationContent.module.css. */
+/* Elementor: .e-20ea165-d7890c0 — holds two GlassCards: the RSVP form and Warm
+   Wishes. Transparent: the backdrop comes from the shared scroll stage in
+   InvitationContent.module.css. The gap is what separates the two cards, now
+   that GlassCard carries no margin of its own. */
 .section {
   position: relative;
   z-index: 1;
   width: 100%;
-  min-height: 28vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding-block: 3rem;
+  gap: var(--sec-gap);
+  padding-block: var(--sec-pad);
   overflow: hidden;
 }
 
-/* Elementor: #ad53411 — Pinyon Script 3.2em */
+/* Elementor: #ad53411 — Pinyon Script 3.2em. Same space below it as the Warm
+   Wishes card puts under its own heading block. */
 .heading {
   font-family: var(--font-script);
   font-size: 3.2rem;
   font-weight: 500;
   line-height: 1.2;
   color: var(--c-gold);
-  margin-bottom: 0.5rem;
+  margin-bottom: var(--s-5);
 }
 
-/* ── Form (carried over unchanged from the original InvitationContent) ── */
+/* ── Form ──
+   No padding of its own: the glass card's inner column already insets it, and
+   the extra 1rem here held the fields short of the heading above and the Check
+   RSVP divider below, so nothing in the card shared a left edge. */
 .rsvpForm {
   width: 100%;
   display: flex;
   flex-direction: column;
   gap: 1.1rem;
   text-align: left;
-  padding: 1rem;
 }
 
 /* Labels stay above the field at every width — matching Elementor's
@@ -59,8 +62,8 @@
 
 .checkRsvp {
   width: 100%;
-  margin-top: 2rem;
-  padding-top: 1.5rem;
+  margin-top: var(--s-5);
+  padding-top: var(--s-5);
   border-top: 1px solid var(--c-line-soft);
 }
 
@@ -117,9 +120,5 @@
 @media (max-width: 767px) {
   .heading {
     font-size: 1.9rem;
-  }
-
-  .rsvpForm {
-    padding: 0.5rem;
   }
 }

@@ -11,30 +11,20 @@
   align-items: center;
   /* Logo + credit sit as one centred group rather than hugging the left edge */
   justify-content: center;
-  gap: 1.25rem;
+  gap: var(--s-5);
   background: var(--c-el-dark);
-  /* The extra bottom padding runs the footer's surface behind the fixed
-     BottomNav, so no lighter band shows between the two. */
-  padding-block: 0.2rem calc(1rem + var(--nav-h));
+  /* Even above and below: the trailing --nav-h runs the footer's surface behind
+     the fixed BottomNav (so no lighter band shows between the two) and is not
+     visible space, which leaves --s-5 of clear room on both sides of the text. */
+  padding-block: var(--s-5) calc(var(--s-5) + var(--nav-h));
+  padding-inline: var(--s-5);
 }
 
-/* Elementor: .e-8fe7b24. Sized to the logo on desktop so the centred group is
-   only as wide as its content; the tablet rule below restores a % column. */
-.logoCol {
-  width: auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-/* Elementor: #9ddc090 max-width 24% — the old 24% of a 12% column */
-.logo {
-  width: 4vw;
-  height: auto;
-  margin-top: 0.5rem
-}
-
-/* Elementor: .e-72247b4 */
+/* Elementor: .e-8fe7b24 / .e-72247b4 — both columns hug their content at every
+   width, so the pair stays centred as one group. The old percentage columns
+   (auto/auto on desktop, 20%/80% on tablet, 100% on mobile) moved the logo to
+   a different place in the bar at each breakpoint. */
+.logoCol,
 .creditCol {
   width: auto;
   display: flex;
@@ -43,12 +33,19 @@
   align-items: center;
 }
 
+/* Elementor: #9ddc090. One size the whole way across — the old 4vw / 70% of a
+   20% column / 100% ladder rendered the mark at roughly 58px, 143px and 75px
+   at the three breakpoints. Vertical placement is the footer's align-items,
+   not a margin nudge. */
+.logo {
+  width: clamp(2.5rem, 6vw, 3.5rem);
+  height: auto;
+}
+
 /* Elementor: #62ca0bb — Belleza 0.9em, white. The max-width keeps the credit
    wrapping to two lines the way the old 38.658% column did. */
 .credit {
-  width: auto;
   max-width: 40rem;
-  margin-top: 10px;
   text-align: center;
   font-family: var(--font-credit);
   font-size: 0.9rem;
@@ -61,47 +58,8 @@
   vertical-align: -0.1em;
 }
 
-/* Elementor tablet breakpoint — back to percentage columns that fill the bar */
-@media (max-width: 1024px) {
-  .footer {
-    gap: 0;
-  }
-
-  .logoCol {
-    width: 20%;
-  }
-
-  .logo {
-    width: 70%;
-  }
-
-  .creditCol {
-    width: 80%;
-    align-items: center;
-    align-self: center;
-  }
-
-  .credit {
-    width: 87%;
-    max-width: none;
-  }
-}
-
 /* Elementor mobile breakpoint */
 @media (max-width: 767px) {
-  /* Keeps the logo off the very edge of the screen */
-  .logoCol {
-    padding-inline-start: 1rem;
-  }
-
-  .logo {
-    width: 100%;
-  }
-
-  .creditCol {
-    width: 100%;
-  }
-
   .credit {
     font-size: 0.7rem;
   }

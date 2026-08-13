@@ -63,7 +63,7 @@ export default function GiftRegistrySection({ style }: GiftRegistrySectionProps)
                 src="/el-registry-card.png"
                 alt=""
                 fill
-                sizes="(max-width: 767px) 96vw, (max-width: 1024px) 100vw, 41vw"
+                sizes="(max-width: 767px) 92vw, (max-width: 1024px) 78vw, 38vw"
                 className={styles.registryArt}
               />
 
@@ -85,7 +85,7 @@ export default function GiftRegistrySection({ style }: GiftRegistrySectionProps)
                     width={1200}
                     height={1200}
                     className={styles.qr}
-                    sizes="(max-width: 767px) 26vw, (max-width: 1024px) 27vw, 11vw"
+                    sizes="(max-width: 767px) 25vw, (max-width: 1024px) 21vw, 11vw"
                   />
 
                   <div className={styles.bank}>
@@ -112,7 +112,7 @@ export default function GiftRegistrySection({ style }: GiftRegistrySectionProps)
           src="/el-questions-card.png"
           alt=""
           fill
-          sizes="(max-width: 767px) 96vw, (max-width: 1024px) 100vw, 41vw"
+          sizes="(max-width: 767px) 92vw, (max-width: 1024px) 78vw, 38vw"
           className={styles.questionsArt}
         />
 

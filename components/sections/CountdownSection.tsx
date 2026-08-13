@@ -25,7 +25,7 @@ export default function CountdownSection({ style }: CountdownSectionProps) {
           width={1024}
           height={538}
           className={styles.heading}
-          sizes="(max-width: 767px) 80vw, (max-width: 1024px) 40vw, 23vw"
+          sizes="(max-width: 767px) 84vw, (max-width: 1024px) 70vw, 34vw"
         />
         <Countdown target={countdownTarget} variant="elementor" className={styles.clock} />
       </GlassCard>

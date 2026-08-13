@@ -1,15 +1,14 @@
-/* Elementor: .e-9f8dec3 — min-height 18vh, column. Transparent: the backdrop
-   comes from the shared scroll stage in InvitationContent.module.css. */
+/* Elementor: .e-9f8dec3 — column. Transparent: the backdrop comes from the
+   shared scroll stage in InvitationContent.module.css. */
 .section {
   position: relative;
   z-index: 1;
   width: 100%;
-  min-height: 18vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding-block: 3rem;
+  gap: var(--sec-gap);
+  padding-block: var(--sec-pad);
   overflow: hidden;
 }
 
@@ -19,21 +18,16 @@
    Deviates from Elementor on sizing. There the box is min-height 50vh with the
    artwork sized by `contain`, so the heart is height-driven and its width
    swings with the viewport's aspect ratio; the copy inside is fixed px and
-   doesn't follow. Width drives it here instead, mirroring .registryCard and
-   .questions in GiftRegistrySection so the three cards share an edge down the
-   column. 38vw is what Elementor's 50vh works out to on a 1440x900 desktop.
+   doesn't follow. Width drives it here instead, on the page's shared measure
+   (--card-w) so it shares an edge with .registryCard and .questions above it.
 
-   The second cap keeps the heart under 85svh tall, expressed as a width
-   (85svh x the ratio) rather than a max-height — max-height would clamp the
-   box against the aspect-ratio and letterbox the artwork inside it. svh, not
-   vh: on mobile vh means the tall viewport with the address bar hidden, so a
-   vh cap can still run past the visible screen. Matches InvitationCardSection.
-   ── */
+   Being the widest ratio of the three cards, its --card-h ceiling effectively
+   never binds; it is stated anyway so all three read the same way. ── */
 .heart {
   position: relative;
   z-index: 1;
-  width: 38vw;
-  max-width: min(724px, calc(85svh * 724 / 602));
+  width: var(--card-w);
+  max-width: min(var(--card-max), calc(var(--card-h) * 724 / 602));
   aspect-ratio: 724 / 602;
   /* Sizing container: every type size below is a share of the heart's own
      width (cqw), so the note scales with the artwork and keeps the same
@@ -121,18 +115,5 @@
   color: var(--c-gold);
 }
 
-/* Elementor tablet breakpoint — the box widens (there, 50vh contained inside a
-   100vw container); the type is in cqw so it follows on its own. */
-@media (max-width: 1024px) {
-  .heart {
-    width: 78vw;
-  }
-}
-
-/* Elementor mobile breakpoint — .e-9b20c2e-a82e884 goes min-width 100vw,
-   pulled back to 95vw here so the lace never touches the screen edge. */
-@media (max-width: 767px) {
-  .heart {
-    width: 95vw;
-  }
-}
+/* No breakpoint overrides: the box tracks --card-w and the type is in cqw, so
+   both follow the shared measure on their own. */

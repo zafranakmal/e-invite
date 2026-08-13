@@ -5,7 +5,7 @@ export default function SiteFooter() {
   return (
     <footer className={styles.footer}>
       <div className={styles.logoCol}>
-        <Image src="/el-footer-logo.png" alt="Anis & Zafran" width={1000} height={1000} className={styles.logo} sizes="10vw" />
+        <Image src="/el-footer-logo.png" alt="Anis & Zafran" width={1000} height={1000} className={styles.logo} sizes="56px" />
       </div>
 
       <div className={styles.creditCol}>

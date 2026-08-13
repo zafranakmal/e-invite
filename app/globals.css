@@ -54,6 +54,30 @@
 
   --nav-h: 4.25rem;
 
+  /* ── Page rhythm below the invitation card ──
+     One vertical step between sections, one gap inside them, and one content
+     measure shared by every block down the column. Each section module reads
+     these instead of picking its own vh/%/rem values, which is what left the
+     stack with seven different widths and five different gaps.
+
+     --card-h is a ceiling on how tall the artwork cards may get. Each card
+     applies it as a *width*, through its own aspect ratio — a max-height would
+     clamp the box against the aspect-ratio and letterbox the art inside it. It
+     only binds on short or landscape viewports; at every common size the cards
+     all land on --card-w exactly. svh, not vh: on mobile vh means the tall
+     viewport with the URL bar hidden, so a vh cap can run past the screen.
+
+     --card-max is 660px rather than the artwork's natural width so the tallest
+     plate (the 1409x2000 itinerary) still clears --card-h on a 1080p screen —
+     above that it would be the one card sitting narrower than the rest. */
+  --sec-pad: 3rem;
+  --sec-gap: 2rem;
+  --card-w: 38vw;
+  --card-max: 660px;
+  --card-h: 95svh;
+  --card-pad-block: 2.5rem;
+  --card-pad-inline: 2rem;
+
   --shadow-emboss: inset 0 1px 0 rgba(255,255,255,0.55), inset 0 -1px 0 rgba(44,34,24,0.06), 0 2px 10px rgba(44,34,24,0.07);
   --shadow-lift: 0 2px 8px rgba(44,34,24,0.08);
 
@@ -61,6 +85,24 @@
   --dur-fast: 200ms;
   --dur-mid: 400ms;
   --dur-slow: 800ms;
+}
+
+/* Elementor tablet breakpoint — the measure widens, the rhythm holds. */
+@media (max-width: 1024px) {
+  :root {
+    --card-w: 78vw;
+  }
+}
+
+/* Elementor mobile breakpoint */
+@media (max-width: 767px) {
+  :root {
+    --sec-pad: 2.25rem;
+    --sec-gap: 1.5rem;
+    --card-w: 92vw;
+    --card-pad-block: 1.75rem;
+    --card-pad-inline: 1.25rem;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -15,13 +15,13 @@
   letter-spacing: 0.15em;
   text-transform: uppercase;
   color: var(--c-ink-3);
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--s-5);
 }
 
 .viewport {
   width: 100%;
   overflow: hidden;
-  margin-bottom: 2rem;
+  margin-bottom: var(--s-5);
 }
 
 /* A window onto the wheel — roughly three wishes tall, both edges faded so

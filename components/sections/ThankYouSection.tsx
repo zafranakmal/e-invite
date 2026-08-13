@@ -18,7 +18,7 @@ export default function ThankYouSection() {
           src="/el-thankyou-heart.png"
           alt=""
           fill
-          sizes="(max-width: 767px) 95vw, (max-width: 1024px) 78vw, 38vw"
+          sizes="(max-width: 767px) 92vw, (max-width: 1024px) 78vw, 38vw"
           className={styles.heartArt}
         />
 

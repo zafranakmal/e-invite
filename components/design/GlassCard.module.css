@@ -1,11 +1,19 @@
-/* Elementor: .e-a64c36b-333640c — the "css.glass" card used by both the RSVP
-   form and the Warm Wishes block in .e-20ea165-d7890c0 */
+/* Elementor: .e-a64c36b-333640c — the "css.glass" card used by the countdown,
+   the RSVP form and the Warm Wishes block.
+
+   On the shared measure, so the three glass cards line up with the artwork
+   cards above and below them. Elementor's own 30vw / 70vw / 90vw ladder put
+   them at three widths none of the other sections used.
+
+   No margin of its own: the distance to the next card is the section's gap, so
+   two stacked cards are exactly one --sec-gap apart. The old `margin: 2vh`
+   applied on all four sides, which meant the *horizontal* inset was driven by
+   viewport height — it grew on a tall monitor and vanished on a short one. */
 .glass {
   position: relative;
   z-index: 1;
-  width: 100%;
-  max-width: 30vw;
-  margin: 2vh;
+  width: var(--card-w);
+  max-width: var(--card-max);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -18,53 +26,25 @@
   border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
-/* Elementor: .e-a6d8fb7-fb8568a — inner column */
+/* Elementor: .e-a6d8fb7-fb8568a — inner column. Fills the card and insets its
+   contents by a fixed padding, rather than the old 23vw/40vw/88vw max-width
+   ladder that left an uneven, viewport-dependent margin inside the glass. */
 .inner {
   width: 100%;
-  max-width: 23vw;
-  min-width: 300px;
-  padding-block: 5%;
-  padding-inline: 2%;
+  padding-block: var(--card-pad-block);
+  padding-inline: var(--card-pad-inline);
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
 }
 
-/* Elementor tablet breakpoint.
-   Elementor also sets max-height:10% on the inner column — skipped, it would
-   clip the card to a sliver. */
-@media (max-width: 1024px) {
-  .glass {
-    max-width: 70vw;
-  }
-
-  .inner {
-    max-width: 40vw;
-  }
-}
-
-/* Elementor mobile breakpoint — the outer card goes transparent and the glass
-   treatment moves onto the inner column. */
+/* Elementor mobile breakpoint — the glass treatment drops away and the content
+   sits straight on the backdrop. The box keeps its width so the column's edge
+   still runs through it. */
 @media (max-width: 767px) {
   .glass {
-    max-width: 90vw;
-    padding: 0;
     background: rgba(255, 255, 255, 0);
     border-color: rgba(255, 255, 255, 0.1);
-  }
-
-  .inner {
-    max-width: 88vw;
-    /* The desktop floor would exceed 88vw on narrow phones and push the card
-       past the viewport — the max-width governs on its own here. */
-    min-width: 0;
-    margin: 0;
-    /* background: rgba(255, 255, 255, 0.31);
-    border-radius: 16px;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.3); */
   }
 }

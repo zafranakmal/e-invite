@@ -22,11 +22,126 @@
   width: 100%;
 }
 
-/* Elementor: #1fe2eea max-width 41vw */
+/* ── Registry card: Elementor .e-25da946-11ccf22 — the scalloped card as a
+   contained background with the copy laid over it. It was a flat 746x570 PNG
+   (el-gift-registry.png) with heading, blurb, QR and bank details baked in;
+   the artwork is now the blank card and every line is real text. New file
+   name, not a swap in place: the optimizer keys its cache on the URL, so the
+   old raster would keep being served under the old one.
+
+   Sizing keeps the old raster's box — 41vw / 100vw / 96vw, capped at 746px —
+   so the card still shares an edge with .questions below it. The second cap
+   keeps it under 85svh tall, expressed as a width (85svh x the ratio) rather
+   than a max-height, which would clamp the box against the aspect-ratio and
+   letterbox the artwork inside it. svh, not vh: on mobile vh means the tall
+   viewport with the address bar hidden. Matches ThankYouSection.
+
+   Elementor's own box can't be ported literally: it is min-height 40vh with
+   the artwork sized by `contain` (height-driven, so the card's width swings
+   with the viewport) and padding-inline 40% + 40%, which leaves the copy a
+   fifth of the card's width to wrap in while the artwork spans all of it.
+   Width drives the card here and the type well is inset to the flat panel
+   instead. ── */
 .registryCard {
+  position: relative;
+  z-index: 1;
   width: 41vw;
-  max-width: 746px;
+  max-width: min(746px, calc(85svh * 1353 / 1033));
+  aspect-ratio: 1353 / 1033;
+  /* Sizing container: every size below is a share of the card's own width
+     (cqw), so the copy scales with the artwork and keeps the raster's
+     proportions at every breakpoint — it can never outgrow the scallops. */
+  container-type: size;
+}
+
+.registryArt {
+  object-fit: contain;
+}
+
+/* Type well. The flat field inside the embossed border runs 10%–90% across and
+   14%–86% down (measured on the artwork); the stack is centred in the well
+   rather than in that field, which lands it high of the card's middle — where
+   the old raster had it, with the deeper margin below. */
+.registryType {
+  position: absolute;
+  top: 11%;
+  bottom: 14%;
+  left: 8%;
+  right: 8%;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* ── Type scale. Every size is a share of the card's width, measured off the
+   old raster: each line's ink was measured on the 746px PNG and divided by
+   that string's width at font-size 1em (Pinyon Script 4.77em for the heading,
+   Bellefair 20.16em for the longest blurb line, 11.34em for the bank line).
+
+   Elementor's own px sizes are set against its height-driven card, so they
+   land differently at every viewport — 3.2em/1em works out to 11.9cqw/3.7cqw
+   on a 1440x900 desktop but 2cqw for the body text on an 800px tablet. The
+   raster's proportions hold at every width instead. ── */
+
+/* Elementor: #007eb4a — Pinyon Script 3.2em, 600, #583701 */
+.registryHeading {
+  font-family: var(--font-script);
+  font-size: 11.5cqw;
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--c-gold);
+}
+
+/* Elementor: #16251f9 — Bellefair 1em/1em, #000, p margin-block-end 0.1em.
+   The width is what wraps the second sentence after "wedding," as the raster
+   did: the line runs 57cqw at this size, and the next word takes it past 59. */
+.registryCopy {
+  /* Pinyon's descenders hang far below the heading's baseline — without this
+     the "y" of Registry lands on the first line. */
+  margin-top: 1cqw;
+  width: 59cqw;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2cqw;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 2.6cqw;
+  line-height: 1.08;
+  color: #000;
+}
+
+/* Elementor: #22743bb — grid-template-columns repeat(2, 1fr), align-items
+   center. 66cqw wide so the account line clears its column: it sets 31.5cqw
+   against a 33cqw column. */
+.pay {
+  width: 66cqw;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  align-items: center;
+  justify-items: center;
+}
+
+/* Elementor: #67ec084 max-width 90% of its column. The PNG carries a
+   transparent quiet zone on all four sides, so the modules read at 23cqw —
+   what the raster had. */
+.qr {
+  width: 27cqw;
   height: auto;
+}
+
+/* Elementor: #9139ded — Bellefair 1em/1.9em, #000. The airier 1.9 is the
+   export's, not the raster's 1.08; it sets the three lines against the full
+   height of the QR beside them. nowrap so the account number can't break. */
+.bank {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 2.6cqw;
+  line-height: 1.9;
+  color: #000;
+  white-space: nowrap;
 }
 
 /* ── Questions card: Elementor .e-c2b42af-ffd03ea — the scalloped card as a

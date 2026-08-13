@@ -6,6 +6,20 @@ import styles from './GiftRegistrySection.module.css';
 import PillButton from '../design/PillButton';
 import { useInviteVariant } from '../../lib/invite-variant';
 
+/* Elementor #16251f9 — the export separates the two sentences with a
+   <p>&nbsp;</p> spacer; that becomes a gap here rather than a blank line. */
+const INTRO = [
+  'Your presence at our wedding is the greatest gift of all.',
+  'However, for those who wish to contribute to our wedding, we warmly welcome your kindness.',
+];
+
+/* Elementor #9139ded */
+const TRANSFER = [
+  'You may also transfer directly',
+  'Bank Islam | 0506 7021 3143 22',
+  'Anis Sufea Binti Ismail',
+];
+
 const CONTACT_GROUPS = [
   {
     side: 'Bride’s Side',
@@ -44,14 +58,44 @@ export default function GiftRegistrySection({ style }: GiftRegistrySectionProps)
       {showRegistry && (
         <>
           <div className={styles.row} style={style}>
-            <Image
-              src="/el-gift-registry.png"
-              alt="Gift Registry — your presence at our wedding is the greatest gift of all. However, for those who wish to contribute, you may transfer directly to Bank Islam 05067021314322, Anis Sufea Binti Ismail."
-              width={746}
-              height={570}
-              className={styles.registryCard}
-              sizes="(max-width: 1024px) 100vw, 41vw"
-            />
+            <div className={styles.registryCard}>
+              <Image
+                src="/el-registry-card.png"
+                alt=""
+                fill
+                sizes="(max-width: 767px) 96vw, (max-width: 1024px) 100vw, 41vw"
+                className={styles.registryArt}
+              />
+
+              <div className={styles.registryType}>
+                {/* Elementor #007eb4a — Pinyon Script 3.2em, #583701 */}
+                <h2 className={styles.registryHeading}>Gift Registry</h2>
+
+                <div className={styles.registryCopy}>
+                  {INTRO.map((line) => (
+                    <p key={line}>{line}</p>
+                  ))}
+                </div>
+
+                {/* Elementor #22743bb — a two-column grid, QR beside the details */}
+                <div className={styles.pay}>
+                  <Image
+                    src="/anis-qr.png"
+                    alt="DuitNow QR code for Bank Islam 0506 7021 3143 22"
+                    width={1200}
+                    height={1200}
+                    className={styles.qr}
+                    sizes="(max-width: 767px) 26vw, (max-width: 1024px) 27vw, 11vw"
+                  />
+
+                  <div className={styles.bank}>
+                    {TRANSFER.map((line) => (
+                      <p key={line}>{line}</p>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div className={styles.row}>

@@ -25,7 +25,7 @@ const CONTACT_GROUPS = [
     side: 'Bride’s Side',
     people: [
       // Elementor #142b9c9 — no number on the source button, link left as exported
-      { name: 'Ismail (Father)', href: 'https://wasap.my/' },
+      { name: 'Ismail (Father)', href: 'https://wasap.my/60198280255' },
       { name: "Nora (Mother)", href: 'https://wasap.my/60196650855' },
     ],
   },

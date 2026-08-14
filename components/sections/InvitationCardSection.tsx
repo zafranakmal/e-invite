@@ -2,13 +2,21 @@
 
 import { CSSProperties, useEffect, useState } from 'react';
 import Image from 'next/image';
-import Snowfall from 'react-snowfall';
+import dynamic from 'next/dynamic';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWaze } from '@fortawesome/free-brands-svg-icons';
 import { faLocationDot, faCalendarPlus } from '@fortawesome/free-solid-svg-icons';
 import styles from './InvitationCardSection.module.css';
 import PillButton from '../design/PillButton';
 import { useInviteVariant } from '../../lib/invite-variant';
+import bgInvitation from '@/assets/el-bg-invitation.webp';
+import cardBlank from '@/assets/el-invitation-card-blank.webp';
+
+/* Snow is a canvas effect that only exists below the fold, behind the reveal.
+   Statically imported it rode in the initial bundle for every guest, including
+   the ones who never tap the button. ssr:false because it draws to a canvas and
+   has nothing to render on the server. */
+const Snowfall = dynamic(() => import('react-snowfall'), { ssr: false });
 
 const WAZE_URL = 'https://waze.com/ul/hw282984j5';
 const MAPS_URL = 'https://maps.app.goo.gl/hrAxPHoTWdKjrtNJ6';
@@ -74,12 +82,15 @@ export default function InvitationCardSection({ revealed }: InvitationCardSectio
   return (
     <section className={styles.section}>
       <div className={styles.bg}>
+        {/* priority: this is what the reveal has to paint instantly. At 143KB
+            (it was a 4.2MB PNG) it no longer starves the hero's LCP image. */}
         <Image
-          src="/el-bg-invitation.png"
+          src={bgInvitation}
           alt=""
           fill
           sizes="100vw"
           priority
+          placeholder="blur"
           style={{ objectFit: 'cover', objectPosition: 'left top' }}
         />
       </div>
@@ -94,13 +105,15 @@ export default function InvitationCardSection({ revealed }: InvitationCardSectio
       />
 
       <div className={styles.card}>
+        {/* No priority — it sits on top of the background above and arrives a
+            beat later either way; competing for the hero's bandwidth on first
+            paint cost more than it bought. */}
         <Image
-          src="/el-invitation-card-blank.png"
+          src={cardBlank}
           alt=""
           fill
           sizes="(max-width: 767px) 92vw, 60vh"
           className={styles.cardArt}
-          priority
         />
 
         <div className={styles.type}>

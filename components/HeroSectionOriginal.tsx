@@ -67,7 +67,7 @@ export default function HeroSectionOriginal({ onReveal, revealed }: HeroSectionP
         }
 
         .arch-text {
-          font-family: 'Cormorant Garamond', serif;
+          font-family: var(--font-body);
           font-size: 14px;
           fill: #2c2c2c;
           font-weight: 400;
@@ -79,7 +79,7 @@ export default function HeroSectionOriginal({ onReveal, revealed }: HeroSectionP
         }
 
         .couple-names {
-          font-family: 'Cormorant Garamond', serif;
+          font-family: var(--font-body);
           font-size: clamp(2.8rem, 10vw, 9rem);
           font-weight: 400;
           color: #1a1a1a;
@@ -103,7 +103,7 @@ export default function HeroSectionOriginal({ onReveal, revealed }: HeroSectionP
         }
 
         .wedding-date {
-          font-family: 'Cormorant Garamond', serif;
+          font-family: var(--font-body);
           font-size: clamp(0.75rem, 1.4vw, 1.1rem);
           letter-spacing: 0.35em;
           color: #2c2c2c;
@@ -118,7 +118,7 @@ export default function HeroSectionOriginal({ onReveal, revealed }: HeroSectionP
           border: none;
           border-radius: 50px;
           padding: 0.85rem 2.5rem;
-          font-family: 'Cormorant Garamond', serif;
+          font-family: var(--font-body);
           font-size: 1.1rem;
           cursor: pointer;
           letter-spacing: 0.02em;

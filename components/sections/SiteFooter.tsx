@@ -1,11 +1,12 @@
 import Image from 'next/image';
 import styles from './SiteFooter.module.css';
+import footerLogo from '@/assets/el-footer-logo.webp';
 
 export default function SiteFooter() {
   return (
     <footer className={styles.footer}>
       <div className={styles.logoCol}>
-        <Image src="/el-footer-logo.png" alt="Anis & Zafran" width={1000} height={1000} className={styles.logo} sizes="56px" />
+        <Image src={footerLogo} alt="Anis & Zafran" className={styles.logo} sizes="56px" />
       </div>
 
       <div className={styles.creditCol}>

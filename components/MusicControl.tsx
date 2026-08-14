@@ -5,8 +5,14 @@ import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import styles from './MusicControl.module.css';
+import footerLogo from '@/assets/el-footer-logo.webp';
 
-const TRACK_SRC = '/falling-slowly.mp3';
+/* 96 kbps mono, 2.8MB — it was 192 kbps stereo, 5.8MB. This is background music
+   at 0.6 volume under a UI, played through a phone speaker; stereo imaging and
+   hi-fi headroom were buying nothing. The bitrate is in the filename because
+   /static/* is served `immutable` for a year (next.config.js) — a re-encode has
+   to arrive under a new name or cached clients keep the old one. */
+const TRACK_SRC = '/static/falling-slowly-96k.mp3';
 const TRACK_TITLE = 'Falling Slowly';
 const TRACK_ARTIST = 'Glen Hansard & Markéta Irglová';
 
@@ -96,13 +102,13 @@ const MusicControl = forwardRef<MusicControlHandle, MusicControlProps>(function 
               and swallows it. Grooves plus the label read as vinyl on their own. */}
           <span className={`${styles.disc}${playing ? ' ' + styles.spinning : ''}`}>
             <span className={styles.discLabel}>
-              <Image src="/el-footer-logo.png" alt="" width={120} height={120} sizes="32px" />
+              <Image src={footerLogo} alt="" sizes="32px" />
             </span>
           </span>
         </button>
       </div>
 
-      {/* preload="none" — a 5.8MB track shouldn't compete with the invitation's
+      {/* preload="none" — the track shouldn't compete with the invitation's
           artwork for bandwidth before anyone has asked to hear it. */}
       <audio ref={audioRef} src={TRACK_SRC} loop preload="none" />
     </div>

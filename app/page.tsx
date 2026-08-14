@@ -21,8 +21,21 @@ export default function Home() {
     }
     window.scrollTo(0, 0);
 
-    // Wait for fonts before showing content
-    document.fonts.ready.then(() => setFontsReady(true));
+    // Wait for fonts before showing content — but never longer than 1.5s.
+    // This overlay covers the entire page, so an unbounded wait on
+    // document.fonts.ready turns any font stall into a guest staring at a blank
+    // cream screen with no way to know anything is happening. The ceiling turns
+    // the worst case from "broken" into "briefly unstyled". Now that the faces
+    // are self-hosted and preloaded (app/layout.tsx) it should never fire.
+    let done = false;
+    const reveal = () => {
+      if (done) return;
+      done = true;
+      setFontsReady(true);
+    };
+    document.fonts.ready.then(reveal);
+    const timer = setTimeout(reveal, 1500);
+    return () => clearTimeout(timer);
   }, []);
 
   // Lock scroll until the invitation is revealed
@@ -65,7 +78,7 @@ export default function Home() {
       >
         <p
           style={{
-            fontFamily: 'Cormorant Garamond, serif',
+            fontFamily: 'var(--font-body)',
             fontSize: 'clamp(1rem, 4vw, 1.4rem)',
             letterSpacing: '0.3em',
             color: '#3d3028',

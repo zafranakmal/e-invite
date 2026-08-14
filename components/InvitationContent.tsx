@@ -11,6 +11,7 @@ import WishesSection, { Wish } from './sections/WishesSection';
 import GiftRegistrySection from './sections/GiftRegistrySection';
 import ThankYouSection from './sections/ThankYouSection';
 import SiteFooter from './sections/SiteFooter';
+import bgItinerary from '@/assets/el-bg-itinerary.webp';
 
 /** Sections the IntersectionObserver watches — must match the ids BottomNav scrolls to. */
 const OBSERVED_IDS = ['itinerary', 'rsvp', 'gift', 'wishes'];
@@ -31,8 +32,14 @@ export default function InvitationContent({ revealed }: InvitationContentProps) 
   const [wishes, setWishes] = useState<Wish[]>([]);
   const [sectionsIn, setSectionsIn] = useState<Record<string, boolean>>({});
 
-  const loadWishes = useCallback(() => {
-    fetch('/api/wishes')
+  /**
+   * `fresh` is for the refetch that follows a guest posting their own wish.
+   * GET /api/wishes is CDN-cached for a few seconds, and handing someone back
+   * a list without the message they just sent reads as "it didn't send" — so
+   * that one call goes around the cache. The load on mount takes the cache.
+   */
+  const loadWishes = useCallback((fresh = false) => {
+    fetch(fresh ? `/api/wishes?t=${Date.now()}` : '/api/wishes', fresh ? { cache: 'no-store' } : undefined)
       .then((r) => r.json())
       .then((data) => {
         if (Array.isArray(data)) setWishes(data);
@@ -72,14 +79,14 @@ export default function InvitationContent({ revealed }: InvitationContentProps) 
           and keeps its dark bar as the end-cap. */}
       <div className={styles.stage}>
         <div className={styles.stageBg} aria-hidden="true">
-          <Image src="/el-bg-itinerary.jpg" alt="" fill sizes="100vw" style={{ objectFit: 'cover', objectPosition: 'left top' }} />
+          <Image src={bgItinerary} alt="" fill sizes="100vw" style={{ objectFit: 'cover', objectPosition: 'left top' }} />
         </div>
 
         <ItinerarySection style={fadeUp(sectionsIn.itinerary)} />
         <CountdownSection />
         {/* Elementor keeps the form and Warm Wishes on one surface — the wishes
             block renders inside the RSVP glass card. */}
-        <RsvpSection style={fadeUp(sectionsIn.rsvp)} onWishPosted={loadWishes}>
+        <RsvpSection style={fadeUp(sectionsIn.rsvp)} onWishPosted={() => loadWishes(true)}>
           <WishesSection wishes={wishes} isIn={sectionsIn.wishes} />
         </RsvpSection>
         <GiftRegistrySection style={fadeUp(sectionsIn.gift)} />

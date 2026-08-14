@@ -31,12 +31,16 @@
   --c-el-dark: #3c362d;    /* countdown + footer surface */
   --c-el-cream: #f4eadb;   /* section fallback behind bg images */
 
-  /* Fonts */
-  --font-script: 'Pinyon Script', cursive;
-  --font-body: 'Cormorant Garamond', serif;
-  --font-arabic: 'Amiri', serif;
-  --font-display: 'Bellefair', serif;   /* Elementor body/label face */
-  --font-credit: 'Belleza', sans-serif; /* Elementor footer credit */
+  /* Fonts — --font-script, --font-body, --font-display and --font-credit are
+     NOT defined here. next/font sets them on <html> in app/layout.tsx, where
+     each resolves to a hashed family name plus a metric-matched fallback.
+     Redefining them at :root would be a same-specificity race decided by
+     stylesheet injection order, and the loser is the real font.
+
+     Nothing may hardcode 'Cormorant Garamond' / 'Pinyon Script' / 'Bellefair' /
+     'Belleza' as a family name any more — those names no longer exist at
+     runtime, so such a rule falls through to the generic fallback. Always go
+     through the variable. */
 
   --t-script-xl: clamp(2.75rem, 11vw, 4.25rem);
   --t-script-lg: clamp(2rem, 8vw, 3rem);

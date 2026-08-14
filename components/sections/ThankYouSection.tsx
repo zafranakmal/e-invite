@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import styles from './ThankYouSection.module.css';
+import thankYouHeart from '@/assets/el-thankyou-heart.webp';
 
 /* Elementor #2a6235f — the export keeps these as three <p>s separated by
    <p><br></p> spacers. "your attendance" is corrected from the export's
@@ -15,7 +16,7 @@ export default function ThankYouSection() {
     <section className={styles.section}>
       <div className={styles.heart}>
         <Image
-          src="/el-thankyou-heart.png"
+          src={thankYouHeart}
           alt=""
           fill
           sizes="(max-width: 767px) 92vw, (max-width: 1024px) 78vw, 38vw"

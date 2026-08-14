@@ -2,6 +2,8 @@
 
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import sunflowerField from '@/assets/hero-sunflower-field.webp';
+import weddingLockup from '@/assets/wedding-lockup.webp';
 
 interface HeroSectionProps {
   onReveal: () => void;
@@ -29,11 +31,12 @@ export default function HeroSection({ onReveal, revealed }: HeroSectionProps) {
       {/* Background image with scroll parallax */}
       <div className="bg-wrap" style={{ transform: `translateY(${scrollY * -0.25}px)` }}>
         <Image
-          src="/hero-sunflower-field.png"
+          src={sunflowerField}
           alt=""
           fill
           priority
           sizes="100vw"
+          placeholder="blur"
           style={{ objectFit: 'cover', objectPosition: 'center' }}
         />
       </div>
@@ -41,12 +44,13 @@ export default function HeroSection({ onReveal, revealed }: HeroSectionProps) {
       {/* Logo + button grouped so offset moves them together */}
       <div className="content-group">
         <div className="logo-wrap">
+          {/* sizes mirrors .logo-wrap's own ladder below — without it Next
+              assumes 100vw and hands a phone the 1720px variant. */}
           <Image
-            src="/wedding-lockup.png"
+            src={weddingLockup}
             alt="The Wedding of Anis and Zafran"
-            width={860}
-            height={650}
             priority
+            sizes="(min-width: 1025px) 33vw, 72vw"
             style={{ width: '100%', height: 'auto', display: 'block' }}
           />
         </div>

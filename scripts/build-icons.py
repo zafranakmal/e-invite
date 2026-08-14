@@ -6,7 +6,7 @@ Run by hand, like build-og-image.py:
     python3 scripts/build-icons.py
 
 Both icons use the mask-and-fill trick the site already uses for this artwork
-in app/registry/registry.module.css — el-footer-logo.png is solid white on
+in app/registry/registry.module.css — el-footer-logo is solid white on
 transparent, so its alpha is the mask and the fill is ink.
 
 The two icons carry the SAME mark but not the same crop, because the monogram
@@ -27,7 +27,7 @@ Requires Pillow. No system fonts, nothing platform-specific.
 
 from PIL import Image, ImageFilter
 
-SRC_MONOGRAM = 'public/el-footer-logo.png'
+SRC_MONOGRAM = 'assets/el-footer-logo.webp'  # 512x512, alpha
 
 INK = (44, 34, 24)        # --c-ink  #2c2218, matching registry.module.css
 GROUND = (240, 232, 220)  # --c-bg   #f0e8dc

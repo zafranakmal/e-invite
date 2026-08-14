@@ -5,7 +5,7 @@
   align-items: center;
   justify-content: center;
   background: #f5f4f2;
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-body);
   font-size: 1rem;
   color: #7a6a5a;
 }
@@ -37,7 +37,7 @@
 }
 
 .monogram {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-body);
   font-style: italic;
   font-size: 0.85rem;
   letter-spacing: 0.2em;
@@ -45,7 +45,7 @@
 }
 
 .headerTitle {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-body);
   font-size: 1.15rem;
   font-weight: 400;
   letter-spacing: 0.06em;
@@ -100,7 +100,7 @@
   border: none;
   border-bottom: 2px solid transparent;
   padding: 0.75rem 1rem;
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-body);
   font-size: 0.88rem;
   letter-spacing: 0.08em;
   color: #7a6a5a;
@@ -131,7 +131,7 @@
   padding: 3rem;
   text-align: center;
   color: #9a8c80;
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-body);
   font-size: 0.9rem;
 }
 
@@ -152,7 +152,7 @@
 }
 
 .countdownLabel {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-body);
   font-size: 1rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -161,7 +161,7 @@
 }
 
 .countdownDate {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-body);
   font-size: 2rem;
   font-style: italic;
   color: #c4a882;
@@ -189,7 +189,7 @@
 }
 
 .countdownNum {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-body);
   font-size: clamp(2.2rem, 6vw, 3.2rem);
   font-weight: 400;
   line-height: 1;
@@ -206,7 +206,7 @@
 }
 
 .countdownSep {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-body);
   font-size: 2rem;
   color: #4a3a2a;
   padding: 0 0.1rem;
@@ -237,7 +237,7 @@
 }
 
 .statValue {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-body);
   font-size: 2.4rem;
   font-weight: 400;
   color: #2c2218;
@@ -306,7 +306,7 @@
 }
 
 .previewTitle {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-body);
   font-size: 1rem;
   font-weight: 400;
   color: #2c2218;
@@ -403,7 +403,7 @@
 }
 
 .sectionTitle {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-body);
   font-size: 1.1rem;
   font-weight: 400;
   color: #2c2218;
@@ -494,7 +494,7 @@
 }
 
 .formTitle {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-body);
   font-size: 1rem;
   font-weight: 400;
   color: #2c2218;

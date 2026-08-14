@@ -15,7 +15,7 @@
   position: fixed;
   inset: 0;
   z-index: -1;
-  background: url('/el-bg-registry.jpg') center / cover no-repeat;
+  background: url('../../assets/el-bg-registry.webp') center / cover no-repeat;
 }
 
 /* ── Top bar ── */
@@ -25,7 +25,7 @@
 }
 
 .backLink {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-body);
   font-size: 0.82rem;
   letter-spacing: 0.1em;
   color: #7a6a5a;
@@ -51,12 +51,12 @@
   aspect-ratio: 1;
   margin: 0 auto 0.35rem;
   background-color: #2c2218;
-  -webkit-mask: url('/el-footer-logo.png') center / contain no-repeat;
-  mask: url('/el-footer-logo.png') center / contain no-repeat;
+  -webkit-mask: url('../../assets/el-footer-logo.webp') center / contain no-repeat;
+  mask: url('../../assets/el-footer-logo.webp') center / contain no-repeat;
 }
 
 .heading {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-body);
   font-size: clamp(2.2rem, 7vw, 3.8rem);
   font-weight: 400;
   font-style: italic;
@@ -66,7 +66,7 @@
 }
 
 .sub {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-body);
   font-size: clamp(0.88rem, 2vw, 1rem);
   color: #5a4a3a;
   line-height: 1.8;
@@ -91,7 +91,7 @@
 }
 
 .checkCtaText {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-body);
   font-size: 0.95rem;
   font-style: italic;
   color: #7a6a5a;
@@ -104,7 +104,7 @@
   border: 1px solid #b5a090;
   border-radius: 50px;
   padding: 0.38rem 1.2rem;
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-body);
   font-size: 0.88rem;
   letter-spacing: 0.06em;
   cursor: pointer;
@@ -126,7 +126,7 @@
 }
 
 .checkPanelLabel {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-body);
   font-size: 0.82rem;
   color: #7a6a5a;
   font-style: italic;
@@ -142,7 +142,7 @@
   border: none;
   border-bottom: 1px solid #b5a090;
   background: transparent;
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-body);
   font-size: 1rem;
   color: #2c2218;
   padding: 0.3rem 0.2rem;
@@ -157,7 +157,7 @@
   border: 1px solid #b5a090;
   border-radius: 50px;
   padding: 0.3rem 1rem;
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-body);
   font-size: 0.82rem;
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
@@ -169,7 +169,7 @@
 }
 
 .checkEmpty {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-body);
   font-size: 0.82rem;
   color: #9a8070;
   font-style: italic;
@@ -185,7 +185,7 @@
 }
 
 .checkListItem {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-body);
   font-size: 0.88rem;
   color: #2c2218;
   display: flex;
@@ -272,7 +272,7 @@
 }
 
 .cardTitle {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-body);
   font-size: clamp(1rem, 3vw, 1.2rem);
   font-weight: 500;
   color: #2c2218;
@@ -281,7 +281,7 @@
 }
 
 .cardDesc {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-body);
   font-size: 0.8rem;
   color: #5a4a3a;
   line-height: 1.65;
@@ -298,7 +298,7 @@
 }
 
 .viewItemLink {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-body);
   font-size: 0.9rem;
   letter-spacing: 0.06em;
   color: #7a6a5a;
@@ -320,7 +320,7 @@
   border: none;
   border-radius: 50px;
   padding: 0.42rem 1.2rem;
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-body);
   font-size: 0.8rem;
   letter-spacing: 0.05em;
   cursor: pointer;
@@ -343,7 +343,7 @@
   border: 1px solid #c8b8a8;
   border-radius: 50px;
   padding: 0.42rem 1.2rem;
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-body);
   font-size: 0.8rem;
   letter-spacing: 0.05em;
   cursor: not-allowed;
@@ -351,7 +351,7 @@
 }
 
 .interestCount {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-body);
   font-size: 0.7rem;
   letter-spacing: 0.1em;
   color: #9a8070;
@@ -360,7 +360,7 @@
 }
 
 .reservedBadge {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-body);
   font-size: 0.82rem;
   color: #5a7a4a;
   font-style: italic;
@@ -379,7 +379,7 @@
   border: none;
   border-bottom: 1px solid #b5a090;
   background: transparent;
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-body);
   font-size: 1rem;
   color: #2c2218;
   padding: 0.3rem 0.1rem;
@@ -388,7 +388,7 @@
 }
 
 .reserveError {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-body);
   font-size: 0.75rem;
   color: #9a5a4a;
   font-style: italic;
@@ -404,7 +404,7 @@
 .cancelBtn {
   background: none;
   border: none;
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-body);
   font-size: 0.8rem;
   color: #9a8070;
   cursor: pointer;
@@ -427,7 +427,7 @@
 }
 
 .paymentTitle {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-body);
   font-size: clamp(1.6rem, 5vw, 2.4rem);
   font-style: italic;
   font-weight: 400;
@@ -436,7 +436,7 @@
 }
 
 .paymentSub {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-body);
   font-size: 0.88rem;
   color: #5a4a3a;
   margin-bottom: 2.25rem;
@@ -466,7 +466,7 @@
 }
 
 .paymentCardLabel {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-body);
   font-size: 0.68rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -490,14 +490,14 @@
 }
 
 .paymentName {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-body);
   font-size: 0.78rem;
   color: #3d3028;
   text-align: center;
 }
 
 .qrDownload {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-body);
   font-size: 0.8rem;
   letter-spacing: 0.06em;
   color: #2c2218;
@@ -530,7 +530,7 @@
 }
 
 .bankRowLabel {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-body);
   font-size: 0.65rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
@@ -540,7 +540,7 @@
 }
 
 .bankRowValue {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-body);
   font-size: 0.9rem;
   color: #2c2218;
   font-weight: 500;
@@ -566,7 +566,7 @@
 }
 
 .paymentNote {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-body);
   font-size: 0.82rem;
   color: #7a6a5a;
   font-style: italic;
@@ -583,7 +583,7 @@
   flex-direction: column;
   gap: 0.85rem;
   align-items: center;
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-body);
   font-size: 0.9rem;
   font-style: italic;
   color: #5a4a3a;

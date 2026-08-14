@@ -3,13 +3,29 @@ import { prisma } from '@/lib/prisma';
 import { auth } from '@/lib/auth';
 import { rateLimit, getClientIp } from '@/lib/rate-limit';
 
+// A GET handler that takes no Request is a candidate for static generation,
+// which would freeze the wishes list at whatever was in the database at build
+// time. The caching we want is at the CDN, on the header below — not in the
+// build output.
+export const dynamic = 'force-dynamic';
+
 // GET /api/wishes — fetch all wishes (newest first)
 export async function GET() {
   try {
     const wishes = await prisma.wish.findMany({
       orderBy: { createdAt: 'desc' },
     });
-    return NextResponse.json(wishes);
+    // Every guest loading the invitation runs this query. s-maxage collapses a
+    // burst (a table of people opening the link at once) into one round trip;
+    // stale-while-revalidate means nobody ever waits on the refresh.
+    //
+    // 10s, not minutes: this is a live wall, and a guest who scrolls down after
+    // a friend posts should see it. The one case 10s would still get wrong —
+    // a guest not seeing their OWN wish, which reads as "it didn't send" — is
+    // handled on the client instead; see loadWishes in InvitationContent.
+    return NextResponse.json(wishes, {
+      headers: { 'Cache-Control': 'public, s-maxage=10, stale-while-revalidate=60' },
+    });
   } catch {
     return NextResponse.json({ error: 'Server error.' }, { status: 500 });
   }

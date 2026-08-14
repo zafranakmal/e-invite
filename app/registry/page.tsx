@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import styles from './registry.module.css';
+import anisQr from '@/assets/anis-qr.webp';
 
 import { useState, useEffect } from 'react';
 
@@ -317,10 +318,8 @@ export default function RegistryPage() {
             <p className={styles.paymentCardLabel}>Scan via DuitNow</p>
             <div className={styles.qrFrame}>
               <Image
-                src="/anis-qr.png"
+                src={anisQr}
                 alt="DuitNow QR code for Bank Islam"
-                width={1200}
-                height={1200}
                 className={styles.qrImg}
                 sizes="(min-width: 1280px) 180px, 160px"
               />
@@ -328,7 +327,7 @@ export default function RegistryPage() {
             <p className={styles.paymentName}>Cik Anis Sufea Binti Ismail</p>
             {/* Same-origin, so `download` sets the saved filename rather than
                 opening the image in a tab. */}
-            <a href="/qr-bank-download.jpeg" download className={styles.qrDownload}>
+            <a href="/static/qr-bank-download.jpeg" download className={styles.qrDownload}>
               Download QR
             </a>
           </div>

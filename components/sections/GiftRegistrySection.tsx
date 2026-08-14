@@ -5,6 +5,9 @@ import Image from 'next/image';
 import styles from './GiftRegistrySection.module.css';
 import PillButton from '../design/PillButton';
 import { useInviteVariant } from '../../lib/invite-variant';
+import registryCard from '@/assets/el-registry-card.webp';
+import questionsCard from '@/assets/el-questions-card.webp';
+import anisQr from '@/assets/anis-qr.webp';
 
 /* Elementor #16251f9 — the export separates the two sentences with a
    <p>&nbsp;</p> spacer; that becomes a gap here rather than a blank line. */
@@ -60,7 +63,7 @@ export default function GiftRegistrySection({ style }: GiftRegistrySectionProps)
           <div className={styles.row} style={style}>
             <div className={styles.registryCard}>
               <Image
-                src="/el-registry-card.png"
+                src={registryCard}
                 alt=""
                 fill
                 sizes="(max-width: 767px) 92vw, (max-width: 1024px) 78vw, 38vw"
@@ -80,10 +83,8 @@ export default function GiftRegistrySection({ style }: GiftRegistrySectionProps)
                 {/* Elementor #22743bb — a two-column grid, QR beside the details */}
                 <div className={styles.pay}>
                   <Image
-                    src="/anis-qr.png"
+                    src={anisQr}
                     alt="DuitNow QR code for Bank Islam 0506 7021 3143 22"
-                    width={1200}
-                    height={1200}
                     className={styles.qr}
                     sizes="(max-width: 767px) 25vw, (max-width: 1024px) 21vw, 11vw"
                   />
@@ -109,7 +110,7 @@ export default function GiftRegistrySection({ style }: GiftRegistrySectionProps)
 
       <div className={styles.questions}>
         <Image
-          src="/el-questions-card.png"
+          src={questionsCard}
           alt=""
           fill
           sizes="(max-width: 767px) 92vw, (max-width: 1024px) 78vw, 38vw"

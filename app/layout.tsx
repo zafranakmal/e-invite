@@ -1,7 +1,31 @@
 import type { Metadata } from 'next';
+import { Cormorant_Garamond, Pinyon_Script, Bellefair, Belleza } from 'next/font/google';
 import { config } from '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 import './globals.css';
+
+/* Self-hosted at build time: the woff2 files are emitted into /_next/static and
+ * served from our own origin, `immutable`. That removes two third-party
+ * handshakes (fonts.googleapis.com for the CSS, then fonts.gstatic.com for the
+ * files) from the critical path, and with them the Google origins in the CSP.
+ *
+ * Weights are the ones the stylesheets actually ask for. The <link> this
+ * replaced pulled 16 variants, including Cormorant 700 and eight italics that
+ * no rule references, plus Amiri — three files for a --font-arabic that was
+ * declared in globals.css and used by nothing. */
+const cormorant = Cormorant_Garamond({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600'],
+  style: ['normal', 'italic'],
+  display: 'swap',
+  variable: '--font-body',
+});
+
+const pinyon = Pinyon_Script({ subsets: ['latin'], weight: '400', display: 'swap', variable: '--font-script' });
+const bellefair = Bellefair({ subsets: ['latin'], weight: '400', display: 'swap', variable: '--font-display' });
+const belleza = Belleza({ subsets: ['latin'], weight: '400', display: 'swap', variable: '--font-credit' });
+
+const fontVars = [cormorant, pinyon, bellefair, belleza].map((f) => f.variable).join(' ');
 
 // FontAwesome injects its CSS at runtime by default, which makes icons flash at
 // a huge size before hydration. Importing the stylesheet above and turning the
@@ -73,15 +97,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Amiri:ital,wght@0,400;0,700;1,400&family=Pinyon+Script&family=Bellefair&family=Belleza&display=swap"
-          rel="stylesheet"
-        />
-      </head>
+    <html lang="en" className={fontVars}>
       <body>{children}</body>
     </html>
   );

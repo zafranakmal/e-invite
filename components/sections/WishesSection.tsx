@@ -66,7 +66,7 @@ export default function WishesSection({ wishes, isIn }: WishesSectionProps) {
       <p className={styles.footerText}>
         Thank you for your lovely wishes. We look forward to your presence, prayers, and blessings on this special day.
         <br />
-        Bismillahi Barakatillah
+        Bismillahi wa 'ala barakatillah
       </p>
     </GlassCard>
   );

@@ -828,31 +828,25 @@
   border: 1px solid #e0d8d0;
 }
 
-.relCoreFamilies {
-  background: #f5e8d8;
-  color: #6b3a10;
-  border: 1px solid #d4a878;
-}
-
-.relFamilies {
+.relFamily {
   background: #fef3e2;
   color: #7a4d00;
   border: 1px solid #e8c878;
 }
 
-.relFriends {
+.relFriend {
   background: #e8f0f8;
   color: #1a4a7a;
   border: 1px solid #a8c4e0;
 }
 
-.relColleagues {
+.relColleague {
   background: #e8f4f4;
   color: #1a5a5a;
   border: 1px solid #a8d4d4;
 }
 
-.relWeddingConnections {
+.relOthers {
   background: #f0e8f8;
   color: #5a1a7a;
   border: 1px solid #c8a8e0;

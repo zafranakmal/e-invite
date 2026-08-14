@@ -7,13 +7,7 @@ import styles from './dashboard.module.css';
 
 type Tab = 'overview' | 'registry' | 'wishes' | 'guests';
 
-const RELATION_OPTIONS = [
-  'Core Families',
-  'Families',
-  'Friends',
-  'Colleagues',
-  'Wedding Connections',
-] as const;
+const RELATION_OPTIONS = ['Family', 'Friend', 'Colleague', 'Others'] as const;
 
 type Rsvp = {
   id: string;

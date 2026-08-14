@@ -329,6 +329,16 @@ export default function DashboardPage() {
     if (res.ok) setWishes((prev) => prev.filter((w) => w.id !== id));
   };
 
+  const deleteRsvp = async (id: string) => {
+    if (!confirm('Delete this RSVP? This cannot be undone.')) return;
+    const res = await fetch('/api/rsvp', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id }),
+    });
+    if (res.ok) setRsvps((prev) => prev.filter((r) => r.id !== id));
+  };
+
   // Reset guest page when search or filters change
   useEffect(() => {
     setPages((p) => ({ ...p, guests: 0 }));
@@ -1003,11 +1013,12 @@ export default function DashboardPage() {
                   <th>Ref</th>
                   <th>Relation</th>
                   <th>Date</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
                 {filteredRsvps.length === 0 ? (
-                  <tr><td colSpan={7} className={styles.empty}>
+                  <tr><td colSpan={8} className={styles.empty}>
                     {guestSearch ? 'No matching guests.' : 'No RSVPs yet.'}
                   </td></tr>
                 ) : filteredRsvps.slice(pages.guests * PAGE_SIZE, (pages.guests + 1) * PAGE_SIZE).map((r) => (
@@ -1054,6 +1065,9 @@ export default function DashboardPage() {
                     </td>
                     <td className={styles.dateCell}>
                       {new Date(r.createdAt).toLocaleDateString('en-MY', { day: '2-digit', month: 'short', year: 'numeric' })}
+                    </td>
+                    <td>
+                      <button onClick={() => deleteRsvp(r.id)} className={styles.deleteBtn}>Delete</button>
                     </td>
                   </tr>
                 ))}

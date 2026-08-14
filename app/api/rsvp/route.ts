@@ -79,6 +79,23 @@ export async function GET(req: NextRequest) {
   }
 }
 
+// DELETE /api/rsvp — admin: delete an RSVP by id (requires session)
+export async function DELETE(req: NextRequest) {
+  try {
+    const session = await auth.api.getSession({ headers: req.headers });
+    if (!session) {
+      return NextResponse.json({ error: 'Unauthorized.' }, { status: 401 });
+    }
+
+    const { id } = await req.json();
+    if (!id) return NextResponse.json({ error: 'Provide id.' }, { status: 400 });
+    await prisma.rsvp.delete({ where: { id } });
+    return NextResponse.json({ ok: true });
+  } catch {
+    return NextResponse.json({ error: 'Server error.' }, { status: 500 });
+  }
+}
+
 // PATCH /api/rsvp — admin: update relation on an existing RSVP (requires session)
 export async function PATCH(req: NextRequest) {
   try {

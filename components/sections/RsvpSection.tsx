@@ -1,7 +1,6 @@
 'use client';
 
 import { CSSProperties, ReactNode, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
 import styles from './RsvpSection.module.css';
 import PillButton from '../design/PillButton';
 import FormField from '../design/FormField';
@@ -41,9 +40,6 @@ interface RsvpSectionProps {
 }
 
 export default function RsvpSection({ style, onWishPosted, children }: RsvpSectionProps) {
-  const searchParams = useSearchParams();
-  const ref = searchParams.get('ref') ?? '';
-
   const [rsvpData, setRsvpData] = useState({
     name: '',
     mobile: '',
@@ -69,6 +65,11 @@ export default function RsvpSection({ style, onWishPosted, children }: RsvpSecti
     }
     setRsvpSubmitting(true);
     setRsvpError('');
+    // Read at submit time rather than via useSearchParams: this value is
+    // never rendered, only sent along with the POST, so there's no reason to
+    // make the whole form (and Warm Wishes alongside it) wait on a Suspense
+    // boundary for it — see InvitationCardSection.tsx for the SSR cost of that.
+    const ref = new URLSearchParams(window.location.search).get('ref');
     try {
       const res = await fetch('/api/rsvp', {
         method: 'POST',

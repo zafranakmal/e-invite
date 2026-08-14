@@ -94,9 +94,12 @@ export default function Home() {
           its own dark surface runs behind the nav. */}
       <main>
         <HeroSection onReveal={handleReveal} revealed={revealed} />
-        <Suspense fallback={null}>
-          <InvitationContent revealed={revealed} />
-        </Suspense>
+        {/* No Suspense here: every ?p=-reading component inside InvitationContent
+            now scopes its own useSearchParams call behind a local <Suspense>
+            (see InvitationCardSection/CountdownSection/GiftRegistrySection),
+            so this whole subtree — invitation card, itinerary, RSVP, registry,
+            footer — statically renders instead of waiting on client hydration. */}
+        <InvitationContent revealed={revealed} />
       </main>
       {/* Always mounted so the <audio> element exists when handleReveal fires;
           the control itself stays hidden until `visible`. */}

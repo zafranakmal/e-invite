@@ -7,17 +7,27 @@ import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons
 import styles from './MusicControl.module.css';
 import footerLogo from '@/assets/el-footer-logo.webp';
 
-/* 96 kbps mono, 2.8MB — it was 192 kbps stereo, 5.8MB. This is background music
-   at 0.6 volume under a UI, played through a phone speaker; stereo imaging and
-   hi-fi headroom were buying nothing. The bitrate is in the filename because
-   /static/* is served `immutable` for a year (next.config.js) — a re-encode has
-   to arrive under a new name or cached clients keep the old one. */
-const TRACK_SRC = '/static/falling-slowly-96k.mp3';
-const TRACK_TITLE = 'Falling Slowly';
-const TRACK_ARTIST = 'Glen Hansard & Markéta Irglová';
+/* 96 kbps mono, 2.8MB — the source was 192 kbps stereo, 5.9MB. This is
+   background music played under a UI through a phone speaker; stereo imaging
+   and hi-fi headroom were buying nothing. The bitrate is in the filename
+   because /static/* is served `immutable` for a year (next.config.js) — a
+   re-encode has to arrive under a new name or cached clients keep the old one.
 
-/** Loud enough to carry, quiet enough not to startle anyone opening this in public. */
-const VOLUME = 0.6;
+   Riyandi Kusuma's piano cover, credited as "piano cover" in the panel because
+   .meta clips at 8.5rem on mobile and the full attribution doesn't fit. */
+const TRACK_SRC = '/static/home-piano-96k.mp3';
+const TRACK_TITLE = 'Home';
+const TRACK_ARTIST = 'Michael Bublé · piano cover';
+
+/* Loud enough to carry, quiet enough not to startle anyone opening this in
+   public. 0.78, not the 0.6 this was tuned to, because the track changed
+   underneath it: the piano cover masters at -18.2 LUFS against the previous
+   track's -15.9, and +2.3dB of gain is exactly that difference. Applied here
+   rather than baked into the file — loudnorm could only reach -18.2 without
+   either clipping the true peak or compressing the dynamics, and a solo piano
+   recording is mostly dynamics. Re-measure if the track is ever swapped again:
+   ffmpeg -i <file> -af ebur128 -f null - */
+const VOLUME = 0.78;
 
 export interface MusicControlHandle {
   /** Start playback. Must be called from within a user gesture — see page.tsx. */

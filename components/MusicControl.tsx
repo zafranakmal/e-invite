@@ -13,12 +13,13 @@ import footerLogo from '@/assets/el-footer-logo.webp';
    so a new encode has to arrive under a new name or cached clients keep the old
    one forever.
 
-   Riyandi Kusuma's piano cover. The panel credits it as "piano cover" rather
-   than naming him because .meta clips at 8.5rem on mobile with no ellipsis, and
-   the full attribution would be cut mid-word. */
+   Both lines are close to the space available: .meta is capped at 11rem, and
+   8.5rem on mobile, with nowrap/overflow-hidden and no ellipsis, so anything
+   longer than roughly this is silently cut mid-word rather than shortened.
+   Widen those caps in MusicControl.module.css before adding to either line. */
 const TRACK_SRC = '/static/endless-love-96k.mp3';
-const TRACK_TITLE = 'Endless Love';
-const TRACK_ARTIST = 'Lionel Richie · piano cover';
+const TRACK_TITLE = 'Endless Love · Piano cover';
+const TRACK_ARTIST = 'Lionel Richie · Riyandi Kusuma';
 
 /* Loud enough to carry, quiet enough not to startle anyone opening this in
    public. This pairs with the track and must be recalculated whenever the track

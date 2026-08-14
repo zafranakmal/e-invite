@@ -7,27 +7,29 @@ import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons
 import styles from './MusicControl.module.css';
 import footerLogo from '@/assets/el-footer-logo.webp';
 
-/* 96 kbps mono, 2.8MB — the source was 192 kbps stereo, 5.9MB. This is
-   background music played under a UI through a phone speaker; stereo imaging
-   and hi-fi headroom were buying nothing. The bitrate is in the filename
-   because /static/* is served `immutable` for a year (next.config.js) — a
-   re-encode has to arrive under a new name or cached clients keep the old one.
+/* 96 kbps mono — background music played under a UI through a phone speaker,
+   where stereo imaging and hi-fi headroom buy nothing. The bitrate is in the
+   filename because /static/* is served `immutable` for a year (next.config.js),
+   so a new encode has to arrive under a new name or cached clients keep the old
+   one forever.
 
-   Riyandi Kusuma's piano cover, credited as "piano cover" in the panel because
-   .meta clips at 8.5rem on mobile and the full attribution doesn't fit. */
-const TRACK_SRC = '/static/home-piano-96k.mp3';
-const TRACK_TITLE = 'Home';
-const TRACK_ARTIST = 'Michael Bublé · piano cover';
+   Riyandi Kusuma's piano cover. The panel credits it as "piano cover" rather
+   than naming him because .meta clips at 8.5rem on mobile with no ellipsis, and
+   the full attribution would be cut mid-word. */
+const TRACK_SRC = '/static/endless-love-96k.mp3';
+const TRACK_TITLE = 'Endless Love';
+const TRACK_ARTIST = 'Lionel Richie · piano cover';
 
 /* Loud enough to carry, quiet enough not to startle anyone opening this in
-   public. 0.78, not the 0.6 this was tuned to, because the track changed
-   underneath it: the piano cover masters at -18.2 LUFS against the previous
-   track's -15.9, and +2.3dB of gain is exactly that difference. Applied here
-   rather than baked into the file — loudnorm could only reach -18.2 without
-   either clipping the true peak or compressing the dynamics, and a solo piano
-   recording is mostly dynamics. Re-measure if the track is ever swapped again:
-   ffmpeg -i <file> -af ebur128 -f null - */
-const VOLUME = 0.78;
+   public. This pairs with the track and must be recalculated whenever the track
+   changes — scripts/encode-track.sh prints the value to use, and the two are
+   meant to be changed in the same commit.
+
+   Do not re-tune it by ear. It is derived: the first track sat at -15.9 LUFS
+   and was hand-tuned to 0.6, so the target is -20.34 LUFS actually reaching the
+   guest, and VOLUME = 10^((-20.34 - I) / 20) for a track measuring I. This one
+   ships at -16.3 LUFS, hence 0.63. */
+const VOLUME = 0.63;
 
 export interface MusicControlHandle {
   /** Start playback. Must be called from within a user gesture — see page.tsx. */

@@ -1,29 +1,61 @@
 import type { Metadata } from 'next';
-import { Cormorant_Garamond, Pinyon_Script, Bellefair, Belleza } from 'next/font/google';
+import localFont from 'next/font/local';
 import { config } from '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 import './globals.css';
 
-/* Self-hosted at build time: the woff2 files are emitted into /_next/static and
- * served from our own origin, `immutable`. That removes two third-party
- * handshakes (fonts.googleapis.com for the CSS, then fonts.gstatic.com for the
- * files) from the critical path, and with them the Google origins in the CSP.
+/* Self-hosted: the woff2 files live in assets/fonts/ and are emitted into
+ * /_next/static/media with a content hash, served from our own origin
+ * `immutable`. That removes two third-party handshakes (fonts.googleapis.com
+ * for the CSS, then fonts.gstatic.com for the files) from the critical path,
+ * and with them the Google origins in the CSP.
  *
- * Weights are the ones the stylesheets actually ask for. The <link> this
- * replaced pulled 16 variants, including Cormorant 700 and eight italics that
- * no rule references, plus Amiri — three files for a --font-arabic that was
- * declared in globals.css and used by nothing. */
-const cormorant = Cormorant_Garamond({
-  subsets: ['latin'],
-  weight: ['300', '400', '500', '600'],
-  style: ['normal', 'italic'],
+ * These are vendored rather than fetched through next/font/google on purpose.
+ * `next/font/google` downloads from Google *at build time*, so the deploy host
+ * needs outbound HTTPS to fonts.googleapis.com — ours doesn't have it, and the
+ * build failed with ETIMEDOUT. Committed files make the build hermetic.
+ *
+ * Each file is the latin subset only, straight from the same gstatic URLs
+ * next/font/google would have used. Cormorant Garamond ships as a variable
+ * font (wght 300–700, one file per style), which is why there are two files
+ * where there were four weights. To refresh any of them, re-fetch
+ * https://fonts.googleapis.com/css2?family=<Family>&display=swap with a
+ * browser user agent and take the woff2 from the latin @font-face block. */
+const cormorant = localFont({
+  src: [
+    { path: '../assets/fonts/cormorant-garamond-latin.woff2', weight: '300 700', style: 'normal' },
+    { path: '../assets/fonts/cormorant-garamond-latin-italic.woff2', weight: '300 700', style: 'italic' },
+  ],
   display: 'swap',
   variable: '--font-body',
+  adjustFontFallback: 'Times New Roman',
 });
 
-const pinyon = Pinyon_Script({ subsets: ['latin'], weight: '400', display: 'swap', variable: '--font-script' });
-const bellefair = Bellefair({ subsets: ['latin'], weight: '400', display: 'swap', variable: '--font-display' });
-const belleza = Belleza({ subsets: ['latin'], weight: '400', display: 'swap', variable: '--font-credit' });
+const pinyon = localFont({
+  src: '../assets/fonts/pinyon-script-latin-400.woff2',
+  weight: '400',
+  style: 'normal',
+  display: 'swap',
+  variable: '--font-script',
+  adjustFontFallback: 'Times New Roman',
+});
+
+const bellefair = localFont({
+  src: '../assets/fonts/bellefair-latin-400.woff2',
+  weight: '400',
+  style: 'normal',
+  display: 'swap',
+  variable: '--font-display',
+  adjustFontFallback: 'Times New Roman',
+});
+
+const belleza = localFont({
+  src: '../assets/fonts/belleza-latin-400.woff2',
+  weight: '400',
+  style: 'normal',
+  display: 'swap',
+  variable: '--font-credit',
+});
 
 const fontVars = [cormorant, pinyon, bellefair, belleza].map((f) => f.variable).join(' ');
 

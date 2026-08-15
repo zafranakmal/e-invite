@@ -59,7 +59,13 @@
 /* Type well. The flat field inside the embossed border runs 10%–90% across and
    14%–86% down (measured on the artwork); the stack is centred in the well
    rather than in that field, which lands it high of the card's middle — where
-   the old raster had it, with the deeper margin below. */
+   the old raster had it, with the deeper margin below.
+
+   space-evenly, not centre: with the QR and bank block gone the three remaining
+   items (heading, blurb, button) are short enough that centring them would pool
+   all the slack into two deep margins top and bottom. Even distribution puts
+   the same gap between every pair and against both ends of the well, so the
+   button sits at a measured distance from the blurb rather than glued to it. */
 .registryType {
   position: absolute;
   top: 11%;
@@ -70,7 +76,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: space-evenly;
   text-align: center;
 }
 
@@ -97,9 +103,9 @@
    The width is what wraps the second sentence after "wedding," as the raster
    did: the line runs 57cqw at this size, and the next word takes it past 59. */
 .registryCopy {
-  /* Pinyon's descenders hang far below the heading's baseline — without this
-     the "y" of Registry lands on the first line. */
-  margin-top: 1cqw;
+  /* Pinyon's descenders hang far below the heading's baseline; the well's
+     space-evenly gap clears them on its own, so the 1cqw nudge this used to
+     carry against the centred stack is no longer needed. */
   width: 59cqw;
   display: flex;
   flex-direction: column;
@@ -111,35 +117,45 @@
   color: #000;
 }
 
-/* Elementor: #22743bb — grid-template-columns repeat(2, 1fr), align-items
-   center. 66cqw wide so the account line clears its column: it sets 31.5cqw
-   against a 33cqw column. */
-.pay {
-  width: 66cqw;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+/* The "View our Registry" CTA, now inside the card where the QR block was. It
+   was a <PillButton variant="brown"> in a row below the card; in here it is a
+   plain anchor styled like .contactBtn on the questions card instead, for the
+   same reason spelled out there — PillButton is sized in px (44px min-height,
+   0.95rem label), the one thing in these wells that doesn't shrink with the
+   card, so on a narrow viewport it would sit oversized against type that has
+   scaled down around it. Every value here is a share of the card's width.
+
+   Height stated rather than built from padding, as on .contactBtn: under the
+   global border-box, padding-block against an auto height just grows the pill. */
+.registryBtn {
+  display: inline-flex;
   align-items: center;
-  justify-items: center;
-}
-
-/* Elementor: #67ec084 max-width 90% of its column. The PNG carries a
-   transparent quiet zone on all four sides, so the modules read at 23cqw —
-   what the raster had. */
-.qr {
-  width: 27cqw;
-  height: auto;
-}
-
-/* Elementor: #9139ded — Bellefair 1em/1.9em, #000. The airier 1.9 is the
-   export's, not the raster's 1.08; it sets the three lines against the full
-   height of the QR beside them. nowrap so the account number can't break. */
-.bank {
+  justify-content: center;
+  gap: 1.6cqw;
+  height: 8.6cqw;
+  padding-inline: 4.5cqw;
+  border-radius: 28px;
+  background: var(--c-el-brown);
+  color: #fff;
   font-family: var(--font-display);
-  font-weight: 400;
-  font-size: 2.6cqw;
-  line-height: 1.9;
-  color: #000;
+  font-weight: 500;
+  font-size: 3cqw;
+  line-height: 1.2;
+  text-decoration: none;
   white-space: nowrap;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+  transition: background var(--dur-fast) var(--ease);
+}
+
+/* The icon ships with width/height attributes; sizing it in cqw keeps it in
+   proportion to the label at every card width. */
+.registryBtn svg {
+  width: 3cqw;
+  height: 3cqw;
+}
+
+.registryBtn:hover {
+  background: #62553f;
 }
 
 /* ── Questions card: Elementor .e-c2b42af-ffd03ea — the scalloped card as a

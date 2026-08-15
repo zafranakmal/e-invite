@@ -3,24 +3,15 @@
 import { CSSProperties, Suspense } from 'react';
 import Image from 'next/image';
 import styles from './GiftRegistrySection.module.css';
-import PillButton from '../design/PillButton';
 import { getInviteVariant, useInviteVariant } from '../../lib/invite-variant';
 import registryCard from '@/assets/el-registry-card.webp';
 import questionsCard from '@/assets/el-questions-card.webp';
-import anisQr from '@/assets/anis-qr.webp';
 
 /* Elementor #16251f9 — the export separates the two sentences with a
    <p>&nbsp;</p> spacer; that becomes a gap here rather than a blank line. */
 const INTRO = [
   'Your presence at our wedding is the greatest gift of all.',
   'However, for those who wish to contribute to our wedding, we warmly welcome your kindness.',
-];
-
-/* Elementor #9139ded */
-const TRANSFER = [
-  'You may also transfer directly',
-  'Bank Islam | 0506 7021 3143 22',
-  'Anis Sufea Binti Ismail',
 ];
 
 const CONTACT_GROUPS = [
@@ -58,58 +49,42 @@ interface GiftRegistrySectionProps {
    no flash for the common case, only ?p=v1 guests see it removed post-hydration. */
 function RegistryCard({ style }: { style?: CSSProperties }) {
   return (
-    <>
-      <div className={styles.row} style={style}>
-        <div className={styles.registryCard}>
-          <Image
-            src={registryCard}
-            alt=""
-            fill
-            sizes="(max-width: 767px) 92vw, (max-width: 1024px) 78vw, 38vw"
-            className={styles.registryArt}
-          />
+    <div className={styles.row} style={style}>
+      <div className={styles.registryCard}>
+        <Image
+          src={registryCard}
+          alt=""
+          fill
+          sizes="(max-width: 767px) 92vw, (max-width: 1024px) 78vw, 38vw"
+          className={styles.registryArt}
+        />
 
-          <div className={styles.registryType}>
-            {/* Elementor #007eb4a — Pinyon Script 3.2em, #583701 */}
-            <h2 className={styles.registryHeading}>Gift Registry</h2>
+        <div className={styles.registryType}>
+          {/* Elementor #007eb4a — Pinyon Script 3.2em, #583701 */}
+          <h2 className={styles.registryHeading}>Gift Registry</h2>
 
-            <div className={styles.registryCopy}>
-              {INTRO.map((line) => (
-                <p key={line}>{line}</p>
-              ))}
-            </div>
-
-            {/* Elementor #22743bb — a two-column grid, QR beside the details */}
-            <div className={styles.pay}>
-              <Image
-                src={anisQr}
-                alt="DuitNow QR code for Bank Islam 0506 7021 3143 22"
-                className={styles.qr}
-                sizes="(max-width: 767px) 25vw, (max-width: 1024px) 21vw, 11vw"
-              />
-
-              <div className={styles.bank}>
-                {TRANSFER.map((line) => (
-                  <p key={line}>{line}</p>
-                ))}
-              </div>
-            </div>
+          <div className={styles.registryCopy}>
+            {INTRO.map((line) => (
+              <p key={line}>{line}</p>
+            ))}
           </div>
+
+          {/* The DuitNow QR and the transfer details used to sit here (Elementor
+              #22743bb, a two-column grid). They now live only on /registry,
+              which carries the same account in a copyable form plus a QR
+              download — this card just points there. The arrow trails the
+              label, as Elementor's row-reverse had it. */}
+          <a className={styles.registryBtn} href="/registry">
+            View our Registry <ArrowIcon />
+          </a>
         </div>
       </div>
-
-      <div className={styles.row}>
-        {/* Elementor sets flex-direction: row-reverse on this button — arrow trails the label */}
-        <PillButton as="a" href="/registry" variant="brown">
-          View our Registry <ArrowIcon />
-        </PillButton>
-      </div>
-    </>
+    </div>
   );
 }
 
 function RegistryGate({ style }: { style?: CSSProperties }) {
-  // ?p=v1 drops the registry card and its button; the Further Questions card
+  // ?p=v1 drops the registry card, CTA and all; the Further Questions card
   // below is not part of the registry and stays on every variant.
   const { showRegistry } = useInviteVariant();
   return showRegistry ? <RegistryCard style={style} /> : null;

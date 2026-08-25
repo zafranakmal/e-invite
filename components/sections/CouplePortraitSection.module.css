@@ -1,6 +1,9 @@
-/* Transparent, like the countdown and RSVP sections either side of it — the
-   backdrop comes from the shared scroll stage in InvitationContent.module.css,
-   and the same --sec-gap / --sec-pad keep the card one step from each. */
+/* Transparent, like every section on the shared scroll stage — the backdrop
+   comes from InvitationContent.module.css. Padding-block only: the width is set
+   on the content through --card-w, the way ItinerarySection sizes its plates.
+   A padding-inline here would have measured the column off the viewport
+   instead, so the photo would have run to 1824px on a 1920 screen while the
+   cards above and below it stayed on the 660px measure. */
 .section {
   position: relative;
   z-index: 1;
@@ -8,42 +11,73 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--sec-gap);
   padding-block: var(--sec-pad);
   overflow: hidden;
 }
 
-/* The Pinyon Script heading shared with "Save your seat!" and "Warm Wishes",
-   down to the space it leaves under itself and its breakpoint ladder. */
+.inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sec-gap);
+}
+
+/* Title + date travel together, so --sec-gap sets the distance to the photo
+   and nothing else. */
+.type {
+  width: var(--card-w);
+  max-width: var(--card-max);
+  text-align: center;
+}
+
+/* The Pinyon Script heading the RSVP form and Warm Wishes use, one step down
+   the ladder: this title is four words rather than two, and at their 3.2rem it
+   broke to three lines inside the same measure. */
 .heading {
   font-family: var(--font-script);
-  font-size: 3.2rem;
+  font-size: 2.8rem;
   font-weight: 500;
   line-height: 1.2;
   color: var(--c-gold);
-  margin-bottom: var(--s-5);
 }
 
-/* Fills the card's inner column exactly like the countdown heading above it.
-   No margin of its own: the source is trimmed flush to the artwork, so the
-   card's --card-pad-block is the only thing setting the space underneath —
-   which is what keeps the gap below the photo equal to the one above the
-   heading, as it is in the countdown card. */
+/* Warm Wishes' "FROM OUR LOVED ONES" — the established label under a script
+   heading. Bellefair, letter-spaced, ink rather than gold, which the palette
+   reserves for display type and ornament. */
+.date {
+  margin-top: var(--s-2);
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  letter-spacing: 0.15em;
+  color: var(--c-ink-3);
+}
+
+/* On the shared measure, so it lines up with the countdown card above and the
+   RSVP card below. The source is trimmed flush to the artwork, so the section's
+   padding is the only thing setting the space around it. */
 .portrait {
-  width: 100%;
+  width: var(--card-w);
+  max-width: var(--card-max);
   height: auto;
 }
 
 /* Elementor tablet breakpoint */
 @media (max-width: 1024px) {
   .heading {
-    font-size: 2.6rem;
+    font-size: 2.4rem;
   }
 }
 
 /* Elementor mobile breakpoint */
 @media (max-width: 767px) {
   .heading {
-    font-size: 1.9rem;
+    font-size: 1.8rem;
+  }
+
+  .date {
+    font-size: 0.8rem;
   }
 }

@@ -29,7 +29,7 @@ export default function CouplePortraitSection({ style }: CouplePortraitSectionPr
 
         <Image
           src={couplePortrait}
-          alt="A collage of photographs from the couple's engagement, seated together among red and pink floral arrangements"
+          alt="Three photographs from the couple's engagement, seated together among red and pink floral arrangements"
           className={styles.portrait}
           sizes="(max-width: 767px) 92vw, (max-width: 1024px) 78vw, 38vw"
         />

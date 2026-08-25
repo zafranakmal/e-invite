@@ -48,13 +48,14 @@ const MANIFEST = [
   { file: 'el-dresscode.png' },
   { file: 'el-countdown-heading.png' },
 
-  // The couple's photo collage. Transparent PNG, pre-trimmed to its own
-  // artwork (the master carries ~10% empty margin top and bottom, which would
-  // sit inside the glass card as invisible padding the card's own
-  // --card-pad-block can't control). Native 948x1072 after the crop: it renders
-  // at most 620 CSS px wide, and no device size above 1080 is ever requested
-  // for it.
-  { file: 'couple-portrait.png', crop: { left: 64, top: 136, width: 948, height: 1072 } },
+  // The couple's photo collage. Transparent PNG, cropped to its own artwork —
+  // the master carries an empty margin (~10% top, and uneven at the other three
+  // edges) that would otherwise sit in the layout as invisible padding, holding
+  // the photo further off the section's edges than the type above it and
+  // off-centre with it. Native 933x1120 after the crop, which is the full
+  // resolution of the artwork: it renders at most 660 CSS px wide, and
+  // /_next/image caps a transform at the source width rather than upscaling.
+  { file: 'couple-portrait.png', crop: { left: 64, top: 136, width: 933, height: 1120 } },
 
   // Lockups. The footer logo renders at 56px, 32px, and as a CSS mask at
   // ~6.5rem — 1000px square was never needed.

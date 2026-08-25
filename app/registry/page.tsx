@@ -118,12 +118,10 @@ export default function RegistryPage() {
       }
       setMyReservedIds((prev) => [...prev, itemId]);
       setCounts((prev) => ({ ...prev, [itemId]: (prev[itemId] ?? 0) + 1 }));
+      // Stay where the guest is — collapsing the form back to the card is the
+      // only feedback needed; no jump down to the payment QR.
       setReservingId(null);
       setFormError('');
-      setTimeout(() => {
-        const el = document.getElementById('registry-payment');
-        if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY, behavior: 'smooth' });
-      }, 300);
     } catch (err) {
       setFormError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
     } finally {

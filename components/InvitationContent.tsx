@@ -6,6 +6,7 @@ import styles from './InvitationContent.module.css';
 import InvitationCardSection from './sections/InvitationCardSection';
 import ItinerarySection from './sections/ItinerarySection';
 import CountdownSection from './sections/CountdownSection';
+import CouplePortraitSection from './sections/CouplePortraitSection';
 import RsvpSection from './sections/RsvpSection';
 import WishesSection, { Wish } from './sections/WishesSection';
 import GiftRegistrySection from './sections/GiftRegistrySection';
@@ -13,8 +14,10 @@ import ThankYouSection from './sections/ThankYouSection';
 import SiteFooter from './sections/SiteFooter';
 import bgItinerary from '@/assets/el-bg-itinerary.webp';
 
-/** Sections the IntersectionObserver watches — must match the ids BottomNav scrolls to. */
-const OBSERVED_IDS = ['itinerary', 'rsvp', 'gift', 'wishes'];
+/** Sections the IntersectionObserver watches, so their cards fade up on first
+    sight. Most are also BottomNav scroll targets; 'couple' is not — it has no
+    nav entry and is here purely for the reveal. */
+const OBSERVED_IDS = ['itinerary', 'couple', 'rsvp', 'gift', 'wishes'];
 
 function fadeUp(isIn?: boolean): CSSProperties {
   return {
@@ -84,6 +87,7 @@ export default function InvitationContent({ revealed }: InvitationContentProps) 
 
         <ItinerarySection style={fadeUp(sectionsIn.itinerary)} />
         <CountdownSection />
+        <CouplePortraitSection style={fadeUp(sectionsIn.couple)} />
         {/* Elementor keeps the form and Warm Wishes on one surface — the wishes
             block renders inside the RSVP glass card. */}
         <RsvpSection style={fadeUp(sectionsIn.rsvp)} onWishPosted={() => loadWishes(true)}>

@@ -48,6 +48,14 @@ const MANIFEST = [
   { file: 'el-dresscode.png' },
   { file: 'el-countdown-heading.png' },
 
+  // The couple's photo collage. Transparent PNG, pre-trimmed to its own
+  // artwork (the master carries ~10% empty margin top and bottom, which would
+  // sit inside the glass card as invisible padding the card's own
+  // --card-pad-block can't control). Native 948x1072 after the crop: it renders
+  // at most 620 CSS px wide, and no device size above 1080 is ever requested
+  // for it.
+  { file: 'couple-portrait.png', crop: { left: 64, top: 136, width: 948, height: 1072 } },
+
   // Lockups. The footer logo renders at 56px, 32px, and as a CSS mask at
   // ~6.5rem — 1000px square was never needed.
   { file: 'wedding-lockup.png' },
@@ -65,11 +73,12 @@ await mkdir(OUT, { recursive: true });
 let before = 0;
 let after = 0;
 
-for (const { file, maxEdge, quality = DEFAULT_QUALITY } of MANIFEST) {
+for (const { file, maxEdge, crop, quality = DEFAULT_QUALITY } of MANIFEST) {
   const from = path.join(SRC, file);
   const to = path.join(OUT, file.replace(/\.(png|jpe?g)$/i, '.webp'));
 
   const pipeline = sharp(from);
+  if (crop) pipeline.extract(crop);
   if (maxEdge) {
     // `fit: inside` + `withoutEnlargement` so this only ever shrinks.
     pipeline.resize({ width: maxEdge, height: maxEdge, fit: 'inside', withoutEnlargement: true });

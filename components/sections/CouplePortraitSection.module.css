@@ -1,0 +1,49 @@
+/* Transparent, like the countdown and RSVP sections either side of it — the
+   backdrop comes from the shared scroll stage in InvitationContent.module.css,
+   and the same --sec-gap / --sec-pad keep the card one step from each. */
+.section {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sec-gap);
+  padding-block: var(--sec-pad);
+  overflow: hidden;
+}
+
+/* The Pinyon Script heading shared with "Save your seat!" and "Warm Wishes",
+   down to the space it leaves under itself and its breakpoint ladder. */
+.heading {
+  font-family: var(--font-script);
+  font-size: 3.2rem;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--c-gold);
+  margin-bottom: var(--s-5);
+}
+
+/* Fills the card's inner column exactly like the countdown heading above it.
+   No margin of its own: the source is trimmed flush to the artwork, so the
+   card's --card-pad-block is the only thing setting the space underneath —
+   which is what keeps the gap below the photo equal to the one above the
+   heading, as it is in the countdown card. */
+.portrait {
+  width: 100%;
+  height: auto;
+}
+
+/* Elementor tablet breakpoint */
+@media (max-width: 1024px) {
+  .heading {
+    font-size: 2.6rem;
+  }
+}
+
+/* Elementor mobile breakpoint */
+@media (max-width: 767px) {
+  .heading {
+    font-size: 1.9rem;
+  }
+}

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/lib/auth';
+import { denyIfNotAdmin } from '@/lib/require-admin';
 import { rateLimit, getClientIp } from '@/lib/rate-limit';
 
 // POST /api/rsvp — create or update an RSVP (public)
@@ -82,10 +83,8 @@ export async function GET(req: NextRequest) {
 // DELETE /api/rsvp — admin: delete an RSVP by id (requires session)
 export async function DELETE(req: NextRequest) {
   try {
-    const session = await auth.api.getSession({ headers: req.headers });
-    if (!session) {
-      return NextResponse.json({ error: 'Unauthorized.' }, { status: 401 });
-    }
+    const denied = await denyIfNotAdmin(req);
+    if (denied) return denied;
 
     const { id } = await req.json();
     if (!id) return NextResponse.json({ error: 'Provide id.' }, { status: 400 });

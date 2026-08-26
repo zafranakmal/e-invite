@@ -19,7 +19,17 @@ A personalised wedding invitation web app for Anis & Zafran, built with Next.js 
 - **Guest list** — full RSVP table with search, ref filter, relation filter, and editable relation tags (Core Families, Families, Friends, Colleagues, Wedding Connections)
 - **Registry** — add / edit / delete items; assign or clear reservations manually
 - **Wishes** — read and delete messages
+- **Team** — admins hand out dashboard logins without touching the database
 - **Session-protected** — all admin routes require authentication via [better-auth](https://www.better-auth.com/)
+
+Two roles:
+
+| | Admin | Editor |
+|---|---|---|
+| See every tab | ✅ | ✅ |
+| Add & edit registry items, assign reservations, tag relations | ✅ | ✅ |
+| Delete an RSVP, wish, registry item or reservation | ✅ | — |
+| Create logins (Team tab) | ✅ | — |
 
 ---
 
@@ -111,11 +121,18 @@ npx prisma generate
 
 ### 4. Create an admin account
 
-Use the sign-up flow at `/sign-in`, or seed directly via Prisma Studio:
+Public sign-up is disabled, so the **first** admin has to be seeded by hand:
 
 ```bash
 npx prisma studio
 ```
+
+Add a row to `user` with `role` set to `admin`, and a matching `account` row
+(`providerId: "credential"`) holding the hashed password.
+
+After that, every further login is made from the dashboard's **Team** tab — an
+admin fills in a name, email, password and role, and better-auth's
+`/api/auth/admin/create-user` does the rest. New logins default to **Editor**.
 
 ### 5. Run the dev server
 
@@ -133,20 +150,25 @@ Open [http://localhost:3000](http://localhost:3000).
 |---|---|---|---|
 | `GET` | `/api/rsvp?mobile=` | Public | Look up a single RSVP |
 | `POST` | `/api/rsvp` | Public | Submit / update an RSVP |
-| `GET` | `/api/rsvp` | Admin | Fetch all RSVPs |
-| `PATCH` | `/api/rsvp` | Admin | Update relation tag |
-| `GET` | `/api/registry` | Public (limited) / Admin (full) | List registry items |
-| `POST` | `/api/registry` | Admin | Add a registry item |
-| `PUT` | `/api/registry` | Admin | Edit a registry item |
-| `DELETE` | `/api/registry` | Admin | Delete a registry item |
+| `GET` | `/api/rsvp` | Signed in | Fetch all RSVPs |
+| `PATCH` | `/api/rsvp` | Signed in | Update relation tag |
+| `DELETE` | `/api/rsvp` | Admin only | Delete an RSVP |
+| `GET` | `/api/registry` | Public (limited) / Signed in (full) | List registry items |
+| `POST` | `/api/registry` | Signed in | Add a registry item |
+| `PUT` | `/api/registry` | Signed in | Edit a registry item |
+| `DELETE` | `/api/registry` | Admin only | Delete a registry item |
 | `GET` | `/api/registry/reservations?mobile=` | Public | Check reservations by mobile |
 | `GET` | `/api/registry/reservations?itemId=` | Public | Get interest count for an item |
 | `POST` | `/api/registry/reservations` | Public | Reserve a gift |
-| `DELETE` | `/api/registry/reservations` | Admin | Clear a reservation |
+| `DELETE` | `/api/registry/reservations` | Admin only | Clear a reservation |
 | `GET` | `/api/wishes` | Public | Fetch all wishes |
 | `POST` | `/api/wishes` | Public | Submit a wish |
-| `DELETE` | `/api/wishes` | Admin | Delete a wish |
+| `DELETE` | `/api/wishes` | Admin only | Delete a wish |
+| `POST` | `/api/auth/admin/create-user` | Admin only | Create a dashboard login |
+| `GET` | `/api/auth/admin/list-users` | Admin only | List dashboard logins |
 
+> **Access**: *Signed in* means any dashboard user, admin or editor. *Admin only* returns `403` to an editor.
+>
 > **Data privacy**: `GET /api/registry` returns reservation details (who reserved each item) only for authenticated admin sessions. Public responses include `reserved: boolean` only.
 
 ---

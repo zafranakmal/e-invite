@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { authClient } from '@/lib/auth-client';
+import { ADMIN_ROLE, EDITOR_ROLE, ROLE_LABELS, isAdmin, type Role } from '@/lib/permissions';
 import styles from './dashboard.module.css';
 
-type Tab = 'overview' | 'registry' | 'wishes' | 'guests';
+type Tab = 'overview' | 'registry' | 'wishes' | 'guests' | 'team';
 
 const RELATION_OPTIONS = ['Family', 'Friend', 'Colleague', 'Others'] as const;
 
@@ -40,7 +41,17 @@ type Wish = {
   createdAt: string;
 };
 
+type TeamMember = {
+  id: string;
+  name: string;
+  email: string;
+  role?: string | null;
+  createdAt: string | Date;
+};
+
 const BLANK_FORM = { name: '', description: '', url: '', price: '', imageUrl: '', maxReservations: '1' };
+const BLANK_TEAM_FORM = { name: '', email: '', password: '', role: EDITOR_ROLE as Role };
+const MIN_PASSWORD_LENGTH = 8;
 const TOTAL_CAPACITY = 1000;
 const PAGE_SIZE = 10;
 const WEDDING_DATE = new Date('2026-10-31T00:00:00');
@@ -50,6 +61,7 @@ const TAB_LABELS: Record<Tab, string> = {
   registry: 'Registry',
   wishes: 'Wishes',
   guests: 'Guest List',
+  team: 'Team',
 };
 
 export default function DashboardPage() {
@@ -62,6 +74,7 @@ export default function DashboardPage() {
   const [rsvps, setRsvps] = useState<Rsvp[]>([]);
   const [registry, setRegistry] = useState<RegistryItem[]>([]);
   const [wishes, setWishes] = useState<Wish[]>([]);
+  const [team, setTeam] = useState<TeamMember[]>([]);
 
   // Countdown to wedding date
   const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0, past: false });
@@ -113,6 +126,13 @@ export default function DashboardPage() {
   const [uploadBusy, setUploadBusy] = useState(false);
   const [uploadError, setUploadError] = useState('');
 
+  // New-login form (admins only)
+  const [showTeamForm, setShowTeamForm] = useState(false);
+  const [teamForm, setTeamForm] = useState(BLANK_TEAM_FORM);
+  const [teamErr, setTeamErr] = useState('');
+  const [teamMsg, setTeamMsg] = useState('');
+  const [teamBusy, setTeamBusy] = useState(false);
+
   // Reservation assignment
   const [assigningItemId, setAssigningItemId] = useState<string | null>(null);
   const [assignForm, setAssignForm] = useState({ name: '', mobile: '' });
@@ -133,6 +153,15 @@ export default function DashboardPage() {
       .then((r) => r.json())
       .then((d) => setRsvps(Array.isArray(d) ? d : []));
   }, [session]);
+
+  // The list of logins. Editors never reach this — /admin/list-users answers
+  // them with a 403 — so the tab that calls it is hidden from them too.
+  const loadTeam = useCallback(async () => {
+    const { data } = await authClient.admin.listUsers({
+      query: { limit: 100, sortBy: 'createdAt', sortDirection: 'desc' },
+    });
+    setTeam((data?.users ?? []) as TeamMember[]);
+  }, []);
 
   // Reset pagination when switching tabs
   useEffect(() => {
@@ -161,7 +190,11 @@ export default function DashboardPage() {
       setDataLoading(true);
       fetchWishes().finally(() => setDataLoading(false));
     }
-  }, [tab, session]);
+    if (tab === 'team') {
+      setDataLoading(true);
+      loadTeam().finally(() => setDataLoading(false));
+    }
+  }, [tab, session, loadTeam]);
 
   // ── Registry helpers ──────────────────────────────────────────────────────
 
@@ -360,6 +393,62 @@ export default function DashboardPage() {
     }
   };
 
+  // ── Team helpers ──────────────────────────────────────────────────────────
+
+  const startTeamForm = () => {
+    setTeamForm(BLANK_TEAM_FORM);
+    setTeamErr('');
+    setTeamMsg('');
+    setShowTeamForm(true);
+  };
+
+  const cancelTeamForm = () => {
+    setShowTeamForm(false);
+    setTeamForm(BLANK_TEAM_FORM);
+    setTeamErr('');
+  };
+
+  const submitTeam = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const name = teamForm.name.trim();
+    const email = teamForm.email.trim().toLowerCase();
+
+    if (!name || !email || !teamForm.password) {
+      setTeamErr('Name, email and password are required.');
+      return;
+    }
+    if (teamForm.password.length < MIN_PASSWORD_LENGTH) {
+      setTeamErr(`Password must be at least ${MIN_PASSWORD_LENGTH} characters.`);
+      return;
+    }
+
+    setTeamErr('');
+    setTeamMsg('');
+    setTeamBusy(true);
+    try {
+      // Creating a login here doesn't touch our own session — the endpoint
+      // hands back a user, not a cookie.
+      const { error } = await authClient.admin.createUser({
+        name,
+        email,
+        password: teamForm.password,
+        role: teamForm.role,
+      });
+      if (error) {
+        setTeamErr(error.message || 'Could not create this login.');
+        return;
+      }
+      setTeamMsg(`${email} can now sign in as ${ROLE_LABELS[teamForm.role].toLowerCase()}.`);
+      setShowTeamForm(false);
+      setTeamForm(BLANK_TEAM_FORM);
+      await loadTeam();
+    } catch {
+      setTeamErr('Something went wrong. Please try again.');
+    } finally {
+      setTeamBusy(false);
+    }
+  };
+
   // ── Sign-out ──────────────────────────────────────────────────────────────
 
   const handleSignOut = async () => {
@@ -368,6 +457,11 @@ export default function DashboardPage() {
   };
 
   // ── Derived stats ─────────────────────────────────────────────────────────
+
+  // Admins own the destructive half of the dashboard: deleting records and
+  // handing out logins. Editors get every other control.
+  const isAdminUser = isAdmin(session?.user?.role);
+  const visibleTabs = (Object.keys(TAB_LABELS) as Tab[]).filter((t) => t !== 'team' || isAdminUser);
 
   const attending = rsvps.filter((r) => r.attending);
   const uniqueRefs = Array.from(new Set(rsvps.map((r) => r.ref).filter(Boolean))) as string[];
@@ -402,13 +496,16 @@ export default function DashboardPage() {
         </div>
         <div className={styles.headerRight}>
           <span className={styles.headerEmail}>{session.user.email}</span>
+          <span className={styles.roleBadge}>
+            {isAdminUser ? ROLE_LABELS[ADMIN_ROLE] : ROLE_LABELS[EDITOR_ROLE]}
+          </span>
           <button onClick={handleSignOut} className={styles.signOutBtn}>Sign out</button>
         </div>
       </header>
 
       {/* ── Tabs ── */}
       <nav className={styles.tabs}>
-        {(Object.keys(TAB_LABELS) as Tab[]).map((t) => (
+        {visibleTabs.map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
@@ -823,13 +920,15 @@ export default function DashboardPage() {
                         <div key={r.id} style={{ marginBottom: '0.6rem' }}>
                           <p className={styles.itemName}>{r.name}</p>
                           <p className={styles.mono}>{r.mobile}</p>
-                          <button
-                            onClick={() => clearReservation(r.id)}
-                            className={styles.deleteBtn}
-                            style={{ marginTop: '0.4rem' }}
-                          >
-                            Clear
-                          </button>
+                          {isAdminUser && (
+                            <button
+                              onClick={() => clearReservation(r.id)}
+                              className={styles.deleteBtn}
+                              style={{ marginTop: '0.4rem' }}
+                            >
+                              Clear
+                            </button>
+                          )}
                         </div>
                       ))}
 
@@ -872,7 +971,9 @@ export default function DashboardPage() {
                     <td>
                       <div className={styles.rowActions}>
                         <button onClick={() => startEdit(item)} className={styles.editBtn}>Edit</button>
-                        <button onClick={() => deleteItem(item.id)} className={styles.deleteBtn}>Delete</button>
+                        {isAdminUser && (
+                          <button onClick={() => deleteItem(item.id)} className={styles.deleteBtn}>Delete</button>
+                        )}
                       </div>
                     </td>
                   </tr>
@@ -912,12 +1013,12 @@ export default function DashboardPage() {
                   <th>Name</th>
                   <th>Message</th>
                   <th>Date</th>
-                  <th></th>
+                  {isAdminUser && <th></th>}
                 </tr>
               </thead>
               <tbody>
                 {wishes.length === 0 ? (
-                  <tr><td colSpan={4} className={styles.empty}>No wishes yet.</td></tr>
+                  <tr><td colSpan={isAdminUser ? 4 : 3} className={styles.empty}>No wishes yet.</td></tr>
                 ) : wishes.slice(pages.wishes * PAGE_SIZE, (pages.wishes + 1) * PAGE_SIZE).map((w) => (
                   <tr key={w.id}>
                     <td className={styles.wishName}>{w.name}</td>
@@ -925,9 +1026,11 @@ export default function DashboardPage() {
                     <td className={styles.dateCell}>
                       {new Date(w.createdAt).toLocaleDateString('en-MY', { day: '2-digit', month: 'short', year: 'numeric' })}
                     </td>
-                    <td className={styles.rowActions}>
-                      <button onClick={() => deleteWish(w.id)} className={styles.deleteBtn}>Delete</button>
-                    </td>
+                    {isAdminUser && (
+                      <td className={styles.rowActions}>
+                        <button onClick={() => deleteWish(w.id)} className={styles.deleteBtn}>Delete</button>
+                      </td>
+                    )}
                   </tr>
                 ))}
               </tbody>
@@ -949,6 +1052,119 @@ export default function DashboardPage() {
                 >Next →</button>
               </div>
             )}
+          </div>
+
+        ) : tab === 'team' && isAdminUser ? (
+
+          /* ── Team ── */
+          <div className={styles.section}>
+            <div className={styles.sectionHeader}>
+              <h2 className={styles.sectionTitle}>Dashboard Access</h2>
+              {!showTeamForm && (
+                <button onClick={startTeamForm} className={styles.primaryBtn}>+ New login</button>
+              )}
+            </div>
+
+            {showTeamForm && (
+              <form onSubmit={submitTeam} className={styles.itemForm}>
+                <h3 className={styles.formTitle}>New login</h3>
+                <div className={styles.formGrid}>
+                  <div className={styles.formField}>
+                    <label className={styles.formLabel}>Name *</label>
+                    <input
+                      value={teamForm.name}
+                      onChange={(e) => setTeamForm({ ...teamForm, name: e.target.value })}
+                      className={styles.formInput}
+                      placeholder="Aunty Siti"
+                    />
+                  </div>
+                  <div className={styles.formField}>
+                    <label className={styles.formLabel}>Email *</label>
+                    <input
+                      type="email"
+                      autoComplete="off"
+                      value={teamForm.email}
+                      onChange={(e) => setTeamForm({ ...teamForm, email: e.target.value })}
+                      className={styles.formInput}
+                      placeholder="helper@example.com"
+                    />
+                  </div>
+                  <div className={styles.formField}>
+                    <label className={styles.formLabel}>Password *</label>
+                    <input
+                      type="text"
+                      autoComplete="off"
+                      value={teamForm.password}
+                      onChange={(e) => setTeamForm({ ...teamForm, password: e.target.value })}
+                      className={styles.formInput}
+                      placeholder={`At least ${MIN_PASSWORD_LENGTH} characters`}
+                    />
+                    <p className={styles.itemDesc}>
+                      Left visible so you can copy it. There is no reset email on this
+                      site — pass it on before you leave this page.
+                    </p>
+                  </div>
+                  <div className={styles.formField}>
+                    <label className={styles.formLabel}>Role *</label>
+                    <select
+                      value={teamForm.role}
+                      onChange={(e) => setTeamForm({ ...teamForm, role: e.target.value as Role })}
+                      className={styles.formSelect}
+                    >
+                      <option value={EDITOR_ROLE}>{ROLE_LABELS[EDITOR_ROLE]} — cannot delete</option>
+                      <option value={ADMIN_ROLE}>{ROLE_LABELS[ADMIN_ROLE]} — full access</option>
+                    </select>
+                    <p className={styles.itemDesc}>
+                      An editor sees every tab and can add and edit. Deleting a record,
+                      clearing a reservation and creating logins stay with admins.
+                    </p>
+                  </div>
+                </div>
+                {teamErr && <p className={styles.formErr}>{teamErr}</p>}
+                <div className={styles.formActions}>
+                  <button type="submit" className={styles.primaryBtn} disabled={teamBusy}>
+                    {teamBusy ? 'Creating…' : 'Create login'}
+                  </button>
+                  <button type="button" onClick={cancelTeamForm} className={styles.ghostBtn}>
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            )}
+
+            {teamMsg && <p className={styles.teamMsg}>{teamMsg}</p>}
+
+            <table className={styles.table}>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Added</th>
+                </tr>
+              </thead>
+              <tbody>
+                {team.length === 0 ? (
+                  <tr><td colSpan={4} className={styles.empty}>No logins yet.</td></tr>
+                ) : team.map((m) => (
+                  <tr key={m.id}>
+                    <td className={styles.itemName}>
+                      {m.name}
+                      {m.id === session.user.id && <span className={styles.dateCell}> (you)</span>}
+                    </td>
+                    <td className={styles.mono}>{m.email}</td>
+                    <td>
+                      <span className={isAdmin(m.role) ? styles.badgeReserved : styles.badgeOpen}>
+                        {isAdmin(m.role) ? ROLE_LABELS[ADMIN_ROLE] : ROLE_LABELS[EDITOR_ROLE]}
+                      </span>
+                    </td>
+                    <td className={styles.dateCell}>
+                      {new Date(m.createdAt).toLocaleDateString('en-MY', { day: '2-digit', month: 'short', year: 'numeric' })}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
 
         ) : (
@@ -1007,12 +1223,12 @@ export default function DashboardPage() {
                   <th>Ref</th>
                   <th>Relation</th>
                   <th>Date</th>
-                  <th></th>
+                  {isAdminUser && <th></th>}
                 </tr>
               </thead>
               <tbody>
                 {filteredRsvps.length === 0 ? (
-                  <tr><td colSpan={8} className={styles.empty}>
+                  <tr><td colSpan={isAdminUser ? 8 : 7} className={styles.empty}>
                     {guestSearch ? 'No matching guests.' : 'No RSVPs yet.'}
                   </td></tr>
                 ) : filteredRsvps.slice(pages.guests * PAGE_SIZE, (pages.guests + 1) * PAGE_SIZE).map((r) => (
@@ -1060,9 +1276,11 @@ export default function DashboardPage() {
                     <td className={styles.dateCell}>
                       {new Date(r.createdAt).toLocaleDateString('en-MY', { day: '2-digit', month: 'short', year: 'numeric' })}
                     </td>
-                    <td>
-                      <button onClick={() => deleteRsvp(r.id)} className={styles.deleteBtn}>Delete</button>
-                    </td>
+                    {isAdminUser && (
+                      <td>
+                        <button onClick={() => deleteRsvp(r.id)} className={styles.deleteBtn}>Delete</button>
+                      </td>
+                    )}
                   </tr>
                 ))}
               </tbody>

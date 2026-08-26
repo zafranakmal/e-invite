@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { auth } from '@/lib/auth';
+import { denyIfNotAdmin } from '@/lib/require-admin';
 import { rateLimit, getClientIp } from '@/lib/rate-limit';
 
 // POST /api/registry/reservations — create a reservation
@@ -70,10 +70,8 @@ export async function POST(req: NextRequest) {
 // { reservationId } drops one guest; { itemId } drops every guest on that gift.
 export async function DELETE(req: NextRequest) {
   try {
-    const session = await auth.api.getSession({ headers: req.headers });
-    if (!session) {
-      return NextResponse.json({ error: 'Unauthorized.' }, { status: 401 });
-    }
+    const denied = await denyIfNotAdmin(req);
+    if (denied) return denied;
 
     const { itemId, reservationId } = await req.json();
     if (!itemId && !reservationId) {

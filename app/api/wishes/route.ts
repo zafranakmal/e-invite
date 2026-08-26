@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { auth } from '@/lib/auth';
+import { denyIfNotAdmin } from '@/lib/require-admin';
 import { rateLimit, getClientIp } from '@/lib/rate-limit';
 
 // A GET handler that takes no Request is a candidate for static generation,
@@ -34,10 +34,8 @@ export async function GET() {
 // DELETE /api/wishes — delete a wish by id (admin only)
 export async function DELETE(req: NextRequest) {
   try {
-    const session = await auth.api.getSession({ headers: req.headers });
-    if (!session) {
-      return NextResponse.json({ error: 'Unauthorized.' }, { status: 401 });
-    }
+    const denied = await denyIfNotAdmin(req);
+    if (denied) return denied;
 
     const { id } = await req.json();
     if (!id) return NextResponse.json({ error: 'Provide id.' }, { status: 400 });

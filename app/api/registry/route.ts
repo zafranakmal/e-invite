@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/lib/auth';
+import { denyIfNotAdmin } from '@/lib/require-admin';
 
 function isSafeHttpUrl(value: string): boolean {
   try {
@@ -88,10 +89,8 @@ export async function GET(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   try {
-    const session = await auth.api.getSession({ headers: req.headers });
-    if (!session) {
-      return NextResponse.json({ error: 'Unauthorized.' }, { status: 401 });
-    }
+    const denied = await denyIfNotAdmin(req);
+    if (denied) return denied;
 
     const { id } = await req.json();
     

@@ -58,10 +58,17 @@
    backdrop is a pale blush wash (assets/el-bg-itinerary.webp), which carries
    ink at this weight without a scrim behind it.
 
-   Sized in rem off a clamp rather than the cards' cqw: it isn't inside a
-   container-typed box, and at 30rem the measure is already narrower than
-   --card-max on every screen where that ceiling binds. The section's --sec-gap
-   sets the space above and below. ── */
+   One font-size for the whole note, declared here and inherited by all three
+   parts, so they match each other by construction and read the same on a
+   320px phone as on a 1920px desktop. Deliberately not cqw or vw: this box
+   has no container-type, so cqw silently falls back to the viewport (1cqw was
+   3.9px on a phone and 12.8px on a desktop), and a vw slope would re-introduce
+   the same drift more slowly. The measure it sits on only spans 294px to
+   480px, which is not a wide enough range to need scaling type — the widest
+   line, "2nd Session: 9.00 pm – 11.00 pm", still clears the narrowest of them.
+
+   The three parts are distinguished by colour, not size: gold labels, ink
+   body, muted closing line. ── */
 .sessions {
   width: var(--card-w);
   max-width: min(var(--card-max), 30rem);
@@ -71,14 +78,18 @@
   gap: 0.1rem;
   text-align: center;
   font-family: var(--font-display);
+  font-size: 1.0625rem;
   color: var(--c-ink);
   margin-top: -5rem;
   margin-bottom: 5rem;
 }
 
+/* Balanced so the intro's two lines stay near-even instead of dropping a
+   single orphaned word onto the second — the wrap point moves with the
+   measure, and this is the one line long enough to show it. */
 .sessionsIntro {
-  font-size: 1cqw;
   line-height: 1.45;
+  text-wrap: balance;
 }
 
 /* Two columns so the labels and the windows line up down the pair, instead of
@@ -92,7 +103,6 @@
   justify-content: center;
   column-gap: 0.5em;
   row-gap: 0.15em;
-  font-size: 1cqw;
   line-height: 1.5;
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
@@ -117,7 +127,6 @@
 }
 
 .sessionsRefer {
-  font-size: 1cqw;
   line-height: 1.45;
   color: var(--c-ink-3);
 }

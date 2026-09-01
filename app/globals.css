@@ -72,7 +72,7 @@
      viewport with the URL bar hidden, so a vh cap can run past the screen.
 
      --card-max is 660px rather than the artwork's natural width so the tallest
-     plate (the 1409x2000 itinerary) still clears --card-h on a 1080p screen —
+     plate (the 1410x2000 itinerary) still clears --card-h on a 1080p screen —
      above that it would be the one card sitting narrower than the rest. */
   --sec-pad: 3rem;
   --sec-gap: 2rem;

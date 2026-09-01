@@ -17,7 +17,7 @@
  * notes at the bottom of this file).
  *
  * `maxEdge` is the long edge to resample to before encoding. It is set from the
- * largest size each image is ever displayed at, doubled for retina — a 1409px
+ * largest size each image is ever displayed at, doubled for retina — a 1410px
  * source for a card that renders ~300px wide is 2.5x more pixels than any
  * device asks for. Full-bleed backgrounds keep their native size.
  *

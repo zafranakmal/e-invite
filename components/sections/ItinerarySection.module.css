@@ -42,11 +42,78 @@
 }
 
 /* The tallest artwork on the page, so this is the one card whose height ceiling
-   can bind — expressed as a width through the plate's 1409:2000 ratio. */
+   can bind — expressed as a width through the plate's 1410:2000 ratio. */
 .itineraryCard {
-  max-width: min(var(--card-max), calc(var(--card-h) * 1409 / 2000));
+  max-width: min(var(--card-max), calc(var(--card-h) * 1410 / 2000));
 }
 
 .dressCode {
   max-width: var(--card-max);
+}
+
+/* ── The two-sitting note.
+
+   Free-standing type on the stage backdrop rather than a plate of its own, so
+   it reads as a footnote to the card above instead of competing with it. The
+   backdrop is a pale blush wash (assets/el-bg-itinerary.webp), which carries
+   ink at this weight without a scrim behind it.
+
+   Sized in rem off a clamp rather than the cards' cqw: it isn't inside a
+   container-typed box, and at 30rem the measure is already narrower than
+   --card-max on every screen where that ceiling binds. The section's --sec-gap
+   sets the space above and below. ── */
+.sessions {
+  width: var(--card-w);
+  max-width: min(var(--card-max), 30rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+  text-align: center;
+  font-family: var(--font-display);
+  color: var(--c-ink);
+}
+
+.sessionsIntro {
+  font-size: clamp(0.95rem, 2.3vw, 1.1rem);
+  line-height: 1.45;
+}
+
+/* Two columns so the labels and the windows line up down the pair, instead of
+   each row centring on its own length — the second window is a character
+   wider than the first. The rows are `display: contents` because the grid that
+   does the aligning is the <dl>, and the <div>s only exist to keep each
+   dt/dd pair together for assistive tech. */
+.sessionList {
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: center;
+  column-gap: 0.5em;
+  row-gap: 0.15em;
+  font-size: clamp(1rem, 2.6vw, 1.2rem);
+  line-height: 1.5;
+}
+
+.sessionRow {
+  display: contents;
+}
+
+.sessionLabel {
+  text-align: right;
+  color: var(--c-gold);
+}
+
+.sessionLabel::after {
+  content: ':';
+}
+
+.sessionTime {
+  margin: 0;
+  text-align: left;
+}
+
+.sessionsRefer {
+  font-size: clamp(0.9rem, 2.2vw, 1.05rem);
+  line-height: 1.45;
+  color: var(--c-ink-3);
 }

@@ -12,7 +12,7 @@ import { getInviteVariant, useInviteVariant } from '../../lib/invite-variant';
 import bgInvitation from '@/assets/el-bg-invitation.webp';
 import cardBlank from '@/assets/el-invitation-card-blank.webp';
 
-/* Reading ?p= (useSearchParams) forces whatever it's nested in to bail out of
+/* Reading ?p= / ?t= (useSearchParams) forces whatever it's nested in to bail out of
    static rendering into a Suspense fallback — that used to be the *entire*
    InvitationContent tree, because this was the only thing in it asking for
    the param. So the invitation card, itinerary, RSVP, registry and footer
@@ -21,8 +21,9 @@ import cardBlank from '@/assets/el-invitation-card-blank.webp';
    any of it appeared. Scoping Suspense to just these two variant-dependent
    fragments lets everything else — including the two Images above — render
    and get requested immediately. getInviteVariant(null) (== FULL) is what
-   guests without a ?p= param see anyway, so it doubles as a fallback with no
-   layout shift; only ?p=v1/v2/v3 guests see a near-instant swap post-hydration. */
+   guests without those params see anyway, so it doubles as a fallback with no
+   layout shift; only guests on a variant link see a near-instant swap
+   post-hydration. */
 const DEFAULT_VARIANT = getInviteVariant(null);
 
 function DetailLines({ revealed }: { revealed: boolean }) {
@@ -83,7 +84,7 @@ const INVITE_LINES = [
   'hadir ke majlis perkahwinan anakanda kami',
 ];
 
-/** The time line comes from the ?p= variant — see lib/invite-variant.ts */
+/** The time line comes from the ?p= / ?t= variant — see lib/invite-variant.ts */
 const detailLines = (timeLabel: string) => [
   'Sabtu, 31 Oktober 2026',
   timeLabel,

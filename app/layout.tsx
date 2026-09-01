@@ -83,7 +83,7 @@ export const metadata: Metadata = {
   // The load-bearing facts sit in the first 62 characters — WhatsApp truncates
   // a preview at roughly two lines. The reception time and the registry are
   // left out on purpose: those are the two facts that differ between the ?p=
-  // audience variants (lib/invite-variant.ts), so a forwarded card can never
+  // and ?t= variants (lib/invite-variant.ts), so a forwarded card can never
   // reveal which invitation a guest was sent.
   description:
     'Wedding Reception of Anis & Zafran - Sabtu, 31 Oktober 2026. Grand Ballroom, BoraOmbak Putrajaya.',
@@ -104,7 +104,7 @@ export const metadata: Metadata = {
 
   openGraph: {
     type: 'website',
-    // One canonical share identity, so every audience variant (?p=v1|v2|v3)
+    // One canonical share identity, so every audience variant (?p=, ?t=)
     // and every ?ref= link previews identically.
     url: '/',
     siteName: 'Anis & Zafran',

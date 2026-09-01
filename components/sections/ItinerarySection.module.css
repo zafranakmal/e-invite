@@ -68,10 +68,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.85rem;
+  gap: 0.1rem;
   text-align: center;
   font-family: var(--font-display);
   color: var(--c-ink);
+  margin-top: -5rem;
+  margin-bottom: 5rem;
 }
 
 .sessionsIntro {
